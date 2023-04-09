@@ -37,7 +37,7 @@ class GerbongController extends Controller
 
     public function edit($id)
     {
-        $gerbong = Gerbong::find($id)->first();
+        $gerbong = Gerbong::find($id);
         $kereta = Kereta::get();
 
         return view('gerbong.form', ['gerbong' => $gerbong, 'kereta' => $kereta]);

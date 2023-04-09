@@ -13,17 +13,16 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gerbong', function (Blueprint $table) {
+        Schema::create('stasiun', function (Blueprint $table) {
             $table->id();
-            $table->string('id_gerbong')->nullable();
-            $table->string('nama_gerbong')->nullable();
-            $table->string('gerbong_kereta')->nullable();
+            $table->string('id_stasiun');
+            $table->string('nama_stasiun');
             $table->timestamps();
         });
 
-        Schema::table('kursi', function (Blueprint $table) {
-            $table->dropColumn('kursi_gerbong');
-            $table->foreignId('id_gerbong')->references('id')->on('gerbong');
+        Schema::table('rute', function (Blueprint $table) {
+            $table->dropColumn('rute_stasiun');
+            $table->foreignId('id_stasiun')->references('id')->on('stasiun');
         });
     }
 
@@ -34,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gerbong');
+        Schema::dropIfExists('kategori');
     }
 };

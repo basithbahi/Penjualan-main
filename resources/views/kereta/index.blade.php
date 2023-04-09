@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Data Kategori')
+@section('title', 'Data Kereta')
 
 @section('contents')
   <div class="card shadow mb-4">
@@ -8,7 +8,7 @@
       <h6 class="m-0 font-weight-bold text-primary">Data Kereta</h6>
     </div>
     <div class="card-body">
-      <a href="{{ route('kereta.tambah') }}" class="btn btn-primary mb-3">Tambah Kategori</a>
+      <a href="{{ route('kereta.tambah') }}" class="btn btn-primary mb-3">Tambah Kereta</a>
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>

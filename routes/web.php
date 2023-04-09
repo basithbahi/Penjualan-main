@@ -1,10 +1,11 @@
 <?php
 
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\BarangController;
-use App\Http\Controllers\KategoriController;
 use App\Http\Controllers\KeretaController;
 use App\Http\Controllers\GerbongController;
+use App\Http\Controllers\KursiController;
+use App\Http\Controllers\StasiunController;
+use App\Http\Controllers\RuteController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -37,13 +38,13 @@ Route::middleware('auth')->group(function () {
         return view('dashboard');
     })->name('dashboard');
 
-    Route::controller(BarangController::class)->prefix('barang')->group(function () {
-        Route::get('', 'index')->name('barang');
-        Route::get('tambah', 'tambah')->name('barang.tambah');
-        Route::post('tambah', 'simpan')->name('barang.tambah.simpan');
-        Route::get('edit/{id}', 'edit')->name('barang.edit');
-        Route::post('edit/{id}', 'update')->name('barang.tambah.update');
-        Route::get('hapus/{id}', 'hapus')->name('barang.hapus');
+    Route::controller(KursiController::class)->prefix('kursi')->group(function () {
+        Route::get('', 'index')->name('kursi');
+        Route::get('tambah', 'tambah')->name('kursi.tambah');
+        Route::post('tambah', 'simpan')->name('kursi.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('kursi.edit');
+        Route::post('edit/{id}', 'update')->name('kursi.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('kursi.hapus');
     });
 
     Route::controller(GerbongController::class)->prefix('gerbong')->group(function () {
@@ -64,12 +65,21 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('kereta.hapus');
     });
 
-    Route::controller(KategoriController::class)->prefix('kategori')->group(function () {
-        Route::get('', 'index')->name('kategori');
-        Route::get('tambah', 'tambah')->name('kategori.tambah');
-        Route::post('tambah', 'simpan')->name('kategori.tambah.simpan');
-        Route::get('edit/{id}', 'edit')->name('kategori.edit');
-        Route::post('edit/{id}', 'update')->name('kategori.tambah.update');
-        Route::get('hapus/{id}', 'hapus')->name('kategori.hapus');
+    Route::controller(StasiunController::class)->prefix('stasiun')->group(function () {
+        Route::get('', 'index')->name('stasiun');
+        Route::get('tambah', 'tambah')->name('stasiun.tambah');
+        Route::post('tambah', 'simpan')->name('stasiun.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('stasiun.edit');
+        Route::post('edit/{id}', 'update')->name('stasiun.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('stasiun.hapus');
+    });
+
+    Route::controller(RuteController::class)->prefix('rute')->group(function () {
+        Route::get('', 'index')->name('rute');
+        Route::get('tambah', 'tambah')->name('rute.tambah');
+        Route::post('tambah', 'simpan')->name('rute.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('rute.edit');
+        Route::post('edit/{id}', 'update')->name('rute.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('rute.hapus');
     });
 });

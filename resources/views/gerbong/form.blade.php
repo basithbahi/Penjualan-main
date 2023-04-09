@@ -3,6 +3,7 @@
 @section('title', 'Form Gerbong')
 
 @section('contents')
+
   <form action="{{ isset($gerbong) ? route('gerbong.tambah.update', $gerbong->id) : route('gerbong.tambah.simpan') }}" method="post">
     @csrf
     <div class="row">
@@ -25,7 +26,9 @@
 							<select name="id_kereta" id="id_kereta" class="custom-select">
 								<option value="" selected disabled hidden>-- Pilih Kereta --</option>
 								@foreach ($kereta as $row)
-									<option value="{{ $row->id }}" {{ isset($gerbong) ? ($gerbong->id_kereta == $row->id ? 'selected' : '') : '' }}>{{ $row->nama_kereta }}</option>
+									<option value="{{ $row->id }}" {{ isset($gerbong) ? ($gerbong->id_kereta == $row->id ? 'selected' : '') : '' }}>
+                    {{ $row->nama_kereta }} - {{ $row->jenis_kereta }}
+                  </option>
 								@endforeach
 							</select>
             </div>

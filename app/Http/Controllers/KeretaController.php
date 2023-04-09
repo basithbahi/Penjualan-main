@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kereta;
+use App\Http\Controllers\Exception;
+use Exception as GlobalException;
+use FFI\Exception as FFIException;
 use Illuminate\Http\Request;
 
 class KeretaController extends Controller
@@ -32,7 +35,7 @@ class KeretaController extends Controller
 
     public function edit($id)
     {
-        $kereta = Kereta::find($id)->first();
+        $kereta = Kereta::find($id);
 
         return view('kereta.form', ['kereta' => $kereta]);
     }
@@ -46,5 +49,23 @@ class KeretaController extends Controller
         ]);
 
         return redirect()->route('kereta');
+    }
+
+    public function hapus($id)
+    {
+        try {
+            $kereta = Kereta::find($id);
+
+            // cek apakah kereta memiliki relasi dengan gerbong
+            if ($kereta->gerbong()->exists()) {
+                throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
+            }
+
+            $kereta->delete();
+
+            return redirect()->route('kereta')->with('success', 'Data kereta berhasil dihapus');
+        } catch (FFIException $e) {
+            return redirect()->back()->withErrors([$e->getMessage()]);
+        }
     }
 }

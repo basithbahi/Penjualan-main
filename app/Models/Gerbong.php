@@ -17,4 +17,9 @@ class Gerbong extends Model
     {
         return $this->belongsTo(Kereta::class, 'id_kereta');
     }
+
+    public function kursi()
+    {
+        return $this->belongsTo(Kursi::class, 'id_kursi');
+    }
 }

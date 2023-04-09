@@ -21,9 +21,14 @@
               <input type="text" class="form-control" id="nama_kereta" name="nama_kereta" value="{{ isset($kereta) ? $kereta->nama_kereta : '' }}">
             </div>
             <div class="form-group">
-              <label for="jenis_kereta">Jenis Kereta</label>
-              <input type="text" class="form-control" id="jenis_kereta" name="jenis_kereta" value="{{ isset($kereta) ? $kereta->jenis_kereta : '' }}">
-            </div>
+                <label for="jenis_kereta">Jenis Kereta</label>
+                <select class="form-control" id="jenis_kereta" name="jenis_kereta">
+                  <option value="">-- Pilih Kategori Kereta --</option>
+                  <option value="Eksekutif" {{ isset($kereta) && $kereta->jenis_kereta == 'Eksekutif' ? 'selected' : '' }}>Eksekutif</option>
+                  <option value="Bisnis" {{ isset($kereta) && $kereta->jenis_kereta == 'Bisnis' ? 'selected' : '' }}>Bisnis</option>
+                  <option value="Ekonomi" {{ isset($kereta) && $kereta->jenis_kereta == 'Ekonomi' ? 'selected' : '' }}>Ekonomi</option>
+                </select>
+              </div>
           </div>
           <div class="card-footer">
             <button type="submit" class="btn btn-primary">Simpan</button>
