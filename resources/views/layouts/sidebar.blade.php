@@ -73,7 +73,7 @@
     </li>
 
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('kereta') }}">
+        <a class="nav-link" href="{{ route('metode_pembayaran') }}">
             <i class="nav-icon fas fa-wallet"></i>
             <span>Metode Pembayaran</span></a>
     </li>
