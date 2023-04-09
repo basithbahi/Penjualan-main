@@ -62,4 +62,21 @@ class GerbongController extends Controller
 
         return redirect()->route('gerbong');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $data = Gerbong::with('kereta')
+                ->where('id_gerbong', 'like', "%$query%")
+                ->orWhere('nama_gerbong', 'like', "%$query%")
+                ->orderBy('id_gerbong', 'asc')
+                ->paginate(10);
+        } else {
+            $data = Gerbong::with('kereta')->get();
+        }
+
+        return view('gerbong.index', ['data' => $data, 'query' => $query]);
+    }
 }

@@ -5,12 +5,24 @@
 @section('contents')
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Data Gerbong</h6>
-    </div>
+        <form action="{{ route('gerbong.search') }}" method="GET">
+          <div class="input-group">
+            <input type="text" class="form-control bg-light border-0 small" name="query" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search fa-sm"></i>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+
+
     <div class="card-body">
 			@if (auth()->user()->level == 'Admin')
       <a href="{{ route('gerbong.tambah') }}" class="btn btn-primary mb-3">Tambah Gerbong</a>
 			@endif
+
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
@@ -31,7 +43,7 @@
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->id_gerbong }}</td>
                 <td>{{ $row->nama_gerbong }}</td>
-                <td>{{ $row->kereta->nama_kereta }}</td>
+                <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
 				@if (auth()->user()->level == 'Admin')
                     <td>
                         <a href="{{ route('gerbong.edit', $row->id) }}" class="btn btn-warning">Edit</a>
@@ -45,4 +57,25 @@
       </div>
     </div>
   </div>
+@endsection
+
+@section('scripts')
+<script>
+  $(document).ready(function() {
+    $('#dataTable').DataTable({
+      "processing": true,
+      "serverSide": true,
+      "ajax": "{{ route('gerbong.search') }}",
+      "columns": [
+        { "data": "DT_RowIndex" },
+        { "data": "id_gerbong" },
+        { "data": "nama_gerbong" },
+        { "data": "kereta.nama_kereta" },
+        @if (auth()->user()->level == 'Admin')
+          { "data": "action", orderable: false, searchable: false }
+        @endif
+      ]
+    });
+  });
+</script>
 @endsection

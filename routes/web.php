@@ -23,15 +23,12 @@ Route::controller(AuthController::class)->group(function () {
     Route::get('register', 'register')->name('register');
     Route::post('register', 'registerSimpan')->name('register.simpan');
 
-    Route::get('login', 'login')->name('login');
+    Route::get('/', 'login')->name('login');
     Route::post('login', 'loginAksi')->name('login.aksi');
 
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
 });
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', function () {
@@ -45,6 +42,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('kursi.edit');
         Route::post('edit/{id}', 'update')->name('kursi.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('kursi.hapus');
+        Route::get('search', 'search')->name('kursi.search');
     });
 
     Route::controller(GerbongController::class)->prefix('gerbong')->group(function () {
@@ -54,6 +52,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('gerbong.edit');
         Route::post('edit/{id}', 'update')->name('gerbong.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('gerbong.hapus');
+        Route::get('search', 'search')->name('gerbong.search');
     });
 
     Route::controller(KeretaController::class)->prefix('kereta')->group(function () {
@@ -63,6 +62,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('kereta.edit');
         Route::post('edit/{id}', 'update')->name('kereta.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('kereta.hapus');
+        Route::get('search', 'search')->name('kereta.search');
     });
 
     Route::controller(StasiunController::class)->prefix('stasiun')->group(function () {
@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('stasiun.edit');
         Route::post('edit/{id}', 'update')->name('stasiun.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('stasiun.hapus');
+        Route::get('search', 'search')->name('stasiun.search');
     });
 
     Route::controller(RuteController::class)->prefix('rute')->group(function () {
@@ -81,5 +82,6 @@ Route::middleware('auth')->group(function () {
         Route::get('edit/{id}', 'edit')->name('rute.edit');
         Route::post('edit/{id}', 'update')->name('rute.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('rute.hapus');
+        Route::get('search', 'search')->name('rute.search');
     });
 });

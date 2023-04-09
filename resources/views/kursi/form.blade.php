@@ -31,7 +31,7 @@
                                 @foreach ($gerbong as $row)
                                     <option value="{{ $row->id }}"
                                         {{ isset($kursi) ? ($kursi->id_gerbong == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->nama_gerbong }}</option>
+                                        {{ $row->nama_gerbong }} - {{ $row->kereta->nama_kereta }}  </option>
                                 @endforeach
                             </select>
                         </div>

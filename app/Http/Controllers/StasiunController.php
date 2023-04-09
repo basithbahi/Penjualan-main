@@ -45,4 +45,21 @@ class StasiunController extends Controller
 
         return redirect()->route('stasiun');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $stasiun = Stasiun::query()
+                ->where('id_stasiun', 'like', "%$query%")
+                ->orWhere('nama_stasiun', 'like', "%$query%")
+                ->orderBy('id_stasiun', 'asc')
+                ->paginate(10);
+        } else {
+            $stasiun = Stasiun::get();
+        }
+
+        return view('stasiun.index', ['stasiun' => $stasiun, 'query' => $query]);
+    }
 }

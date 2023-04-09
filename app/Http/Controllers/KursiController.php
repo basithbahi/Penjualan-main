@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kursi;
 use App\Models\Gerbong;
+use App\Models\Kereta;
 use Illuminate\Http\Request;
 
 class KursiController extends Controller
@@ -61,5 +62,22 @@ class KursiController extends Controller
         Kursi::find($id)->delete();
 
         return redirect()->route('kursi');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $data = Kursi::with('gerbong')
+                ->where('id_kursi', 'like', "%$query%")
+                ->orWhere('nama_kursi', 'like', "%$query%")
+                ->orderBy('id_kursi', 'asc')
+                ->paginate(10);
+        } else {
+            $data = Kursi::with('gerbong')->get();
+        }
+
+        return view('kursi.index', ['data' => $data, 'query' => $query]);
     }
 }

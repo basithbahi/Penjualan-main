@@ -68,4 +68,22 @@ class KeretaController extends Controller
             return redirect()->back()->withErrors([$e->getMessage()]);
         }
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $kereta = Kereta::query()
+                ->where('id_kereta', 'like', "%$query%")
+                ->orWhere('nama_kereta', 'like', "%$query%")
+                ->orWhere('jenis_kereta', 'like', "%$query%")
+                ->orderBy('id_kereta', 'asc')
+                ->paginate(10);
+        } else {
+            $kereta = Kereta::get();
+        }
+
+        return view('kereta.index', ['kereta' => $kereta, 'query' => $query]);
+    }
 }
