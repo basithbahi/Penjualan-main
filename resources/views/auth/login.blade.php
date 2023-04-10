@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>SB Admin 2 - Login</title>
+  <title>JESJESPOR - Login</title>
 
   <!-- Custom fonts for this template-->
   <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
@@ -51,7 +51,7 @@
 										</div>
 										@endif
                     <div class="form-group">
-                      <input name="email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Enter Email Address...">
+                      <input name="email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukkan Alamat E-mail">
                     </div>
                     <div class="form-group">
                       <input name="password" type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password">
@@ -67,7 +67,7 @@
                   </form>
                   <hr>
                   <div class="text-center">
-                    <a class="small" href="{{ route('register') }}">Create an Account!</a>
+                    <a class="small" href="{{ route('register') }}">Belum Punya Akun? Register!</a>
                   </div>
                 </div>
               </div>

@@ -17,8 +17,8 @@
         </form>
       </div>
     <div class="card-body">
-      <a href="{{ route('kereta.tambah') }}" class="btn btn-primary mb-3">Tambah Kereta</a>
-      <div class="table-responsive">
+        <a href="{{ route('kereta.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Kereta</a>
+        <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
@@ -38,9 +38,9 @@
                 <td>{{ $row->nama_kereta }}</td>
                 <td>{{ $row->jenis_kereta }}</td>
                 <td>
-                  <a href="{{ route('kereta.edit', $row->id) }}" class="btn btn-warning">Edit</a>
-                  <a href="{{ route('kereta.hapus', $row->id) }}" class="btn btn-danger">Hapus</a>
-                </td>
+                    <a href="{{ route('kereta.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                    <a href="{{ route('kereta.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
+            </td>
               </tr>
             @endforeach
           </tbody>

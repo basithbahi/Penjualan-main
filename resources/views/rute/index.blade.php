@@ -18,7 +18,7 @@
       </div>
     <div class="card-body">
 			@if (auth()->user()->level == 'Admin')
-      <a href="{{ route('rute.tambah') }}" class="btn btn-primary mb-3">Tambah Rute</a>
+            <a href="{{ route('rute.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Rute</a>
 			@endif
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -43,9 +43,9 @@
                 <td>{{ $row->stasiun_tujuan }}</td>
 								@if (auth()->user()->level == 'Admin')
                 <td>
-                  <a href="{{ route('rute.edit', $row->id) }}" class="btn btn-warning">Edit</a>
-                  <a href="{{ route('rute.hapus', $row->id) }}" class="btn btn-danger">Hapus</a>
-                </td>
+                    <a href="{{ route('rute.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                    <a href="{{ route('rute.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
+            </td>
 								@endif
               </tr>
             @endforeach

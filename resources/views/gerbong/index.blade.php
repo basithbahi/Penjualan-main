@@ -20,7 +20,7 @@
 
     <div class="card-body">
 			@if (auth()->user()->level == 'Admin')
-      <a href="{{ route('gerbong.tambah') }}" class="btn btn-primary mb-3">Tambah Gerbong</a>
+      <a href="{{ route('gerbong.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Gerbong</a>
 			@endif
 
       <div class="table-responsive">
@@ -46,8 +46,8 @@
                 <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
 				@if (auth()->user()->level == 'Admin')
                     <td>
-                        <a href="{{ route('gerbong.edit', $row->id) }}" class="btn btn-warning">Edit</a>
-                        <a href="{{ route('gerbong.hapus', $row->id) }}" class="btn btn-danger">Hapus</a>
+                        <a href="{{ route('gerbong.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                        <a href="{{ route('gerbong.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
                     </td>
 				@endif
               </tr>
@@ -57,25 +57,4 @@
       </div>
     </div>
   </div>
-@endsection
-
-@section('scripts')
-<script>
-  $(document).ready(function() {
-    $('#dataTable').DataTable({
-      "processing": true,
-      "serverSide": true,
-      "ajax": "{{ route('gerbong.search') }}",
-      "columns": [
-        { "data": "DT_RowIndex" },
-        { "data": "id_gerbong" },
-        { "data": "nama_gerbong" },
-        { "data": "kereta.nama_kereta" },
-        @if (auth()->user()->level == 'Admin')
-          { "data": "action", orderable: false, searchable: false }
-        @endif
-      ]
-    });
-  });
-</script>
 @endsection

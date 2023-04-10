@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Stasiun;
 use Illuminate\Http\Request;
+use Exception as GlobalException;
+use FFI\Exception as FFIException;
 
 class StasiunController extends Controller
 {
@@ -44,6 +46,24 @@ class StasiunController extends Controller
         ]);
 
         return redirect()->route('stasiun');
+    }
+
+    public function hapus($id)
+    {
+        try {
+            $stasiun = Stasiun::find($id);
+
+            // cek apakah kereta memiliki relasi dengan gerbong
+            if ($stasiun->rute()->exists()) {
+                throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
+            }
+
+            $stasiun->delete();
+
+            return redirect()->route('stasiun')->with('success', 'Data stasiun berhasil dihapus');
+        } catch (FFIException $e) {
+            return redirect()->back()->withErrors([$e->getMessage()]);
+        }
     }
 
     public function search(Request $request)
