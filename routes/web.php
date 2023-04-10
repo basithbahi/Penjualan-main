@@ -6,6 +6,7 @@ use App\Http\Controllers\GerbongController;
 use App\Http\Controllers\KursiController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
+use App\Http\Controllers\MetodePembayaranController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -84,4 +85,14 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('rute.hapus');
         Route::get('search', 'search')->name('rute.search');
     });
+    Route::controller(MetodePembayaranController::class)->prefix('metode_pembayaran')->group(function () {
+        Route::get('', 'index')->name('metode_pembayaran');
+        Route::get('tambah', 'tambah')->name('metode_pembayaran.tambah');
+        Route::post('tambah', 'simpan')->name('metode_pembayaran.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('metode_pembayaran.edit');
+        Route::post('edit/{id}', 'update')->name('metode_pembayaran.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('metode_pembayaran.hapus');
+        Route::get('search', 'search')->name('metode_pembayaran.search');
+    });
+
 });
