@@ -63,7 +63,7 @@
             <span>Transaksi</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('kereta') }}">
+        <a class="nav-link" href="{{ route('metode_pembayaran') }}">
             <i class="fas fa-fw fa-wallet"></i>
             <span>Metode Pembayatan</span></a>
     </li>
