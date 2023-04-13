@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeretaController;
 use App\Http\Controllers\GerbongController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\KursiController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
@@ -93,6 +94,16 @@ Route::middleware('auth')->group(function () {
         Route::post('edit/{id}', 'update')->name('metode_pembayaran.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('metode_pembayaran.hapus');
         Route::get('search', 'search')->name('metode_pembayaran.search');
+    });
+
+    Route::controller(AdminController::class)->prefix('admin')->group(function () {
+        Route::get('', 'index')->name('admin');
+        Route::get('tambah', 'tambah')->name('admin.tambah');
+        Route::post('tambah', 'simpan')->name('admin.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('admin.edit');
+        Route::post('edit/{id}', 'update')->name('admin.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('admin.hapus');
+        Route::get('search', 'search')->name('admin.search');
     });
 
 });
