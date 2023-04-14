@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\KeretaController;
 use App\Http\Controllers\GerbongController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\KursiController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
@@ -104,6 +105,16 @@ Route::middleware('auth')->group(function () {
         Route::post('edit/{id}', 'update')->name('admin.tambah.update');
         Route::get('hapus/{id}', 'hapus')->name('admin.hapus');
         Route::get('search', 'search')->name('admin.search');
+    });
+
+    Route::controller(UserController::class)->prefix('user')->group(function () {
+        Route::get('', 'index')->name('user');
+        Route::get('tambah', 'tambah')->name('user.tambah');
+        Route::post('tambah', 'simpan')->name('user.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('user.edit');
+        Route::post('edit/{id}', 'update')->name('user.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('user.hapus');
+        Route::get('search', 'search')->name('user.search');
     });
 
 });
