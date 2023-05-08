@@ -33,8 +33,8 @@
                 </tr>
             </thead>
             <tbody>
-                @php($no = 1)
-                @foreach ($user as $row)
+            @php($no = 1)
+            @foreach (DB::table('users')->where('level', 'user')->get() as $row)
                 <tr>
                     <th>{{ $no++ }}</th>
                     <td>{{ $row->nik }}</td>
