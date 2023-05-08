@@ -93,6 +93,7 @@ body,
           <li><a href="#tentang">Tentang Kami</a></li>
           <li><a href="#footer">Hubungi Kami</a></li>
           <li><a href="login">Akun</a></li>
+          <li><a href="logout">Logout</a></li>
         </ul>
       </nav><!-- .navbar -->
     </div>
@@ -244,7 +245,12 @@ body,
 
     <!-- Template Main JS File -->
     <script src="{{ asset('style/assets/js/main.js')}}"></script>
-
+      <div class="dropdown-divider"></div>
+        <a class="dropdown-item" href="{{ route('logout') }}">
+          <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+          Logout
+        </a>
+      </div>
 
     
 </body>
