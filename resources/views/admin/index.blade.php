@@ -34,8 +34,8 @@
             </tr>
           </thead>
           <tbody>
-            @php($no = 1)
-            @foreach ($admin as $row)
+          @php($no = 1)
+          @foreach (DB::table('users')->where('level', 'admin')->get() as $row)
               <tr>
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->nik }}</td>
