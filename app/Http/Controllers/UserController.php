@@ -77,11 +77,11 @@ class UserController extends Controller
             return redirect()->route('admin')->with('success', 'Data admin berhasil dihapus');
         } catch (FFIException $e) {
             return redirect()->back()->withErrors([$e->getMessage()]);
-            
+
         }*/
         User::find($id)->delete();
 
-            return redirect()->route('user');
+        return redirect()->route('user');
     }
 
     public function search(Request $request)

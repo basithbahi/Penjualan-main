@@ -116,5 +116,10 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('user.hapus');
         Route::get('search', 'search')->name('user.search');
     });
+});
 
+Route::middleware('auth')->group(function () {
+    Route::get('home', function () {
+        return view('home');
+    })->name('home');
 });
