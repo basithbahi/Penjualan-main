@@ -67,7 +67,7 @@ class AdminController extends Controller
     {
         Admin::find($id)->delete();
 
-            return redirect()->route('admin');
+        return redirect()->route('admin');
     }
 
     public function search(Request $request)
