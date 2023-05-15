@@ -129,16 +129,6 @@ Route::middleware('auth')->group(function () {
         Route::get('search', 'search')->name('jadwal.search');
     });
 
-    Route::controller(KeretaController::class)->prefix('kereta')->group(function () {
-        Route::get('', 'index')->name('kereta');
-        Route::get('tambah', 'tambah')->name('kereta.tambah');
-        Route::post('tambah', 'simpan')->name('kereta.tambah.simpan');
-        Route::get('edit/{id}', 'edit')->name('kereta.edit');
-        Route::post('edit/{id}', 'update')->name('kereta.tambah.update');
-        Route::get('hapus/{id}', 'hapus')->name('kereta.hapus');
-        Route::get('search', 'search')->name('kereta.search');
-    });
-
     Route::controller(TransaksiController::class)->prefix('transaksi')->group(function () {
         Route::get('', 'index')->name('transaksi');
         Route::get('tambah', 'tambah')->name('transaksi.tambah');
