@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KeretaController;
 use App\Http\Controllers\GerbongController;
 use App\Http\Controllers\AdminController;
@@ -118,8 +119,21 @@ Route::middleware('auth')->group(function () {
     });
 });
 
+<<<<<<< HEAD
+    Route::controller(JadwalController::class)->prefix('jadwal')->group(function () {
+        Route::get('', 'index')->name('jadwal');
+        Route::get('tambah', 'tambah')->name('jadwal.tambah');
+        Route::post('tambah', 'simpan')->name('jadwal.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('jadwal.edit');
+        Route::post('edit/{id}', 'update')->name('jadwal.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('jadwal.hapus');
+        Route::get('search', 'search')->name('jadwal.search');
+    });
+});
+=======
 Route::middleware('auth')->group(function () {
     Route::get('home', function () {
         return view('home');
     })->name('home');
 });
+>>>>>>> 31af400b9eaa4c4d496cb052543b5693193d743a

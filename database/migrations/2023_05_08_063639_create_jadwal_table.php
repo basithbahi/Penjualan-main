@@ -13,17 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('rute', function (Blueprint $table) {
+        Schema::create('jadwal', function (Blueprint $table) {
             $table->id();
-            $table->string('id_rute')->nullable();
-            $table->string('stasiun_keberangkatan')->nullable();
-            $table->string('stasiun_tujuan')->nullable();
+            $table->string('id_jadwal')->nullable();
+            $table->string('user_jadwal');
+            $table->string('jadwal_kereta');
+            $table->string('rute_jadwal');
             $table->timestamps();
-        });
 
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('rute_jadwal');
-            $table->foreignId('id_rute')->references('id')->on('rute');
         });
     }
 
@@ -34,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rute');
+        Schema::dropIfExists('jadwal');
     }
 };
