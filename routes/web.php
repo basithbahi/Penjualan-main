@@ -124,4 +124,3 @@ Route::middleware('auth')->group(function () {
         return view('home');
     })->name('home');
 });
->>>>>>> 31af400b9eaa4c4d496cb052543b5693193d743a
