@@ -93,7 +93,7 @@ class UserController extends Controller
                 ->where('nik', 'like', "%$query%")
                 ->orWhere('nama', 'like', "%$query%")
                 ->orWhere('alamat', 'like', "%$query%")
-                ->orderBy('jk', 'asc')
+                ->orderBy('nik', 'asc')
                 ->paginate(10);
         } else {
             $user = User::get();
