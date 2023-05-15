@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::get('dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+});
 
     Route::controller(KursiController::class)->prefix('kursi')->group(function () {
         Route::get('', 'index')->name('kursi');
@@ -117,8 +118,6 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('user.hapus');
         Route::get('search', 'search')->name('user.search');
     });
-});
-
 
     Route::controller(JadwalController::class)->prefix('jadwal')->group(function () {
         Route::get('', 'index')->name('jadwal');
@@ -129,6 +128,7 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('jadwal.hapus');
         Route::get('search', 'search')->name('jadwal.search');
     });
+
 
 Route::middleware('auth')->group(function () {
     Route::get('home', function () {
