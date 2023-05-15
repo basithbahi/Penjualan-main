@@ -25,6 +25,10 @@ return new class extends Migration
             $table->dropColumn('gerbong_kereta');
             $table->foreignId('id_kereta')->references('id')->on('kereta');
         });
+        Schema::table('jadwal', function (Blueprint $table) {
+            $table->dropColumn('jadwal');
+            $table->foreignId('id_kereta')->references('id')->on('kereta');
+        });
     }
 
     /**
