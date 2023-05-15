@@ -119,7 +119,7 @@ Route::middleware('auth')->group(function () {
     });
 });
 
-<<<<<<< HEAD
+
     Route::controller(JadwalController::class)->prefix('jadwal')->group(function () {
         Route::get('', 'index')->name('jadwal');
         Route::get('tambah', 'tambah')->name('jadwal.tambah');
@@ -129,11 +129,9 @@ Route::middleware('auth')->group(function () {
         Route::get('hapus/{id}', 'hapus')->name('jadwal.hapus');
         Route::get('search', 'search')->name('jadwal.search');
     });
-});
-=======
+
 Route::middleware('auth')->group(function () {
     Route::get('home', function () {
         return view('home');
     })->name('home');
 });
->>>>>>> 31af400b9eaa4c4d496cb052543b5693193d743a
