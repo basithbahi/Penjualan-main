@@ -129,7 +129,15 @@ Route::middleware('auth')->group(function () {
         Route::get('search', 'search')->name('jadwal.search');
     });
 
-
+    Route::controller(TransaksiController::class)->prefix('transaksi')->group(function () {
+        Route::get('', 'index')->name('transaksi');
+        Route::get('tambah', 'tambah')->name('transaksi.tambah');
+        Route::post('tambah', 'simpan')->name('transaksi.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('transaksi.edit');
+        Route::post('edit/{id}', 'update')->name('transaksi.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('transaksi.hapus');
+        Route::get('search', 'search')->name('transaksi.search');
+    });
 Route::middleware('auth')->group(function () {
     Route::get('home', function () {
         return view('home');

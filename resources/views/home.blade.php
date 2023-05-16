@@ -109,7 +109,7 @@ body,
         <div class="col-xl-4">
           <h2 data-aos="fade-up">Pemesanan Tiket</h2>
           <body class="text-center">
-            <form class="form-signin">
+          <form action="{{ isset($rute) ? route('transaksi.tambah.update', $rute->id) : route('transaksi.tambah.simpan') }}" method="post">  
                 <br>
                 <select name="stasiunKeberangkatan" class="form-control">
                     <option value="0">Stasiun Keberangkatan</option>    
@@ -126,18 +126,21 @@ body,
                     <option value="1">2 Dewasa</option>
                     <option value="2">3 Dewasa</option>
                 </select>
-            </form>
+            
         <br><br>
-        
-        <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
-            <a href="#about" class="btn-get-started">PESAN TIKET</a>
+          <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
+          <button type="submit" class="btn btn-primary">Pesan</button>
             <a href="cekKodeBooking" class="glightbox btn-watch-video d-flex align-items-center">
                 <span>Cek Kode Booking</span></a>
           </div>
 
+        </form>
+        
+
         </div>
       </div>
     </div>
+  
   </section><!-- End Hero Section -->
 
   <!--cek kode booking-->
