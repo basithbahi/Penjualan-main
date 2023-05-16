@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('level');
+            $table->string('transaksi_user');
             $table->timestamps();
         });
 

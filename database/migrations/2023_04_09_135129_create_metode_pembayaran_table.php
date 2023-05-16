@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_metode_pembayaran');
             $table->string('metode_pembayaran');
+            $table->string('transaksi_metode_pembayaran');
             $table->timestamps();
         });
 

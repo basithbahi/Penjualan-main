@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('user_jadwal');
             $table->string('jadwal_kereta');
             $table->string('rute_jadwal');
+            $table->string('transaksi_jadwal');
             $table->timestamps();
-
         });
     }
 
