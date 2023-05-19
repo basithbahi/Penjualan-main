@@ -17,9 +17,9 @@
                     </div>
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="id_transaksi">ID Transaksi</label>
-                            <input type="text" class="form-control" id="id_transaksi" name="id_transaksi"
-                                value="{{ isset($transaksi) ? $transaksi->id_transaksi : '' }}">
+                            <label for="invoice">ID Transaksi</label>
+                            <input type="text" class="form-control" id="invoice" name="invoice"
+                                value="{{ isset($transaksi) ? $transaksi->invoice : '' }}">
                         </div>
                         <div class="form-group">
                             <label for="id_user">User</label>

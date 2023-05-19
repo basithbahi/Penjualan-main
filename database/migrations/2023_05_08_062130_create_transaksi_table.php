@@ -16,25 +16,10 @@ return new class extends Migration
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
             $table->string('invoice')->nullable();
-            $table->string('id_user')->nullable();
-            $table->string('id_jadwal')->nullable();
-            $table->string('id_metode_pembayaran')->nullable();
+            $table->string('transaksi_user')->nullable();
+            $table->string('transaksi_metode_pembayaran')->nullable();
+            $table->string('transaksi_jadwal')->nullable();
             $table->timestamps();
-        });
-
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('transaksi_user');
-            $table->foreignId('invoice')->references('id')->on('transaksi');
-        });
-
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('transaksi_jadwal');
-            $table->foreignId('invoice')->references('id')->on('transaksi');
-        });
-
-        Schema::table('metode_pembayaran', function (Blueprint $table) {
-            $table->dropColumn('transaksi_metode_pembayaran');
-            $table->foreignId('invoice')->references('id')->on('transaksi');
         });
     }
 

@@ -45,7 +45,7 @@
             @foreach ($data as $row)
               <tr>
                 <th>{{ $no++ }}</th>
-                <td>{{ $row->id_transaksi }}</td>
+                <td>{{ $row->invoice }}</td>
                 <td>{{ $row->user->nama }}</td>
                 <td>{{ $row->jenis_cucian->jenis_cucian }}</td>
                 <td>{{ $row->tipe_laundry->tipe_laundry }}</td>

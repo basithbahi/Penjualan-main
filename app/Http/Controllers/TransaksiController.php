@@ -37,7 +37,7 @@ class TransaksiController extends Controller
     public function simpan(Request $request)
     {
         $data = [
-            'id_transaksi' => $request->id_transaksi,
+            'invoice' => $request->invoice,
             'id_user' => $request->id_user,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
@@ -63,7 +63,7 @@ class TransaksiController extends Controller
     public function update($id, Request $request)
     {
         $data = [
-            'id_transaksi' => $request->id_transaksi,
+            'invoice' => $request->invoice,
             'id_user' => $request->id_user,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
@@ -94,7 +94,7 @@ class TransaksiController extends Controller
     {
         $data = [
             'id_riwayat_transaksi' => $request->id_riwayat_transaksi,
-            'id_transaksi' => $request->id_transaksi,
+            'invoice' => $request->invoice,
             'metode_pembayaran' => $request->metode_pembayaran,
             'total_bayar' => $request->total_bayar,
         ];
@@ -110,9 +110,9 @@ class TransaksiController extends Controller
 
         if ($query) {
             $data = Transaksi::with('user', 'id_jadwal', 'id_metode_pembayaran')
-                ->where('id_transaksi', 'like', "%$query%")
+                ->where('invoice', 'like', "%$query%")
                 ->orWhere('nama_user', 'like', "%$query%")
-                ->orderBy('id_transaksi', 'asc')
+                ->orderBy('invoice', 'asc')
                 ->paginate(10);
         } else {
             $data = Transaksi::with('user', 'id_jadwal', 'id_metode_pembayaran')->get();

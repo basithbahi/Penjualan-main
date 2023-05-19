@@ -19,8 +19,12 @@ return new class extends Migration
             $table->string('user_jadwal');
             $table->string('jadwal_kereta');
             $table->string('rute_jadwal');
-            $table->string('transaksi_jadwal');
             $table->timestamps();
+        });
+
+        Schema::table('transaksi', function (Blueprint $table) {
+            $table->dropColumn('transaksi_jadwal');
+            $table->foreignId('id_jadwal')->references('id')->on('jadwal');
         });
     }
 
