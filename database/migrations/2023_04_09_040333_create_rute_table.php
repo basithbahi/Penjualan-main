@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('id_rute')->nullable();
             $table->foreignId('id_stasiun')->references('id')->on('stasiun');
-            $table->string('stasiun_keberangkatan')->nullable();
             $table->string('stasiun_tujuan')->nullable();
             $table->timestamps();
         });
