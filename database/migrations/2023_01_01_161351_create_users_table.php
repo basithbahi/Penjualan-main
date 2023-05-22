@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('user', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('nik');
             $table->string('nama');
@@ -25,6 +25,16 @@ return new class extends Migration
             $table->string('level');
             $table->timestamps();
         });
+
+        Schema::table('jadwal', function (Blueprint $table) {
+            $table->dropColumn('user_jadwal');
+            $table->foreignId('id_users')->references('id')->on('users');
+        });
+
+        Schema::table('transaksi', function (Blueprint $table) {
+            $table->dropColumn('transaksi_user');
+            $table->foreignId('id_user')->references('id')->on('user');
+        });
     }
 
     /**
@@ -34,6 +44,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('user');
+        Schema::dropIfExists('users');
     }
 };

@@ -20,6 +20,11 @@ return new class extends Migration
             $table->string('stasiun_tujuan')->nullable();
             $table->timestamps();
         });
+
+        Schema::table('jadwal', function (Blueprint $table) {
+            $table->dropColumn('rute_jadwal');
+            $table->foreignId('id_rute')->references('id')->on('rute');
+        });
     }
 
     /**
