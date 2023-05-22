@@ -25,16 +25,6 @@ return new class extends Migration
             $table->string('level');
             $table->timestamps();
         });
-
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('user_jadwal');
-            $table->foreignId('id_users')->references('id')->on('users');
-        });
-
-        Schema::table('transaksi', function (Blueprint $table) {
-            $table->dropColumn('transaksi_user');
-            $table->foreignId('id_user')->references('id')->on('user');
-        });
     }
 
     /**

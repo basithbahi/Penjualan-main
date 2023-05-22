@@ -19,11 +19,6 @@ return new class extends Migration
             $table->string('nama_stasiun');
             $table->timestamps();
         });
-
-        Schema::table('rute', function (Blueprint $table) {
-            $table->dropColumn('rute_stasiun');
-            $table->foreignId('id_stasiun')->references('id')->on('stasiun');
-        });
     }
 
     /**
