@@ -27,6 +27,7 @@ class RuteController extends Controller
         $data = [
             'id_rute' => $request->id_rute,
             'id_stasiun' => $request->id_stasiun,
+            'stasiun_keberangkatan' => $request->stasiun_keberangkatan,
             'stasiun_tujuan' => $request->stasiun_tujuan,
         ];
 
@@ -48,6 +49,7 @@ class RuteController extends Controller
         $data = [
             'id_rute' => $request->id_rute,
             'id_stasiun' => $request->id_stasiun,
+            'stasiun_keberangkatan' => $request->stasiun_keberangkatan,
             'stasiun_tujuan' => $request->stasiun_tujuan,
         ];
 
@@ -71,6 +73,7 @@ class RuteController extends Controller
             $data = Rute::with('stasiun')
                 ->where('id_rute', 'like', "%$query%")
                 ->orWhere('id_stasiun', 'like', "%$query%")
+                ->orWhere('stasiun_keberangkatan', 'like', "%$query%")
                 ->orWhere('stasiun_tujuan', 'like', "%$query%")
                 ->orderBy('id_rute', 'asc')
                 ->paginate(10);

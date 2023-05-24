@@ -43,7 +43,7 @@
             <span>Kursi</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('kereta') }}">
+        <a class="nav-link" href="{{ route('jadwal') }}">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Jadwal Kereta Api</span></a>
     </li>

@@ -28,9 +28,9 @@ return new class extends Migration
 
         Schema::table('jadwal', function (Blueprint $table) {
             $table->dropColumn('user_jadwal');
-            $table->foreignId('id_users')->references('id')->on('users');
+            $table->foreignId('nik')->references('id')->on('users');
         });
-    }
+    } 
 
     /**
      * Reverse the migrations.

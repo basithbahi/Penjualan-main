@@ -24,16 +24,16 @@ class JadwalController extends Controller
         $users = User::get();
 
 
-        return view('jadwal.form', ['kereta' => $kereta],['rute' => $rute],['users' => $users]);
+        return view('jadwal.form', ['kereta' => $kereta, 'rute' => $rute, 'users' => $users]);
     }
 
     public function simpan(Request $request)
     {
         $data = [
             'id_jadwal' => $request->id_jadwal,
-            'user_jadwal' => $request->user_jadwal,
-            'jadwal_kereta' => $request->jadwal_kereta,
-            'rute_jadwal' => $request->rute_jadwal,
+            'nik' => $request->nik,
+            'id_kereta' => $request->id_kereta,
+            'id_rute' => $request->id_rute,
         ];
 
         Jadwal::create($data);
@@ -48,7 +48,7 @@ class JadwalController extends Controller
         $rute   = Rute::get();
         $users = User::get();
 
-        return view('jadwal.form', ['jadwal' => $jadwal], ['kereta' => $kereta],['rute' => $rute],['users' => $users]);
+        return view('jadwal.form', ['jadwal' => $jadwal , 'kereta' => $kereta , 'rute' => $rute , 'users' => $users]);
     }
 
     public function update($id, Request $request)
