@@ -20,15 +20,6 @@ return new class extends Migration
             $table->string('jenis_kereta');
             $table->timestamps();
         });
-
-        Schema::table('gerbong', function (Blueprint $table) {
-            $table->dropColumn('gerbong_kereta');
-            $table->foreignId('id_kereta')->references('id')->on('kereta');
-        });
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('jadwal_kereta');
-            $table->foreignId('id_kereta')->references('id')->on('kereta');
-        });
     }
 
     /**

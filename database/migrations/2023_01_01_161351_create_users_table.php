@@ -25,12 +25,7 @@ return new class extends Migration
             $table->string('level');
             $table->timestamps();
         });
-
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('user_jadwal');
-            $table->foreignId('nik')->references('id')->on('users');
-        });
-    } 
+    }
 
     /**
      * Reverse the migrations.

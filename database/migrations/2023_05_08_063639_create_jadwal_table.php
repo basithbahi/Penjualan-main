@@ -16,8 +16,10 @@ return new class extends Migration
         Schema::create('jadwal', function (Blueprint $table) {
             $table->id();
             $table->string('id_jadwal')->nullable();
+            $table->foreignId('id_users')->references('id')->on('users');
+            $table->foreignId('id_kereta')->references('id')->on('kereta');
+            $table->foreignId('id_rute')->references('id')->on('rute');
             $table->timestamps();
-
         });
     }
 
