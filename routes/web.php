@@ -31,6 +31,7 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'loginAksi')->name('login.aksi');
 
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
+    
 });
 
 
@@ -142,4 +143,7 @@ Route::middleware('auth')->group(function () {
     Route::get('home', function () {
         return view('home');
     })->name('home');
+    Route::get('cekKodeBooking', function () {
+        return view('cekKodeBooking');
+    })->name('cekKodeBooking');
 });
