@@ -13,6 +13,14 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function show($id)
+    {
+        $user = User::find($id);
+
+        return view('user.show', ['user' => $user]);
+    }
+
     public function index()
     {
         $user = User::get();
@@ -27,6 +35,11 @@ class UserController extends Controller
 
     public function simpan(Request $request)
     {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         User::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -35,9 +48,9 @@ class UserController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
             'level' => 'User'
         ]);
-
         return redirect()->route('user');
     }
 
@@ -50,6 +63,11 @@ class UserController extends Controller
 
     public function update($id, Request $request)
     {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         User::find($id)->update([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -58,6 +76,7 @@ class UserController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
         ]);
 
         return redirect()->route('user');
@@ -65,20 +84,20 @@ class UserController extends Controller
 
     public function hapus($id)
     {
-        /**try {
-            $admin = Admin::find($id);
+        // try {
+        //     $user = User::find($id);
 
-            if ($admin->jadwal()->exists()) {
-                throw new GlobalException("Tidak dapat menghapus admin yang masih memiliki jadwal terkait.");
-            }
+        //     if ($user->jadwal()->exists()) {
+        //         throw new GlobalException("Tidak dapat menghapus user yang masih memiliki jadwal terkait.");
+        //     }
 
-            $admin->delete();
+        //     $user->delete();
 
-            return redirect()->route('admin')->with('success', 'Data admin berhasil dihapus');
-        } catch (FFIException $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
+        //     return redirect()->route('user')->with('success', 'Data user berhasil dihapus');
+        // } catch (FFIException $e) {
+        //     return redirect()->back()->withErrors([$e->getMessage()]);
 
-        }*/
+        // }
         User::find($id)->delete();
 
         return redirect()->route('user');
@@ -93,7 +112,7 @@ class UserController extends Controller
                 ->where('nik', 'like', "%$query%")
                 ->orWhere('nama', 'like', "%$query%")
                 ->orWhere('alamat', 'like', "%$query%")
-                ->orderBy('nik', 'asc')
+                ->orderBy('jk', 'asc')
                 ->paginate(10);
         } else {
             $user = User::get();

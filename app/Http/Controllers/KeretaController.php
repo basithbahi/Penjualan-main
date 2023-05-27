@@ -52,22 +52,30 @@ class KeretaController extends Controller
     }
 
     public function hapus($id)
-    {
-        try {
-            $kereta = Kereta::find($id);
+{
+    try {
+        $kereta = Kereta::find($id);
 
-            // cek apakah kereta memiliki relasi dengan gerbong
-            if ($kereta->gerbong()->exists()) {
-                throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
-            }
+        // cek jumlah kereta
+        $jumlahKereta = Kereta::count();
 
-            $kereta->delete();
-
-            return redirect()->route('kereta')->with('success', 'Data kereta berhasil dihapus');
-        } catch (FFIException $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
+        // cek apakah kereta memiliki relasi dengan gerbong
+        if ($kereta->gerbong()->exists()) {
+            throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
         }
+
+        // cek apakah jumlah kereta lebih dari satu
+        if ($jumlahKereta > 1) {
+            $kereta->delete();
+            return redirect()->route('kereta')->with('success', 'Data kereta berhasil dihapus');
+        } else {
+            throw new GlobalException("Tidak dapat menghapus kereta karena hanya terdapat satu kereta.");
+        }
+    } catch (GlobalException $e) {
+        return redirect()->back()->withErrors([$e->getMessage()]);
     }
+}
+
 
     public function search(Request $request)
     {

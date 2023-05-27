@@ -10,6 +10,7 @@ use App\Http\Controllers\KursiController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
 use App\Http\Controllers\MetodePembayaranController;
+use App\Http\Controllers\TransaksiController;
 use Illuminate\Support\Facades\Route;
 
 /*

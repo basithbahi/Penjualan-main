@@ -20,9 +20,8 @@ class JadwalController extends Controller
     public function tambah()
     {
         $kereta = Kereta::get();
-        $rute   = Rute::get();
+        $rute = Rute::get();
         $users = User::get();
-
 
         return view('jadwal.form', ['kereta' => $kereta, 'rute' => $rute, 'users' => $users]);
     }
@@ -45,19 +44,20 @@ class JadwalController extends Controller
     {
         $jadwal = Jadwal::find($id);
         $kereta = Kereta::get();
-        $rute   = Rute::get();
+        $rute = Rute::get();
         $users = User::get();
 
-        return view('jadwal.form', ['jadwal' => $jadwal , 'kereta' => $kereta , 'rute' => $rute , 'users' => $users]);
+        return view('jadwal.form', ['jadwal' => $jadwal, 'kereta' => $kereta, 'rute' => $rute, 'users' => $users]);
+
     }
 
     public function update($id, Request $request)
     {
         $data = [
             'id_jadwal' => $request->id_jadwal,
-            'user_jadwal' => $request->user_jadwal,
-            'jadwal_kereta' => $request->jadwal_kereta,
-            'rute_jadwal' => $request->rute_jadwal,
+            'nik' => $request->nik, // Ganti dengan nama input yang sesuai
+            'id_kereta' => $request->id_kereta,
+            'id_rute' => $request->id_rute,
         ];
 
         Jadwal::find($id)->update($data);
@@ -77,11 +77,11 @@ class JadwalController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-            $data = Jadwal::with('kereta','users','rute')
+            $data = Jadwal::with('kereta', 'users', 'rute')
                 ->where('id_jadwal', 'like', "%$query%")
                 ->paginate(10);
         } else {
-            $data = Jadwal::with('kereta','users','rute')->get();
+            $data = Jadwal::with('kereta', 'users', 'rute')->get();
         }
 
         return view('jadwal.index', ['data' => $data, 'query' => $query]);

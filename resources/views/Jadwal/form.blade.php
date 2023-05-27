@@ -18,16 +18,14 @@
               <input type="text" class="form-control" id="id_jadwal" name="id_jadwal" value="{{ isset($jadwal) ? $jadwal->id_jadwal : '' }}">
             </div>
             <div class="form-group">
-              <label for="user_jadwal">Admin</label>
-							<select name="nik" id="nik" class="custom-select">
-								<option value="" selected disabled hidden>-- Admin --</option>
-								@foreach ($users->where('level', 'Admin') as $row)
-                <option value="{{ $row->id }}" {{ isset($jadwal) ? ($jadwal->nik == $row->id ? 'selected' : '') : '' }}>
-                  {{ $row->nama}}
-                </option>
-              @endforeach
-							</select>
-            </div>
+            <label for="user_jadwal">Admin</label>
+            <select name="nik" id="nik" class="custom-select">
+              <option value="" selected disabled hidden>-- Admin --</option>
+              <option value="{{ auth()->user()->id }}" selected>
+                {{ auth()->user()->nama }}
+              </option>
+            </select>
+          </div>
             <div class="form-group">
               <label for="jadwal_kereta">Jadwal Kereta</label>
 							<select name="id_kereta" id="id_kereta" class="custom-select">
@@ -45,7 +43,7 @@
 								<option value="" selected disabled hidden>-- Pilih Rute --</option>
 								@foreach ($rute as $row)
 									<option value="{{ $row->id }}" {{ isset($jadwal) ? ($jadwal->id_rute == $row->id ? 'selected' : '') : '' }}>
-                    {{ $row->stasiun->id_stasiun }} - {{ $row->stasiun_tujuan }}
+                    {{ $row->stasiun->nama_stasiun }} - {{ $row->stasiun_tujuan }}
                   </option>
 								@endforeach
 							</select>

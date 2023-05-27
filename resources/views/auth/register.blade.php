@@ -108,6 +108,11 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="image">Foto Profil</label>
+                                        <input type="file" class="form-control" name="image"
+                                        value="{{ isset($user) ? $user->image : '' }}"></br>
+                                </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Register
                                     Account</button>
                             </form>

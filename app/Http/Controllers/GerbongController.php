@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Gerbong;
 use App\Models\Kereta;
+use Exception as GlobalException;
 use Illuminate\Http\Request;
 
 class GerbongController extends Controller
@@ -58,11 +59,28 @@ class GerbongController extends Controller
 
     public function hapus($id)
     {
-        Gerbong::find($id)->delete();
-
-        return redirect()->route('gerbong');
+        try {
+            $gerbong = Gerbong::find($id);
+    
+            // cek jumlah gerbong
+            $jumlahGerbong = Gerbong::count();
+    
+            // cek apakah gerbong memiliki relasi dengan kursi
+            if ($gerbong->kursi()->exists()) {
+                throw new GlobalException("Tidak dapat menghapus gerbong yang masih memiliki kursi terkait.");
+            }
+    
+            // cek apakah jumlah kereta lebih dari satu
+            if ($jumlahGerbong > 1) {
+                $gerbong->delete();
+                return redirect()->route('gerbong')->with('success', 'Data gerbong berhasil dihapus');
+            } else {
+                throw new GlobalException("Tidak dapat menghapus gerbong karena hanya terdapat satu gerbong.");
+            }
+        } catch (GlobalException $e) {
+            return redirect()->back()->withErrors([$e->getMessage()]);
+        }
     }
-
     public function search(Request $request)
     {
         $query = $request->input('query');

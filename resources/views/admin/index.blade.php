@@ -26,16 +26,17 @@
               <th>NIK</th>
               <th>Nama</th>
               <th>Alamat</th>
-              <th>TTl</th>
-              <th>JK</th>
+              <th>Tanggal Lahir</th>
+              <th>Jenis Kelamin</th>
               <th>Email</th>
               <th>Password</th>
+              <th>foto profil</th>
               <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
-          @php($no = 1)
-          @foreach (DB::table('users')->where('level', 'Admin')->get() as $row)
+            @php($no = 1)
+            @foreach (DB::table('users')->where('level', 'Admin')->get() as $row)
               <tr>
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->nik }}</td>
@@ -45,10 +46,11 @@
                 <td>{{ $row->jk }}</td>
                 <td>{{ $row->email }}</td>
                 <td>{{ $row->password }}</td>
+                <td>{{ $row->foto_profil }}</td>
                 <td>
                     <a href="{{ route('admin.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
                     <a href="{{ route('admin.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
-            </td>
+                </td>
               </tr>
             @endforeach
           </tbody>

@@ -27,6 +27,11 @@ class AdminController extends Controller
 
     public function simpan(Request $request)
     {
+        $image_name='';
+        if($request->file('image')){
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         Admin::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -35,6 +40,7 @@ class AdminController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
             'level' => 'Admin'
         ]);
 
@@ -50,6 +56,11 @@ class AdminController extends Controller
 
     public function update($id, Request $request)
     {
+        $image_name='';
+        if($request->file('image')){
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+        
         Admin::find($id)->update([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -58,18 +69,36 @@ class AdminController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
         ]);
 
         return redirect()->route('admin');
     }
-
-    public function hapus($id)
-    {
-        Admin::find($id)->delete();
-
-            return redirect()->route('admin');
-    }
-
+        public function hapus($id)
+        {
+            try {
+                $admin = Admin::find($id);
+        
+                // cek jumlah admin dengan level Admin
+                $jumlahAdmin = Admin::where('level', 'Admin')->count();
+        
+                // cek apakah admin memiliki level Admin
+                if ($admin->level != 'Admin') {
+                    throw new GlobalException("Tidak dapat menghapus admin dengan level bukan Admin.");
+                }
+        
+                // cek apakah jumlah admin dengan level Admin lebih dari satu
+                if ($jumlahAdmin > 1) {
+                    $admin->delete();
+                    return redirect()->route('admin')->with('success', 'Data admin berhasil dihapus');
+                } else {
+                    throw new GlobalException("Tidak dapat menghapus admin karena hanya terdapat satu admin dengan level Admin.");
+                }
+            } catch (GlobalException $e) {
+                return redirect()->back()->withErrors([$e->getMessage()]);
+            }
+        }
+        
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -79,7 +108,7 @@ class AdminController extends Controller
                 ->where('nik', 'like', "%$query%")
                 ->orWhere('nama', 'like', "%$query%")
                 ->orWhere('alamat', 'like', "%$query%")
-                ->orderBy('nik', 'asc')
+                ->orderBy('jk', 'asc')
                 ->paginate(10);
         } else {
             $admin = Admin::get();

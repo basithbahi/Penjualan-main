@@ -52,16 +52,23 @@ class StasiunController extends Controller
     {
         try {
             $stasiun = Stasiun::find($id);
-
-            // cek apakah kereta memiliki relasi dengan gerbong
+    
+            // cek jumlah gerbong
+            $jumlahStasiun = Stasiun::count();
+    
+            // cek apakah stasiun memiliki relasi dengan rute
             if ($stasiun->rute()->exists()) {
-                throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
+                throw new GlobalException("Tidak dapat menghapus stasiun yang masih memiliki rute terkait.");
             }
-
-            $stasiun->delete();
-
-            return redirect()->route('stasiun')->with('success', 'Data stasiun berhasil dihapus');
-        } catch (FFIException $e) {
+    
+            // cek apakah jumlah kereta lebih dari satu
+            if ($jumlahStasiun > 1) {
+                $stasiun->delete();
+                return redirect()->route('stasiun')->with('success', 'Data stasiun berhasil dihapus');
+            } else {
+                throw new GlobalException("Tidak dapat menghapus gerbong karena hanya terdapat satu gerbong.");
+            }
+        } catch (GlobalException $e) {
             return redirect()->back()->withErrors([$e->getMessage()]);
         }
     }

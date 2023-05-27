@@ -12,6 +12,8 @@ use App\Models\Rute;
 use App\Models\Stasiun;
 use App\Models\Transaksi;
 use App\Models\User;
+use App\Models\Jadwal;
+use App\Models\RiwayatTransaksi;
 use App\Http\Controllers\Exception;
 use Exception as GlobalException;
 use FFI\Exception as FFIException;
@@ -41,7 +43,6 @@ class TransaksiController extends Controller
             'id_user' => $request->id_user,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'waktu' => $request->waktu,
         ];
 
         Transaksi::create($data);
@@ -56,8 +57,7 @@ class TransaksiController extends Controller
         $id_jadwal = Jadwal::get();
         $id_metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'id_jadwal'
-        => $id_jadwal, 'id_metode_pembayaran' => $id_metode_pembayaran]);
+        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'id_jadwal' => $id_jadwal, 'id_metode_pembayaran' => $id_metode_pembayaran]);
     }
 
     public function update($id, Request $request)
@@ -67,7 +67,6 @@ class TransaksiController extends Controller
             'id_user' => $request->id_user,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'waktu' => $request->waktu,
         ];
 
         Transaksi::find($id)->update($data);

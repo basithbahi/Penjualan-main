@@ -17,24 +17,20 @@
         </form>
       </div>
 
-
     <div class="card-body">
 			@if (auth()->user()->level == 'Admin')
       <a href="{{ route('transaksi.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Transaksi</a>
 			@endif
-
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             @if (auth()->user()->level == 'Admin')
             <tr>
               <th>No</th>
-              <th>ID Transaksi</th>
+              <th>Invoice</th>
               <th>User</th>
-              <th>Jenis Cucian</th>
-              <th>Tipe Laundry</th>
-              <th>Jenis Pencuci</th>
-              <th>Berat Cucian (Kg)</th>
+              <th>Metode Pembayaran</th>
+              <th>Jadwal Kereta Api</th>
               <th>Total Harga</th>
               <th>Aksi</th>
 				@endif
@@ -47,18 +43,16 @@
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->invoice }}</td>
                 <td>{{ $row->user->nama }}</td>
-                <td>{{ $row->jenis_cucian->jenis_cucian }}</td>
-                <td>{{ $row->tipe_laundry->tipe_laundry }}</td>
-                <td>{{ $row->jenis_pencuci->jenis_pencuci }}</td>
-                <td>{{ $row->berat_cucian}}</td>
-                <td>Rp{{ number_format(($row->berat_cucian * $row->jenis_cucian->harga) + ($row->berat_cucian * $row->tipe_laundry->harga) + ($row->berat_cucian * $row->jenis_pencuci->harga)) }}</td>
-				@if (auth()->user()->level == 'Admin')
+                <td>{{ $row->metode_pembayaran->metode_pembayaran}}</td>
+                <td>{{ $row->jadwal->jadwal_kereta }}</td>
+                <td>{{ $row->total_bayar}}</td>
+				        @if (auth()->user()->level == 'Admin')
                     <td>
                         <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
                         <a href="{{ route('transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
-                        <a href="{{ route('transaksi.bayar', $row->id) }}" class="btn btn-info"><i class="fas fa-money-bill "></i></a>
                     </td>
-				@endif
+                @else
+                @endif
               </tr>
             @endforeach
           </tbody>

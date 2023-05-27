@@ -19,7 +19,7 @@ class Jadwal extends Model
 
     public function admin()
     {
-        return $this->belongsTo(Admin::class, 'nik');
+        return $this->belongsTo(Admin::class, 'id');
     }
 
     public function rute()

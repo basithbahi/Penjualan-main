@@ -3,7 +3,7 @@
 @section('title', 'Form Admin')
 
 @section('contents')
-  <form action="{{ isset($admin) ? route('admin.tambah.update', $admin->id) : route('admin.tambah.simpan') }}" method="post">
+  <form action="{{ isset($admin) ? route('admin.tambah.update', $admin->id) : route('admin.tambah.simpan') }}" method="post" enctype="multipart/form-data">
     @csrf
     <div class="row">
       <div class="col-12">
@@ -35,7 +35,7 @@
             </div>
             <div class="form-group">
               <label for="jk">jk</label>
-               <div class="form-control form-control-user" style="font-size: 14px;">
+              <div class="form-control form-control-user" style="font-size: 14px;">
                                         <input class="form-control-input" type="radio" name="jk" id="inlineRadio1" value="Pria">
                                         <label class="form-control-label" for="inlineRadio1">Pria</label> &nbsp;&nbsp;&nbsp;&nbsp;
                                         <input class="form-control-input" type="radio" name="jk" id="inlineRadio2" value="Wanita">
@@ -48,6 +48,11 @@
             <div class="form-group">
               <label for="password">Password</label>
               <input type="text" class="form-control" id="password" name="password" value="{{ isset($admin) ? $admin->password : '' }}">
+            </div>
+            <div class="form-group">
+                            <label for="image">Foto Profil</label>
+                            <input type="file" class="form-control" name="image"
+                                value="{{ isset($admin) ? $admin->image : '' }}"><br>
             </div>
           </div>
           <div class="card-footer">
