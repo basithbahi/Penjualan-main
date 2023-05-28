@@ -16,9 +16,9 @@ class RuteSeeder extends Seeder
     public function run()
     {
         DB::table('rute')->insert([
-            ['id_rute' => 'PW02', 'id_stasiun' => '1', 'stasiun_tujuan' => 'Purwekerto', 'harga' => 20000],
-            ['id_rute' => 'PW03', 'id_stasiun' => '2', 'stasiun_tujuan' => 'Gambir', 'harga' => 25000],
-            ['id_rute' => 'PW04', 'id_stasiun' => '3', 'stasiun_tujuan' => 'Yogyakarta', 'harga' => 23000],
+            ['id_rute' => 'PW02', 'id_stasiun' => '1', 'stasiun_tujuan' => 'Purwekerto'],
+            ['id_rute' => 'PW03', 'id_stasiun' => '2', 'stasiun_tujuan' => 'Gambir'],
+            ['id_rute' => 'PW04', 'id_stasiun' => '3', 'stasiun_tujuan' => 'Yogyakarta'],
         ]);
     }
 }
