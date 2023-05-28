@@ -22,23 +22,5 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        DB::table('barang')->insertOrIgnore([
-            [
-                'id' => 1,
-                'kode_barang' => 'BRG0001',
-                'nama_barang' => 'Aqua Gelas',
-                'kategori_barang' => 'Minuman',
-                'harga' => '2500',
-                'jumlah' => 50
-            ],
-            [
-                'id' => 2,
-                'kode_barang' => 'BRG0002',
-                'nama_barang' => 'Baju',
-                'kategori_barang' => 'Pakaian',
-                'harga' => '50000',
-                'jumlah' => 2
-            ]
-        ]);
     }
 }
