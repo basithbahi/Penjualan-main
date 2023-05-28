@@ -41,15 +41,15 @@
                   </div>
                   <form action="{{ route('login.aksi') }}" method="POST" class="user">
                     @csrf
-										@if ($errors->any())
-										<div class="alert alert-danger">
-											<ul>
-												@foreach ($errors->all() as $error)
-												<li>{{ $error }}</li>
-												@endforeach
-											</ul>
-										</div>
-										@endif
+                    @if ($errors->any())
+                      <div class="alert alert-danger">
+                        <ul>
+                          @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                          @endforeach
+                        </ul>
+                      </div>
+                    @endif
                     <div class="form-group">
                       <input name="email" type="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukkan Alamat E-mail">
                     </div>
@@ -59,8 +59,7 @@
                     <div class="form-group">
                       <div class="custom-control custom-checkbox small">
                         <input name="remember" type="checkbox" class="custom-control-input" id="customCheck">
-                        <label class="custom-control-label" for="customCheck">Remember
-                          Me</label>
+                        <label class="custom-control-label" for="customCheck">Remember Me</label>
                       </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>

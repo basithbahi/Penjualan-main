@@ -16,14 +16,10 @@ return new class extends Migration
         Schema::create('rute', function (Blueprint $table) {
             $table->id();
             $table->string('id_rute')->nullable();
-            $table->string('stasiun_keberangkatan')->nullable();
+            $table->foreignId('id_stasiun')->references('id')->on('stasiun');
             $table->string('stasiun_tujuan')->nullable();
+            $table->double('harga');
             $table->timestamps();
-        });
-
-        Schema::table('jadwal', function (Blueprint $table) {
-            $table->dropColumn('rute_jadwal');
-            $table->foreignId('id_rute')->references('id')->on('rute');
         });
     }
 

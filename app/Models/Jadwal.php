@@ -10,16 +10,16 @@ class Jadwal extends Model
     use HasFactory;
     protected $table = 'jadwal';
 
-    protected $fillable = ['id_jadwal', 'id_user', 'id_kereta', 'id_rute'];
+    protected $fillable = ['id_jadwal', 'nik', 'id_kereta', 'id_rute'];
 
     public function kereta()
     {
         return $this->belongsTo(Kereta::class, 'id_kereta');
     }
 
-    public function user()
+    public function admin()
     {
-        return $this->belongsTo(Users::class, 'id_user');
+        return $this->belongsTo(Admin::class, 'id');
     }
 
     public function rute()

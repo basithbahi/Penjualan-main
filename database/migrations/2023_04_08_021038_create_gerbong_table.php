@@ -17,13 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('id_gerbong')->nullable();
             $table->string('nama_gerbong')->nullable();
-            $table->string('gerbong_kereta')->nullable();
+            $table->foreignId('id_kereta')->references('id')->on('kereta');
             $table->timestamps();
-        });
-
-        Schema::table('kursi', function (Blueprint $table) {
-            $table->dropColumn('kursi_gerbong');
-            $table->foreignId('id_gerbong')->references('id')->on('gerbong');
         });
     }
 

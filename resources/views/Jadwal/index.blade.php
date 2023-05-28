@@ -19,9 +19,9 @@
 
 
     <div class="card-body">
-			@if (auth()->user()->level == 'Admin')
+      @if (auth()->user()->level == 'Admin')
       <a href="{{ route('jadwal.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah jadwal</a>
-			@endif
+      @endif
 
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -32,9 +32,9 @@
               <th>Admin</th>
               <th>Jadwal Kereta</th>
               <th>Jadwal Rute</th>
-			    @if (auth()->user()->level == 'Admin')
-                    <th>Aksi</th>
-				@endif
+              @if (auth()->user()->level == 'Admin')
+              <th>Aksi</th>
+              @endif
             </tr>
           </thead>
           <tbody>
@@ -43,15 +43,15 @@
               <tr>
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->id_jadwal }}</td>
-                <td>{{ $row->nama_jadwal }}</td>
+                <td>{{ $row->nik }}</td>
                 <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
-                <td>{{ $row->rute_jadwal }}</td>
-				@if (auth()->user()->level == 'Admin')
-                    <td>
-                        <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
-                        <a href="{{ route('jadwal.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
-                    </td>
-				@endif
+                <td>{{ $row->rute->stasiun->nama_stasiun }} -{{ $row->rute->stasiun_tujuan }}</td>
+                @if (auth()->user()->level == 'Admin')
+                <td>
+                    <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                    <a href="{{ route('jadwal.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
+                </td>
+                @endif
               </tr>
             @endforeach
           </tbody>

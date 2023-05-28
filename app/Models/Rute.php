@@ -11,7 +11,7 @@ class Rute extends Model
 
     protected $table = 'rute';
 
-    protected $fillable = ['id_rute', 'id_stasiun', 'stasiun_tujuan'];
+    protected $fillable = ['id_rute', 'id_stasiun', 'stasiun_tujuan', 'harga'];
 
     public function stasiun()
     {

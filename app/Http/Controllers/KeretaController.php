@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kereta;
-use App\Http\Controllers\Exception;
 use Exception as GlobalException;
-use FFI\Exception as FFIException;
 use Illuminate\Http\Request;
 
 class KeretaController extends Controller
@@ -28,6 +26,7 @@ class KeretaController extends Controller
             'id_kereta' => $request->id_kereta,
             'nama_kereta' => $request->nama_kereta,
             'jenis_kereta' => $request->jenis_kereta,
+            'harga' => $request->harga,
         ]);
 
         return redirect()->route('kereta');
@@ -46,6 +45,7 @@ class KeretaController extends Controller
             'id_kereta' => $request->id_kereta,
             'nama_kereta' => $request->nama_kereta,
             'jenis_kereta' => $request->jenis_kereta,
+            'harga' => $request->harga,
         ]);
 
         return redirect()->route('kereta');
@@ -56,18 +56,26 @@ class KeretaController extends Controller
         try {
             $kereta = Kereta::find($id);
 
+            // cek jumlah kereta
+            $jumlahKereta = Kereta::count();
+
             // cek apakah kereta memiliki relasi dengan gerbong
             if ($kereta->gerbong()->exists()) {
                 throw new GlobalException("Tidak dapat menghapus kereta yang masih memiliki gerbong terkait.");
             }
 
-            $kereta->delete();
-
-            return redirect()->route('kereta')->with('success', 'Data kereta berhasil dihapus');
-        } catch (FFIException $e) {
+            // cek apakah jumlah kereta lebih dari satu
+            if ($jumlahKereta > 1) {
+                $kereta->delete();
+                return redirect()->route('kereta')->with('success', 'Data kereta berhasil dihapus');
+            } else {
+                throw new GlobalException("Tidak dapat menghapus kereta karena hanya terdapat satu kereta.");
+            }
+        } catch (GlobalException $e) {
             return redirect()->back()->withErrors([$e->getMessage()]);
         }
     }
+
 
     public function search(Request $request)
     {
