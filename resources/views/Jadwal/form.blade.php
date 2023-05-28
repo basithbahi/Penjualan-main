@@ -52,6 +52,11 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="harga">Harga</label>
+                            <input type="text" class="form-control" id="harga" name="harga"
+                                value="{{ isset($jadwal) ? $jadwal->harga : '' }}">
+                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>

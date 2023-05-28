@@ -22,6 +22,7 @@ class CreateJadwalTable extends Migration
             $table->foreign('id_kereta')->references('id')->on('kereta');
             $table->unsignedBigInteger('id_rute');
             $table->foreign('id_rute')->references('id')->on('rute');
+            $table->double('harga');
             $table->timestamps();
         });
     }

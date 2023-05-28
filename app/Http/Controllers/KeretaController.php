@@ -26,7 +26,6 @@ class KeretaController extends Controller
             'id_kereta' => $request->id_kereta,
             'nama_kereta' => $request->nama_kereta,
             'jenis_kereta' => $request->jenis_kereta,
-            'harga' => $request->harga,
         ]);
 
         return redirect()->route('kereta');
@@ -45,7 +44,6 @@ class KeretaController extends Controller
             'id_kereta' => $request->id_kereta,
             'nama_kereta' => $request->nama_kereta,
             'jenis_kereta' => $request->jenis_kereta,
-            'harga' => $request->harga,
         ]);
 
         return redirect()->route('kereta');

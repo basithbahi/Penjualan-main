@@ -33,6 +33,7 @@ class JadwalController extends Controller
             'nik' => $request->nik,
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
+            'harga' => $request->harga,
         ];
 
         Jadwal::create($data);
@@ -48,7 +49,6 @@ class JadwalController extends Controller
         $users = User::get();
 
         return view('jadwal.form', ['jadwal' => $jadwal, 'kereta' => $kereta, 'rute' => $rute, 'users' => $users]);
-
     }
 
     public function update($id, Request $request)
@@ -58,6 +58,7 @@ class JadwalController extends Controller
             'nik' => $request->nik, // Ganti dengan nama input yang sesuai
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
+            'harga' => $request->harga,
         ];
 
         Jadwal::find($id)->update($data);

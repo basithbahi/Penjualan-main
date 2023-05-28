@@ -34,11 +34,6 @@
                             <input type="text" class="form-control" id="stasiun_tujuan" name="stasiun_tujuan"
                                 value="{{ isset($rute) ? $rute->stasiun_tujuan : '' }}">
                         </div>
-                        <div class="form-group">
-                            <label for="harga">Harga Perjalanan</label>
-                            <input type="text" class="form-control" id="harga" name="harga"
-                                value="{{ isset($rute) ? $rute->harga : '' }}">
-                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>

@@ -32,6 +32,7 @@
               <th>Admin</th>
               <th>Jadwal Kereta</th>
               <th>Jadwal Rute</th>
+              <th>Harga Perjalanan</th>
               @if (auth()->user()->level == 'Admin')
               <th>Aksi</th>
               @endif
@@ -46,6 +47,7 @@
                 <td>{{ $row->nik }}</td>
                 <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
                 <td>{{ $row->rute->stasiun->nama_stasiun }} -{{ $row->rute->stasiun_tujuan }}</td>
+                <td>{{ $row->harga }}</td>
                 @if (auth()->user()->level == 'Admin')
                 <td>
                     <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>

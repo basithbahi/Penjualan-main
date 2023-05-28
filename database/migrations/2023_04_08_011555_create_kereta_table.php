@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('id_kereta');
             $table->string('nama_kereta');
             $table->string('jenis_kereta');
-            $table->double('harga');
             $table->timestamps();
         });
     }

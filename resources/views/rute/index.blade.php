@@ -30,7 +30,6 @@
                             <th>ID Rute</th>
                             <th>Stasiun Keberangkatan</th>
                             <th>Stasiun Tujuan</th>
-                            <th>Harga</th>
                             @if (auth()->user()->level == 'Admin')
                                 <th>Aksi</th>
                             @endif
@@ -44,7 +43,6 @@
                                 <td>{{ $row->id_rute }}</td>
                                 <td>{{ $row->stasiun->nama_stasiun }}</td>
                                 <td>{{ $row->stasiun_tujuan }}</td>
-                                <td>{{ $row->harga }}</td>
                                 @if (auth()->user()->level == 'Admin')
                                     <td>
                                         <a href="{{ route('rute.edit', $row->id) }}" class="btn btn-warning">Edit

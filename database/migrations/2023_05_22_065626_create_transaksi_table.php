@@ -13,13 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        
+
         Schema::create('transaksi', function (Blueprint $table) {
             $table->id();
             $table->string('invoice')->nullable();
-            $table->foreignId('id_user')->references('id')->on('users');
+            $table->foreignId('nik')->references('id')->on('users');
             $table->foreignId('id_metode_pembayaran')->references('id')->on('metode_pembayaran');
             $table->foreignId('id_jadwal')->references('id')->on('jadwal');
+            $table->foreignId('id_kursi')->references('id')->on('kursi');
             $table->timestamps();
         });
     }

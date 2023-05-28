@@ -11,7 +11,7 @@ class Kereta extends Model
 
     protected $table = 'kereta';
 
-    protected $fillable = ['id_kereta', 'nama_kereta', 'jenis_kereta', 'harga'];
+    protected $fillable = ['id_kereta', 'nama_kereta', 'jenis_kereta'];
 
     public function gerbong()
     {

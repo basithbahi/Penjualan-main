@@ -26,7 +26,6 @@
               <th>ID Kereta</th>
               <th>Nama Kereta</th>
               <th>Jenis Kereta</th>
-              <th>Harga Perjalanan</th>
               <th>Aksi</th>
             </tr>
           </thead>
@@ -38,7 +37,6 @@
                 <td>{{ $row->id_kereta }}</td>
                 <td>{{ $row->nama_kereta }}</td>
                 <td>{{ $row->jenis_kereta }}</td>
-                <td>{{ $row->harga }}</td>
                 <td>
                     <a href="{{ route('kereta.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
                     <a href="{{ route('kereta.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>

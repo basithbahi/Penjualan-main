@@ -29,7 +29,6 @@ class RuteController extends Controller
             'id_stasiun' => $request->id_stasiun,
             'stasiun_keberangkatan' => $request->stasiun_keberangkatan,
             'stasiun_tujuan' => $request->stasiun_tujuan,
-            'harga' => $request->harga,
         ];
 
         Rute::create($data);
@@ -52,7 +51,6 @@ class RuteController extends Controller
             'id_stasiun' => $request->id_stasiun,
             'stasiun_keberangkatan' => $request->stasiun_keberangkatan,
             'stasiun_tujuan' => $request->stasiun_tujuan,
-            'harga' => $request->harga,
         ];
 
         Rute::find($id)->update($data);

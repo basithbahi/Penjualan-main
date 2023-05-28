@@ -56,6 +56,19 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <label for="id_kursi">Kursi</label>
+                            <select name="id_kursi" id="id_kursi" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Kursi --</option>
+                                @foreach ($kursi as $row)
+                                    <option value="{{ $row->id }}"
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_kursi ? 'selected' : '') : '' }}>
+                                        {{ $row->nama_kursi }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>

@@ -7,6 +7,7 @@ use App\Models\MetodePembayaran;
 use App\Models\Transaksi;
 use App\Models\User;
 use App\Models\Jadwal;
+use App\Models\Kursi;
 
 class TransaksiController extends Controller
 {
@@ -22,8 +23,9 @@ class TransaksiController extends Controller
         $user = User::get();
         $jadwal = Jadwal::get();
         $metode_pembayaran = MetodePembayaran::get();
+        $kursi = Kursi::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran,]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran, 'kursi' => $kursi]);
     }
 
     public function simpan(Request $request)
@@ -33,6 +35,7 @@ class TransaksiController extends Controller
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
+            'id_kursi' => $request->id_kursi,
         ];
 
         Transaksi::create($data);
@@ -44,10 +47,11 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::find($id);
         $user = User::get();
-        $id_jadwal = Jadwal::get();
-        $id_metode_pembayaran = MetodePembayaran::get();
+        $jadwal = Jadwal::get();
+        $metode_pembayaran = MetodePembayaran::get();
+        $kursi = Kursi::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'id_jadwal' => $id_jadwal, 'id_metode_pembayaran' => $id_metode_pembayaran]);
+        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran, 'kursi' => $kursi]);
     }
 
     public function update($id, Request $request)
@@ -57,6 +61,7 @@ class TransaksiController extends Controller
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
+            'id_kursi' => $request->id_kursi,
         ];
 
         Transaksi::find($id)->update($data);

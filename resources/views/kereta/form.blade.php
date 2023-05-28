@@ -39,11 +39,6 @@
                                 </option>
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="harga">Harga Perjalanan</label>
-                            <input type="text" class="form-control" id="harga" name="harga"
-                                value="{{ isset($kereta) ? $kereta->harga : '' }}">
-                        </div>
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
