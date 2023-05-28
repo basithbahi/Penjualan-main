@@ -16,8 +16,9 @@ class UserController extends Controller
     public function index()
     {
         $user = User::get();
+        $jumlahDataUser = User::where('level', 'user')->count();
 
-        return view('user/index', ['user' => $user]);
+        return view('user.index', compact('user', 'jumlahDataUser'));
     }
 
     public function tambah()
@@ -38,14 +39,14 @@ class UserController extends Controller
             'level' => 'User'
         ]);
 
-        return redirect()->route('user');
+        return redirect()->route('user.index');
     }
 
     public function edit($id)
     {
         $user = User::find($id);
 
-        return view('user.form', ['user' => $user]);
+        return view('user.form', compact('user'));
     }
 
     public function update($id, Request $request)
@@ -60,28 +61,14 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('user');
+        return redirect()->route('user.index');
     }
 
     public function hapus($id)
     {
-        /**try {
-            $admin = Admin::find($id);
-
-            if ($admin->jadwal()->exists()) {
-                throw new GlobalException("Tidak dapat menghapus admin yang masih memiliki jadwal terkait.");
-            }
-
-            $admin->delete();
-
-            return redirect()->route('admin')->with('success', 'Data admin berhasil dihapus');
-        } catch (FFIException $e) {
-            return redirect()->back()->withErrors([$e->getMessage()]);
-
-        }*/
         User::find($id)->delete();
 
-        return redirect()->route('user');
+        return redirect()->route('user.index');
     }
 
     public function search(Request $request)
@@ -99,6 +86,8 @@ class UserController extends Controller
             $user = User::get();
         }
 
-        return view('user.index', ['user' => $user, 'query' => $query]);
+        $jumlahDataUser = User::where('level', 'user')->count();
+
+        return view('user.index', compact('user', 'query', 'jumlahDataUser'));
     }
 }

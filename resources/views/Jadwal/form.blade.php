@@ -18,9 +18,13 @@
               <input type="text" class="form-control" id="id_jadwal" name="id_jadwal" value="{{ isset($jadwal) ? $jadwal->id_jadwal : '' }}">
             </div>
             <div class="form-group">
-              <label for="user_jadwal">Admin </label>
-              <input type="text" class="form-control" id="user_jadwal" name="user_jadwal" value="{{ isset($jadwal) ? $jadwal->user_jadwal : '' }}">
+                <label for="user_jadwal">Admin</label>
+                <select name="nik" id="nik" class="custom-select">
+                  <option value="{{$jadwal-> auth()->user()->id }}">
+                  </option>
+                </select>
             </div>
+
             <div class="form-group">
               <label for="jadwal_kereta">Jadwal Kereta</label>
 							<select name="id_kereta" id="id_kereta" class="custom-select">
@@ -32,12 +36,19 @@
 								@endforeach
 							</select>
             </div>
-          </div>
-          <div class="form-group">
-              <label for="rute_jadwal">Jadwal Rute</label>
-							<select name="rute_jadwal" id="rute_jadwal" class="custom-select">
+            <div class="form-group">
+              <label for="rute_jadwal">Rute</label>
+							<select name="id_rute" id="id_rute" class="custom-select">
+								<option value="" selected disabled hidden>-- Pilih Rute --</option>
+								@foreach ($rute as $row)
+									<option value="{{ $row->id }}" {{ isset($jadwal) ? ($jadwal->id_rute == $row->id ? 'selected' : '') : '' }}>
+                    {{ $row->stasiun->nama_stasiun }} - {{ $row->stasiun_tujuan }}
+                  </option>
+								@endforeach
 							</select>
             </div>
+          </div>
+
           <div class="card-footer">
             <button type="submit" class="btn btn-primary">Simpan</button>
           </div>

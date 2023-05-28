@@ -3,18 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admin;
-use App\Models\Gerbong;
-use App\Models\Kereta;
-use App\Models\Kursi;
 use App\Models\MetodePembayaran;
-use App\Models\Rute;
-use App\Models\Stasiun;
 use App\Models\Transaksi;
 use App\Models\User;
-use App\Http\Controllers\Exception;
-use Exception as GlobalException;
-use FFI\Exception as FFIException;
+use App\Models\Jadwal;
 
 class TransaksiController extends Controller
 {
@@ -99,7 +91,7 @@ class TransaksiController extends Controller
             'total_bayar' => $request->total_bayar,
         ];
 
-        RiwayatTransaksi::create($data);
+        // RiwayatTransaksi::create($data);
 
         return redirect()->route('riwayat_transaksi');
     }
