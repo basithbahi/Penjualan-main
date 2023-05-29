@@ -43,9 +43,9 @@
             <span>Kursi</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('jadwal') }}">
-            <i class="fas fa-fw fa-calendar"></i>
-            <span>Jadwal Kereta Api</span></a>
+        <a class="nav-link" href="{{ route('stasiun') }}">
+            <i class="fas fa-fw fa-building"></i>
+            <span>Stasiun</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('rute') }}">
@@ -53,20 +53,21 @@
             <span>Rute</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ route('stasiun') }}">
-            <i class="fas fa-fw fa-building"></i>
-            <span>Stasiun</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ route('kereta') }}">
-            <i class="fas fa-fw fa-history"></i>
-            <span>Transaksi</span></a>
+        <a class="nav-link" href="{{ route('jadwal') }}">
+            <i class="fas fa-fw fa-calendar"></i>
+            <span>Jadwal Kereta Api</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="{{ route('metode_pembayaran') }}">
             <i class="fas fa-fw fa-wallet"></i>
             <span>Metode Pembayatan</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('transaksi') }}">
+            <i class="fas fa-fw fa-history"></i>
+            <span>Transaksi</span></a>
+    </li>
+
 
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">

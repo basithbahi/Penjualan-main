@@ -108,6 +108,13 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="image">Foto Profil</label>
+                                    <input type="file" class="form-control" name="image">
+                                    @if (isset($user) && $user->foto_profil)
+                                        <img src="{{ asset('storage/' . $user->foto_profil) }}" alt="Foto Profil" width="100">
+                                    @endif
+                                </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">Register
                                     Account</button>
                             </form>
@@ -120,7 +127,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
     <!-- Bootstrap core JavaScript-->

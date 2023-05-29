@@ -16,8 +16,9 @@ class AdminController extends Controller
     public function index()
     {
         $admin = Admin::get();
+        $jumlahDataAdmin = Admin::where('level', 'Admin')->count();
 
-        return view('admin/index', ['admin' => $admin]);
+        return view('admin.index', compact('admin', 'jumlahDataAdmin'));
     }
 
     public function tambah()
@@ -27,6 +28,11 @@ class AdminController extends Controller
 
     public function simpan(Request $request)
     {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         Admin::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -35,6 +41,7 @@ class AdminController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
             'level' => 'Admin'
         ]);
 
@@ -50,6 +57,11 @@ class AdminController extends Controller
 
     public function update($id, Request $request)
     {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         Admin::find($id)->update([
             'nik' => $request->nik,
             'nama' => $request->nama,
@@ -58,6 +70,7 @@ class AdminController extends Controller
             'jk' => $request->jk,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
         ]);
 
         return redirect()->route('admin');
@@ -67,7 +80,7 @@ class AdminController extends Controller
     {
         Admin::find($id)->delete();
 
-            return redirect()->route('admin');
+        return redirect()->route('admin');
     }
 
     public function search(Request $request)
@@ -79,12 +92,12 @@ class AdminController extends Controller
                 ->where('nik', 'like', "%$query%")
                 ->orWhere('nama', 'like', "%$query%")
                 ->orWhere('alamat', 'like', "%$query%")
-                ->orderBy('nik', 'asc')
+                ->orderBy('jk', 'asc')
                 ->paginate(10);
         } else {
             $admin = Admin::get();
+            $jumlahDataAdmin = Admin::where('level', 'Admin')->count();
         }
-
-        return view('admin.index', ['admin' => $admin, 'query' => $query]);
+        return view('admin.index', compact('admin', 'query', 'jumlahDataAdmin'));
     }
 }

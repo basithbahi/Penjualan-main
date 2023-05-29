@@ -21,58 +21,54 @@
                             <input type="text" class="form-control" id="invoice" name="invoice"
                                 value="{{ isset($transaksi) ? $transaksi->invoice : '' }}">
                         </div>
+
                         <div class="form-group">
-                            <label for="id_user">User</label>
-                            <select name="id_user" id="id_user" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih User--</option>
-                                @foreach ($user as $row)
+                            <label for="nik">User</label>
+                            <select name="nik" id="nik" class="custom-select">
+                                <option value="{{ auth()->user()->id }}">
+                                    {{ auth()->user()->nama }}
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="id_metode_pembayaran">Metode Pembayaran</label>
+                            <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Metode Pembayaran --</option>
+                                @foreach ($metode_pembayaran as $row)
                                     <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($transaksi->id_user == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->nama }}
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id ? 'selected' : '') : '' }}>
+                                        {{ $row->metode_pembayaran }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label for="id_jenis_cucian">Jenis Cucian</label>
-                            <select name="id_jenis_cucian" id="id_jenis_cucian" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Jenis Cucian --</option>
-                                @foreach ($jenis_cucian as $row)
+                            <label for="id_jadwal">Jadwal Kereta</label>
+                            <select name="id_jadwal" id="id_jadwal" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
+                                @foreach ($jadwal as $row)
                                     <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($transaksi->id_jenis_cucian == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->jenis_cucian }}
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_jadwal ? 'selected' : '') : '' }}>
+                                        {{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
+
                         <div class="form-group">
-                            <label for="id_tipe_laundry">Tipe Laundry</label>
-                            <select name="id_tipe_laundry" id="id_tipe_laundry" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Tipe Laundry --</option>
-                                @foreach ($tipe_laundry as $row)
+                            <label for="id_kursi">Kursi</label>
+                            <select name="id_kursi" id="id_kursi" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Kursi --</option>
+                                @foreach ($kursi as $row)
                                     <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($transaksi->id_tipe_laundry == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->tipe_laundry }}
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_kursi ? 'selected' : '') : '' }}>
+                                        {{ $row->nama_kursi }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="form-group">
-                            <label for="id_jenis_pencuci">Jenis Pencuci</label>
-                            <select name="id_jenis_pencuci" id="id_jenis_pencuci" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Jenis Pencuci --</option>
-                                @foreach ($jenis_pencuci as $row)
-                                    <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($transaksi->id_jenis_pencuci == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->jenis_pencuci }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="berat_cucian">Berat Cucian (Kg)</label>
-                            <input type="text" class="form-control" id="berat_cucian" name="berat_cucian"
-                                value="{{ isset($transaksi) ? $transaksi->berat_cucian : '' }}">
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>

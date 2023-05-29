@@ -3,18 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Admin;
-use App\Models\Gerbong;
-use App\Models\Kereta;
-use App\Models\Kursi;
 use App\Models\MetodePembayaran;
-use App\Models\Rute;
-use App\Models\Stasiun;
 use App\Models\Transaksi;
 use App\Models\User;
-use App\Http\Controllers\Exception;
-use Exception as GlobalException;
-use FFI\Exception as FFIException;
+use App\Models\Jadwal;
+use App\Models\Kursi;
 
 class TransaksiController extends Controller
 {
@@ -30,18 +23,19 @@ class TransaksiController extends Controller
         $user = User::get();
         $jadwal = Jadwal::get();
         $metode_pembayaran = MetodePembayaran::get();
+        $kursi = Kursi::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran,]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran, 'kursi' => $kursi]);
     }
 
     public function simpan(Request $request)
     {
         $data = [
             'invoice' => $request->invoice,
-            'id_user' => $request->id_user,
+            'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'waktu' => $request->waktu,
+            'id_kursi' => $request->id_kursi,
         ];
 
         Transaksi::create($data);
@@ -53,21 +47,21 @@ class TransaksiController extends Controller
     {
         $transaksi = Transaksi::find($id);
         $user = User::get();
-        $id_jadwal = Jadwal::get();
-        $id_metode_pembayaran = MetodePembayaran::get();
+        $jadwal = Jadwal::get();
+        $metode_pembayaran = MetodePembayaran::get();
+        $kursi = Kursi::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'id_jadwal'
-        => $id_jadwal, 'id_metode_pembayaran' => $id_metode_pembayaran]);
+        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran, 'kursi' => $kursi]);
     }
 
     public function update($id, Request $request)
     {
         $data = [
             'invoice' => $request->invoice,
-            'id_user' => $request->id_user,
+            'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'waktu' => $request->waktu,
+            'id_kursi' => $request->id_kursi,
         ];
 
         Transaksi::find($id)->update($data);
@@ -82,27 +76,26 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi');
     }
 
-    public function bayar($id)
-    {
-        $transaksi = Transaksi::find($id);
-        $metode_pembayaran = MetodePembayaran::find($id);
+    // public function bayar($id)
+    // {
+    //     $transaksi = Transaksi::find($id);
+    //     $metode_pembayaran = MetodePembayaran::find($id);
 
-        return view('transaksi.bayar', ['transaksi' => $transaksi, 'metode_pembayaran' => $metode_pembayaran]);
-    }
+    //     return view('transaksi.bayar', ['transaksi' => $transaksi, 'metode_pembayaran' => $metode_pembayaran]);
+    // }
 
-    public function upload(Request $request)
-    {
-        $data = [
-            'id_riwayat_transaksi' => $request->id_riwayat_transaksi,
-            'invoice' => $request->invoice,
-            'metode_pembayaran' => $request->metode_pembayaran,
-            'total_bayar' => $request->total_bayar,
-        ];
+    // public function upload(Request $request)
+    // {
+    //     $data = [
+    //         'invoice' => $request->invoice,
+    //         'metode_pembayaran' => $request->metode_pembayaran,
+    //         'total_bayar' => $request->total_bayar,
+    //     ];
 
-        RiwayatTransaksi::create($data);
+    //     // RiwayatTransaksi::create($data);
 
-        return redirect()->route('riwayat_transaksi');
-    }
+    //     return redirect()->route('riwayat_transaksi');
+    // }
 
     public function search(Request $request)
     {

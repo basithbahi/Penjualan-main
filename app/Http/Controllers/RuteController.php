@@ -73,8 +73,7 @@ class RuteController extends Controller
             $data = Rute::with('stasiun')
                 ->where('id_rute', 'like', "%$query%")
                 ->orWhere('id_stasiun', 'like', "%$query%")
-                ->orWhere('stasiun_keberangkatan', 'like', "%$query%")
-                ->orWhere('stasiun_tujuan', 'like', "%$query%")
+                ->orWhere('id_jadwal', 'like', "%$query%")
                 ->orderBy('id_rute', 'asc')
                 ->paginate(10);
         } else {
