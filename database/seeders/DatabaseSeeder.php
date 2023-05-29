@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
@@ -22,5 +23,16 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
+        $this->call([
+            UserSeeder::class,
+            KeretaSeeder::class,
+            GerbongSeeder::class,
+            KursiSeeder::class,
+            StasiunSeeder::class,
+            RuteSeeder::class,
+            MetodePembayaranSeeder::class,
+            JadwalSeeder::class,
+            TransaksiSeeder::class
+        ]);
     }
 }

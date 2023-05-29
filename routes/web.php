@@ -167,8 +167,13 @@ Route::middleware('auth')->group(function () {
         Route::get('home', function () {
             return view('home');
         })->name('home');
+
         Route::get('cekKodeBooking', function () {
             return view('cekKodeBooking');
         })->name('cekKodeBooking');
+
+        Route::get('seat', function () {
+            return view('seat');
+        })->name('seat');
     });
 });

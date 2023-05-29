@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
                 'jk' => 'Pria',
                 'email' => 'miko@mail.com',
                 'password' => Hash::make('123'),
-                'level' => 'user',
+                'level' => 'User',
             ],
             [
                 'nik' => '2141720179',
@@ -32,7 +32,7 @@ class UserSeeder extends Seeder
                 'jk' => 'Wanita',
                 'email' => 'tarista@mail.com',
                 'password' => Hash::make('123'),
-                'level' => 'user',
+                'level' => 'User',
             ],
             [
                 'nik' => '2141720180',
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
                 'jk' => 'Pria',
                 'email' => 'sabil@mail.com',
                 'password' => Hash::make('123'),
-                'level' => 'user',
+                'level' => 'User',
             ],
             [
                 'nik' => '2141720123',
@@ -52,7 +52,7 @@ class UserSeeder extends Seeder
                 'jk' => 'Pria',
                 'email' => 'basith@mail.com',
                 'password' => Hash::make('123'),
-                'level' => 'admin',
+                'level' => 'Admin',
             ],
             [
                 'nik' => '2141720131',
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
                 'jk' => 'Wanita',
                 'email' => 'nabila@mail.com',
                 'password' => Hash::make('123'),
-                'level' => 'admin',
+                'level' => 'Admin',
             ],
         ];
 
