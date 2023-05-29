@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'nik' => '2141720131',
-                'nama' => 'Nabila Amalina SYafa',
+                'nama' => 'Nabila Amalina Syafa',
                 'alamat' => 'Lumajang',
                 'ttl' => '2001-01-01',
                 'jk' => 'Wanita',

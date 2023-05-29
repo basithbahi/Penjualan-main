@@ -28,6 +28,10 @@
     <link href="{{ asset('style/assets/vendor/glightbox/css/glightbox.min.css') }}" rel="stylesheet">
     <link href="{{ asset('style/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('style/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
+    <!-- Custom fonts for this template-->
+  <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
@@ -98,17 +102,43 @@
             <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
             <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
 
-            <nav id="navbar" class="navbar">
-                <ul>
-                    <li><a href="home" class="active">Home</a></li>
-                    <li><a href="#tentang">Tentang Kami</a></li>
-                    <li><a href="#footer">Hubungi Kami</a></li>
-                    <li><a href="login">Akun</a></li>
-                    <li><a href="logout">Logout</a></li>
-                </ul>
-            </nav><!-- .navbar -->
-        </div>
-    </header><!-- End Header -->
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a href="home" class="active">Home</a></li>
+          <li><a href="#tentang">Tentang Kami</a></li>
+          <li><a href="#footer">Hubungi Kami</a></li>
+          <li><a href="login">Akun</a></li>
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                {{ auth()->user()->nama }}
+                <br>
+              </span>
+              <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item text-center" href="#" style="margin-left: -20px;">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Profile</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-center" href="{{ route('logout') }}" style="margin-left: -20px;">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Logout</span>
+                </a>
+              </div>
+              </li>
+
+              </li>
+
+
+
+
+        </ul>
+      </nav><!-- .navbar -->
+    </div>
+  </header><!-- End Header -->
 
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero d-flex align-items-center">
@@ -272,6 +302,14 @@
     <script src="{{ asset('style/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('style/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('style/assets/vendor/php-email-form/validate.js') }}"></script>
+      <!-- Bootstrap core JavaScript-->
+  <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+  <!-- Core plugin JavaScript-->
+  <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
+
 
     <!-- Template Main JS File -->
     <script src="{{ asset('style/assets/js/main.js') }}"></script>

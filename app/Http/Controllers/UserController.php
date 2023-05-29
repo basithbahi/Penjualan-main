@@ -81,7 +81,7 @@ class UserController extends Controller
             'foto_profil' => $image_name,
         ]);
 
-        return redirect()->route('user.index');
+        return redirect()->route('user');
     }
 
     public function hapus($id)

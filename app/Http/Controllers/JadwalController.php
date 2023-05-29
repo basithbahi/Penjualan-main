@@ -78,11 +78,11 @@ class JadwalController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-            $data = Jadwal::with('kereta', 'users', 'rute')
+            $data = Jadwal::with('kereta')
                 ->where('id_jadwal', 'like', "%$query%")
                 ->paginate(10);
         } else {
-            $data = Jadwal::with('kereta', 'users', 'rute')->get();
+            $data = Jadwal::with('kereta')->get();
         }
 
         return view('jadwal.index', ['data' => $data, 'query' => $query]);
