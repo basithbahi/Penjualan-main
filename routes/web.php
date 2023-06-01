@@ -150,6 +150,7 @@ Route::middleware('auth')->group(function () {
             Route::post('edit/{id}', 'update')->name('jadwal.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('jadwal.hapus');
             Route::get('search', 'search')->name('jadwal.search');
+            Route::get('searchIndex', 'searchIndex')->name('jadwal.searchIndex');
         });
 
     Route::controller(TransaksiController::class)
@@ -162,6 +163,7 @@ Route::middleware('auth')->group(function () {
             Route::post('edit/{id}', 'update')->name('transaksi.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('transaksi.hapus');
             Route::get('search', 'search')->name('transaksi.search');
+            Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
         });
     Route::middleware('auth')->group(function () {
         Route::get('home', function () {

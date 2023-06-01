@@ -108,7 +108,7 @@ body,
         <div class="col-xl-4">
           <h2 data-aos="fade-up">Pemesanan Tiket</h2>
           <body class="text-center">
-          <form action="{{ isset($rute) ? route('transaksi.tambah.update', $rute->id) : route('transaksi.tambah.simpan') }}" method="post">  
+          <form action="{{ route('jadwal.searchIndex') }}" method="GET">
                 <br>
                 <select name="stasiunKeberangkatan" class="form-control">
                     <option value="0">Stasiun Keberangkatan</option>    
@@ -117,7 +117,7 @@ body,
                 </select>
                 <br>
                 
-                <input type="date" id="inputTanggal" class="form-control" placeholder="Tanggal" required autofocus>
+                <input type="date" id="tanggal" class="form-control" placeholder="Tanggal" required autofocus>
         
                 <br>
                 <select name="penumpang" class="form-control">
