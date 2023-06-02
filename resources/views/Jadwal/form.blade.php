@@ -58,10 +58,20 @@
                                 value="{{ isset($jadwal) ? $jadwal->harga : '' }}">
                         </div>
                         <div class="form-group">
-                            <label for="waktu">Waktu Keberangkatan</label>
-                            <input name="waktu" type="text" class="form-control datetimepicker-input" id="waktu"
-                                data-toggle="datetimepicker" data-target="#waktu" placeholder="Waktu"
-                                value="{{ isset($jadwal) ? $jadwal->waktu : '' }}">
+                                <label for="tanggal_keberangkatan">Tanggal Keberangkatan</label>
+                                <input name="tanggal_keberangkatan" type="date"
+                                    class="form-control form-control-user @error('tanggal_keberangkatan')is-invalid @enderror"
+                                    id="exampleInputDate" placeholder="Tanggal Keberangkatan"
+                                    value="{{ isset($user) ? $user->tanggal_keberangkatan : '' }}">
+                                @error('tanggal_keberangkatan')
+                                    <span class="invalid-feedback">{{ $message }}</span>
+                                @enderror
+                            </div>
+                        <div class="form-group">
+                            <label for="waktu_keberangkatan">Waktu Keberangkatan</label>
+                            <input name="waktu_keberangkatan" type="text" class="form-control datetimepicker-input" id="waktu_keberangkatan"
+                                data-toggle="datetimepicker" data-target="#waktu_keberangkatan" placeholder="Waktu"
+                                value="{{ isset($jadwal) ? $jadwal->waktu_keberangkatan : '' }}">
                         </div>
 
                     </div>
