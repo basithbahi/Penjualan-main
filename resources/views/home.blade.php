@@ -152,24 +152,14 @@
                             action="{{ isset($rute) ? route('transaksi.tambah.update', $rute->id) : route('transaksi.tambah.simpan') }}"
                             method="post">
                             <br>
-                            <select name="stasiunKeberangkatan" class="form-control">
-                                <option value="0">Stasiun Keberangkatan</option>
+                            <select name="pemilihan_stasiun" class="form-control">
+                                <option value="0">Pemilihan Stasiun</option>
                                 <option value="1">Surabaya</option>
                                 <option value="2">Malang</option>
                             </select>
                             <br>
 
-                            <input type="date" id="inputTanggal" class="form-control" placeholder="Tanggal" required
-                                autofocus>
-
-                            <br>
-                            <select name="penumpang" class="form-control">
-                                <option value="0">1 Dewasa</option>
-                                <option value="1">2 Dewasa</option>
-                                <option value="2">3 Dewasa</option>
-                            </select>
-
-
+                            <input type="date" id="inputTanggal" class="form-control" placeholder="Tanggal" required autofocus>
 
 
                             <br><br>

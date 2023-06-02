@@ -80,39 +80,39 @@
 
   <div class="seat-container">
     <div class="seat-row">
-      <div class="seat">A1</div>
-      <div class="seat">B1</div>
+      <div class="seat" data-seat="A1">A1</div>
+      <div class="seat" data-seat="B1">B1</div>
       <div class="divider"></div>
-      <div class="seat">C1</div>
-      <div class="seat">D1</div>
+      <div class="seat" data-seat="C1">C1</div>
+      <div class="seat" data-seat="D1">D1</div>
     </div>
     <div class="seat-row">
-      <div class="seat">A2</div>
-      <div class="seat">B2</div>
+      <div class="seat" data-seat="A2">A2</div>
+      <div class="seat" data-seat="B2">B2</div>
       <div class="divider"></div>
-      <div class="seat">C2</div>
-      <div class="seat">D2</div>
+      <div class="seat" data-seat="C2">C2</div>
+      <div class="seat" data-seat="D2">D2</div>
     </div>
     <div class="seat-row">
-      <div class="seat">A3</div>
-      <div class="seat">B3</div>
+      <div class="seat" data-seat="A3">A3</div>
+      <div class="seat" data-seat="B3">B3</div>
       <div class="divider"></div>
-      <div class="seat">C3</div>
-      <div class="seat">D3</div>
+      <div class="seat" data-seat="C3">C3</div>
+      <div class="seat" data-seat="D3">D3</div>
     </div>
     <div class="seat-row">
-      <div class="seat">A4</div>
-      <div class="seat">B4</div>
+      <div class="seat" data-seat="A4">A4</div>
+      <div class="seat" data-seat="B4">B4</div>
       <div class="divider"></div>
-      <div class="seat">C4</div>
-      <div class="seat">D4</div>
+      <div class="seat" data-seat="C4">C4</div>
+      <div class="seat" data-seat="D4">D4</div>
     </div>
     <div class="seat-row">
-      <div class="seat">A5</div>
-      <div class="seat">B5</div>
+      <div class="seat" data-seat="A5">A5</div>
+      <div class="seat" data-seat="B5">B5</div>
       <div class="divider"></div>
-      <div class="seat">C5</div>
-      <div class="seat">D5</div>
+      <div class="seat" data-seat="C5">C5</div>
+      <div class="seat" data-seat="D5">D5</div>
     </div>
   </div>
 
@@ -123,13 +123,23 @@
   <script>
     const seats = document.querySelectorAll('.seat');
     const submitButton = document.querySelector('.button');
+    let selectedSeat = null;
 
     seats.forEach((seat) => {
       seat.addEventListener('click', () => {
-        if (!seat.classList.contains('disabled')) {
-          seat.classList.toggle('selected');
-          updateSubmitButtonStatus();
+        const seatData = seat.getAttribute('data-seat');
+        if (selectedSeat === seatData) {
+          seat.classList.remove('selected');
+          selectedSeat = null;
+        } else {
+          if (selectedSeat) {
+            const currentSelectedSeat = document.querySelector(`.seat[data-seat="${selectedSeat}"]`);
+            currentSelectedSeat.classList.remove('selected');
+          }
+          seat.classList.add('selected');
+          selectedSeat = seatData;
         }
+        updateSubmitButtonStatus();
       });
     });
 
