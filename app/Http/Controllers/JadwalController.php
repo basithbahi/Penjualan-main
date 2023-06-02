@@ -34,7 +34,8 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
 
         ];
 
@@ -61,7 +62,9 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
+
 
         ];
 
@@ -104,11 +107,11 @@ class JadwalController extends Controller
         $users = User::get();
 
         if ($query) {
-            $data = Jadwal::query()
+            $data = Jadwal::with('stasiun')
             ->join('rute', 'jadwal.id_rute', '=', 'rute.id_rute')
             ->join('stasiun', 'rute.id_stasiun', '=', 'stasiun.id_stasiun')
             ->where('stasiun.nama_stasiun', 'like', "%$query%")
-            ->orWhere('jadwal.tanggal', 'like', "%$query2%")
+            ->Where('jadwal.tanggal', 'like', "%$query2%")
             ->orderBy('jadwal.id_kereta', 'asc')
             ->paginate(10);
         } else {

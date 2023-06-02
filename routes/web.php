@@ -170,6 +170,10 @@ Route::middleware('auth')->group(function () {
             return view('home');
         })->name('home');
 
+        Route::get('searchIndex', function () {
+            return view('searchIndex');
+        })->name('searchIndex');
+
         Route::get('cekKodeBooking', function () {
             return view('cekKodeBooking');
         })->name('cekKodeBooking');
