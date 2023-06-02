@@ -77,7 +77,7 @@ class UserController extends Controller
             'ttl' => $request->ttl,
             'jk' => $request->jk,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'foto_profil' => $image_name,
         ]);
 

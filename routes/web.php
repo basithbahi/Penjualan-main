@@ -177,5 +177,9 @@ Route::middleware('auth')->group(function () {
         Route::get('seat', function () {
             return view('seat');
         })->name('seat');
+
+        Route::get('profile', function () {
+            return view('profile');
+        })->name('profile');
     });
 });
