@@ -18,6 +18,13 @@ class TransaksiController extends Controller
         return view('transaksi.index', ['data' => $transaksi]);
     }
 
+    public function cekKodeBooking()
+    {
+        $transaksi = Transaksi::get();
+
+        return view('cekKodeBooking', ['data' => $transaksi]);
+    }
+
     public function tambah()
     {
         $user = User::get();
