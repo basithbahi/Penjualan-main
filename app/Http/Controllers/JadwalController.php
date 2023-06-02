@@ -100,17 +100,16 @@ class JadwalController extends Controller
 
     public function searchIndex(Request $request)
     {
-        $query = $request->input('stasiunKeberangkatan');
+        $query = $request->input('stasiun');
         $query2 = $request->input('tanggal');
         $kereta = Kereta::get();
         $rute = Rute::get();
         $users = User::get();
 
         if ($query) {
-            $data = Jadwal::with('stasiun')
+            $data = Jadwal::query()
             ->join('rute', 'jadwal.id_rute', '=', 'rute.id_rute')
-            ->join('stasiun', 'rute.id_stasiun', '=', 'stasiun.id_stasiun')
-            ->where('stasiun.nama_stasiun', 'like', "%$query%")
+            ->where('rute.id_stasiun', 'like', "%$query%")
             ->Where('jadwal.tanggal', 'like', "%$query2%")
             ->orderBy('jadwal.id_kereta', 'asc')
             ->paginate(10);

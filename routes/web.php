@@ -178,6 +178,10 @@ Route::middleware('auth')->group(function () {
             return view('cekKodeBooking');
         })->name('cekKodeBooking');
 
+        Route::get('searchKodeBooking', function () {
+            return view('searchKodeBooking');
+        })->name('searchKodeBooking');
+
         Route::get('seat', function () {
             return view('seat');
         })->name('seat');
