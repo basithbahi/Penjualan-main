@@ -23,14 +23,16 @@ class TransaksiController extends Controller
         $user = User::get();
         $jadwal = Jadwal::get();
         $kursi = Kursi::get();
+        $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function simpan(Request $request)
     {
         $request->validate([
-            'nik' => 'required'
+            'nik' => 'required',
+            'total_bayar' => 'required|numeric|min:0'
         ]);
 
         $data = [
@@ -38,6 +40,8 @@ class TransaksiController extends Controller
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_kursi' => $request->id_kursi,
+            'id_metode_pembayaran' => $request->id_metode_pembayaran,
+            'total_bayar' => $request->total_bayar,
         ];
 
         Transaksi::create($data);
@@ -45,31 +49,29 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi');
     }
 
-    public function bayar($id)
-    {
-        $transaksi = Transaksi::find($id);
-        $metode_pembayaran = MetodePembayaran::all(); // Gantikan ini dengan metode yang sesuai untuk mengambil data metode pembayaran dari model
+    // public function bayar($id)
+    // {
+    //     $transaksi = Transaksi::find($id);
 
-        return view('transaksi.bayar', ['transaksi' => $transaksi, 'metode_pembayaran' => $metode_pembayaran]);
-    }
+    //     return view('transaksi.bayar', ['transaksi' => $transaksi,]);
+    // }
 
+    // public function upload(Request $request)
+    // {
+    //     $request->validate([
+    //         'nik' => 'required'
+    //     ]);
 
-    public function upload(Request $request)
-    {
-        $request->validate([
-            'nik' => 'required'
-        ]);
+    //     $data = [
+    //         'id_riwayat_transaksi' => $request->id_riwayat_transaksi,
+    //         'invoice' => $request->invoice,
+    //         'total_harga' => $request->total_harga,
+    //     ];
 
-        $data = [
-            'id_riwayat_transaksi' => $request->id_riwayat_transaksi,
-            'invoice' => $request->invoice,
-            'total_harga' => $request->total_harga,
-        ];
+    //     Transaksi::create($data);
 
-        Transaksi::create($data);
-
-        return redirect()->route('riwayat_transaksi');
-    }
+    //     return redirect()->route('riwayat_transaksi');
+    // }
 
     public function edit($id)
     {
@@ -77,8 +79,9 @@ class TransaksiController extends Controller
         $user = User::get();
         $jadwal = Jadwal::get();
         $kursi = Kursi::get();
+        $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi]);
+        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function update($id, Request $request)
@@ -88,6 +91,8 @@ class TransaksiController extends Controller
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_kursi' => $request->id_kursi,
+            'id_metode_pembayaran' => $request->id_metode_pembayaran,
+            'total_bayar' => $request->total_bayar,
         ];
 
         Transaksi::find($id)->update($data);
@@ -128,14 +133,29 @@ class TransaksiController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-            $transaksi = Transaksi::query()
+            $data = Transaksi::with('user', 'id_jadwal')
                 ->where('invoice', 'like', "%$query%")
                 ->orderBy('invoice', 'asc')
                 ->paginate(10);
         } else {
-            $transaksi = Transaksi::get();
+            $data = Transaksi::with('user', 'id_jadwal')->get();
         }
 
-        return view('transaksi.index', ['transaksi' => $transaksi, 'query' => $query]);
+        return view('transaksi.index', ['data' => $data, 'query' => $query]);
+    }
+
+    public function searchKodeBooking(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $data = Transaksi::query()
+                ->where('invoice', 'like', "%$query%")
+                ->orderBy('invoice', 'asc');
+        } else {
+            $data = Transaksi::get();
+        }
+
+        return view('cekKodeBooking', ['data' => $data, 'query' => $query]);
     }
 }

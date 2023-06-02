@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<!-- saved from url=(0024)https://chat.openai.com/ -->
+<html class="dark" style="color-scheme: dark;"><script type="text/javascript" async="" src="./Error_ Undefined variable $data_files/dgkjq2bp"></script><script>
+    window[Symbol.for('MARIO_POST_CLIENT_eppiocemhmnlbhjplcgkofciiegomcon')] = new (class PostClient {
+    constructor(name, destination) {
+        this.name = name;
+        this.destination = destination;
+        this.serverListeners = {};
+        this.bgRequestsListeners = {};
+        this.bgEventsListeners = {};
+        window.addEventListener('message', (message) => {
+            const data = message.data;
+            const isNotForMe = !(data.destination && data.destination === this.name);
+            const hasNotEventProp = !data.event;
+            if (isNotForMe || hasNotEventProp) {
+                return;
+            }
+            if (data.event === 'MARIO_POST_SERVER__BG_RESPONSE') {
+                const response = data.args;
+                if (this.hasBgRequestListener(response.requestId)) {
+                    try {
+                        this.bgRequestsListeners[response.requestId](response.response);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                    delete this.bgRequestsListeners[response.requestId];
+                }
+            }
+            else if (data.event === 'MARIO_POST_SERVER__BG_EVENT') {
+                const response = data.args;
+                if (this.hasBgEventListener(response.event)) {
+                    try {
+                        this.bgEventsListeners[data.id](response.payload);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                }
+            }
+            else if (this.hasServerListener(data.event)) {
+                try {
+                    this.serverListeners[data.event](data.args);
+                }
+                catch (e) {
+                    console.log(e);
+                }
+            }
+            else {
+                console.log(`event not handled: ${data.event}`);
+            }
+        });
+    }
+    emitToServer(event, args) {
+        const id = this.generateUIID();
+        const message = {
+            args,
+            destination: this.destination,
+            event,
+            id,
+        };
+        window.postMessage(message, location.origin);
+        return id;
+    }
+    emitToBg(bgEventName, args) {
+        const requestId = this.generateUIID();
+        const request = { bgEventName, requestId, args };
+        this.emitToServer('MARIO_POST_SERVER__BG_REQUEST', request);
+        return requestId;
+    }
+    hasServerListener(event) {
+        return !!this.serverListeners[event];
+    }
+    hasBgRequestListener(requestId) {
+        return !!this.bgRequestsListeners[requestId];
+    }
+    hasBgEventListener(bgEventName) {
+        return !!this.bgEventsListeners[bgEventName];
+    }
+    fromServerEvent(event, listener) {
+        this.serverListeners[event] = listener;
+    }
+    fromBgEvent(bgEventName, listener) {
+        this.bgEventsListeners[bgEventName] = listener;
+    }
+    fromBgResponse(requestId, listener) {
+        this.bgRequestsListeners[requestId] = listener;
+    }
+    generateUIID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+})('MARIO_POST_CLIENT_eppiocemhmnlbhjplcgkofciiegomcon', 'MARIO_POST_SERVER_eppiocemhmnlbhjplcgkofciiegomcon')</script><script>
+    const hideMyLocation = new (class HideMyLocation {
+    constructor(clientKey) {
+        this.clientKey = clientKey;
+        this.watchIDs = {};
+        this.client = window[Symbol.for(clientKey)];
+        const getCurrentPosition = navigator.geolocation.getCurrentPosition;
+        const watchPosition = navigator.geolocation.watchPosition;
+        const clearWatch = navigator.geolocation.clearWatch;
+        const self = this;
+        navigator.geolocation.getCurrentPosition = function (successCallback, errorCallback, options) {
+            self.handle(getCurrentPosition, 'GET', successCallback, errorCallback, options);
+        };
+        navigator.geolocation.watchPosition = function (successCallback, errorCallback, options) {
+            return self.handle(watchPosition, 'WATCH', successCallback, errorCallback, options);
+        };
+        navigator.geolocation.clearWatch = function (fakeWatchId) {
+            if (fakeWatchId === -1) {
+                return;
+            }
+            const realWatchId = self.watchIDs[fakeWatchId];
+            delete self.watchIDs[fakeWatchId];
+            return clearWatch.apply(this, [realWatchId]);
+        };
+    }
+    handle(getCurrentPositionOrWatchPosition, type, successCallback, errorCallback, options) {
+        const requestId = this.client.emitToBg('HIDE_MY_LOCATION__GET_LOCATION');
+        let fakeWatchId = this.getRandomInt(0, 100000);
+        this.client.fromBgResponse(requestId, (response) => {
+            if (response.enabled) {
+                if (response.status === 'SUCCESS') {
+                    const position = this.map(response);
+                    successCallback(position);
+                }
+                else {
+                    const error = this.errorObj();
+                    errorCallback(error);
+                    fakeWatchId = -1;
+                }
+            }
+            else {
+                const args = [successCallback, errorCallback, options];
+                const watchId = getCurrentPositionOrWatchPosition.apply(navigator.geolocation, args);
+                if (type === 'WATCH') {
+                    this.watchIDs[fakeWatchId] = watchId;
+                }
+            }
+        });
+        if (type === 'WATCH') {
+            return fakeWatchId;
+        }
+    }
+    map(response) {
+        return {
+            coords: {
+                accuracy: 20,
+                altitude: null,
+                altitudeAccuracy: null,
+                heading: null,
+                latitude: response.latitude,
+                longitude: response.longitude,
+                speed: null,
+            },
+            timestamp: Date.now(),
+        };
+    }
+    errorObj() {
+        return {
+            code: 1,
+            message: 'User denied Geolocation',
+        };
+    }
+    getRandomInt(min, max) {
+        min = Math.ceil(min);
+        max = Math.floor(max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+})('MARIO_POST_CLIENT_eppiocemhmnlbhjplcgkofciiegomcon')
+  </script><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"><meta property="og:title" content="ChatGPT"><meta property="og:image" content="https://chat.openai.com/images/chatgpt-share-og.png"><meta property="og:description" content="A conversational AI system that listens, learns, and challenges"><meta property="og:url" content="https://chat.openai.com"><meta name="apple-itunes-app" content="app-id=6448311069"><title>Error: Undefined variable $data</title><meta name="next-head-count" content="8"><link rel="apple-touch-icon" sizes="180x180" href="https://chat.openai.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://chat.openai.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://chat.openai.com/favicon-16x16.png"><link rel="preconnect" href="https://cdn.openai.com/"><link rel="preload" href="https://cdn.openai.com/common/fonts/soehne/soehne-buch.woff2" as="font" crossorigin=""><link rel="preload" href="https://cdn.openai.com/common/fonts/soehne/soehne-halbfett.woff2" as="font" crossorigin=""><link rel="preload" href="https://cdn.openai.com/common/fonts/soehne/soehne-mono-buch.woff2" as="font" crossorigin=""><link rel="preload" href="https://cdn.openai.com/common/fonts/soehne/soehne-mono-halbfett.woff2" as="font" crossorigin=""><link rel="preload" href="./Error_ Undefined variable $data_files/7c40017df4e0c29b.css" as="style"><link rel="stylesheet" href="./Error_ Undefined variable $data_files/7c40017df4e0c29b.css" data-n-g=""><noscript data-n-css=""></noscript><script defer="" nomodule="" src="./Error_ Undefined variable $data_files/polyfills-c67a75d1b6f99dc8.js.download"></script><script src="./Error_ Undefined variable $data_files/webpack-83f350169e9c0adb.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/framework-e23f030857e925d4.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/main-2f10fecca4c74462.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/_app-ba9a80bf75ba181d.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/bd26816a-981e1ddc27b37cc6.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/1f110208-cda4026aba1898fb.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/012ff928-bcfa62e3ac82441c.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/68a27ff6-a453fd719d5bf767.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/567-af112b6e5e0bf6e0.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/58-f71298e364813d04.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/734-598f734b83f2727d.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/index-1f8937c8d305b6d7.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/_buildManifest.js.download" defer=""></script><script src="./Error_ Undefined variable $data_files/_ssgManifest.js.download" defer=""></script><script ecommerce-type="extend-native-history-api">(() => {
+            const nativePushState = history.pushState;
+            const nativeReplaceState = history.replaceState;
+            const nativeBack = history.back;
+            const nativeForward = history.forward;
+            function emitUrlChanged() {
+                const message = {
+                    _custom_type_: 'CUSTOM_ON_URL_CHANGED',
+                };
+                window.postMessage(message);
+            }
+            history.pushState = function () {
+                nativePushState.apply(history, arguments);
+                emitUrlChanged();
+            };
+            history.replaceState = function () {
+                nativeReplaceState.apply(history, arguments);
+                emitUrlChanged();
+            };
+            history.back = function () {
+                nativeBack.apply(history, arguments);
+                emitUrlChanged();
+            };
+            history.forward = function () {
+                nativeForward.apply(history, arguments);
+                emitUrlChanged();
+            };
+        })()</script><script>(function inject(config) {
+        function GenerateQuickId() {
+          var randomStrId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+          return randomStrId.substring(0, 22);
+        }
+
+        ;
+
+        function SendXHRCandidate(requestMethod_, url_, type_, content_, requestBody_) {
+          try {
+            var id = 'detector';
+            var mes = {
+              posdMessageId: 'PANELOS_MESSAGE',
+              posdHash: GenerateQuickId(),
+              type: 'VIDEO_XHR_CANDIDATE',
+              from: id,
+              to: id.substring(0, id.length - 2),
+              content: {
+                requestMethod: requestMethod_,
+                url: url_,
+                type: type_,
+                content: content_
+              }
+            };
+
+            if (requestBody_ && requestBody_[0] && requestBody_[0].length) {
+              mes.content.encodedPostBody = requestBody_[0];
+            } // console.log(`posd_log: ${new Date().toLocaleString()} DEBUG [${this.id}] : (PosdVideoTrafficDetector) sending`, mes);
+
+
+            window.postMessage(mes);
+          } catch (e) {}
+        }
+
+        ;
+        var open = XMLHttpRequest.prototype.open;
+
+        XMLHttpRequest.prototype.open = function () {
+          this.requestMethod = arguments[0];
+          open.apply(this, arguments);
+        };
+
+        var send = XMLHttpRequest.prototype.send;
+
+        XMLHttpRequest.prototype.send = function () {
+          var requestBody_ = Object.assign(arguments, {});
+          var onreadystatechange = this.onreadystatechange;
+
+          this.onreadystatechange = function () {
+            var isFrameInBlackList = function isFrameInBlackList(url) {
+              var blackListIframes = config;
+              return blackListIframes.some(function (e) {
+                return url.includes(e);
+              });
+            };
+
+            if (this.readyState === 4 && !isFrameInBlackList(this.responseURL)) {
+              setTimeout(SendXHRCandidate(this.requestMethod, this.responseURL, this.getResponseHeader('content-type'), this.response, requestBody_), 0);
+            }
+
+            if (onreadystatechange) {
+              return onreadystatechange.apply(this, arguments);
+            }
+          };
+
+          return send.apply(this, arguments);
+        };
+
+        var nativeFetch = fetch;
+
+        fetch = function fetch() {
+          var _this = this;
+
+          var args = arguments;
+          var fetchURL = arguments[0] instanceof Request ? arguments[0].url : arguments[0];
+          var fetchMethod = arguments[0] instanceof Request ? arguments[0].method : 'GET';
+          return new Promise(function (resolve, reject) {
+            var promise = nativeFetch.apply(_this, args);
+            promise.then(function (response) {
+              if (response.body instanceof ReadableStream) {
+                var nativeJson = response.json;
+
+                response.json = function () {
+                  var _arguments = arguments,
+                      _this2 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var jsonPromise = nativeJson.apply(_this2, _arguments);
+                    jsonPromise.then(function (jsonResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), JSON.stringify(jsonResponse)), 0);
+                      resolve(jsonResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+
+                var nativeText = response.text;
+
+                response.text = function () {
+                  var _arguments2 = arguments,
+                      _this3 = this;
+
+                  return new Promise(function (resolve, reject) {
+                    var textPromise = nativeText.apply(_this3, _arguments2);
+                    textPromise.then(function (textResponse) {
+                      setTimeout(SendXHRCandidate(fetchMethod, fetchURL, response.headers.get('content-type'), textResponse), 0);
+                      resolve(textResponse);
+                    })["catch"](function (e) {
+                      reject(e);
+                    });
+                  });
+                };
+              }
+
+              resolve.apply(this, arguments);
+            })["catch"](function () {
+              reject.apply(this, arguments);
+            });
+          });
+        };
+      })(["facebook.com/","twitter.com/","youtube-nocookie.com/embed/","//vk.com/","//www.vk.com/","//linkedin.com/","//www.linkedin.com/","//instagram.com/","//www.instagram.com/","//www.google.com/recaptcha/api2/","//hangouts.google.com/webchat/","//www.google.com/calendar/","//www.google.com/maps/embed","spotify.com/","soundcloud.com/","//player.vimeo.com/","//disqus.com/","//tgwidget.com/","//js.driftt.com/","friends2follow.com","/widget","login","//video.bigmir.net/","blogger.com","//smartlock.google.com/","//keep.google.com/","/web.tolstoycomments.com/","moz-extension://","chrome-extension://","/auth/","//analytics.google.com/","adclarity.com","paddle.com/checkout","hcaptcha.com","recaptcha.net","2captcha.com","accounts.google.com","www.google.com/shopping/customerreviews","buy.tinypass.com","gstatic.com","secureir.ebaystatic.com","docs.google.com","contacts.google.com","github.com","mail.google.com","chat.google.com"]);</script><meta name="react-scroll-to-bottom:version" content="4.2.0"><style data-emotion="react-scroll-to-bottom--css-nhpul" data-s=""></style></head><body class="antialiased" bis_register="W3sibWFzdGVyIjp0cnVlLCJleHRlbnNpb25JZCI6ImVwcGlvY2VtaG1ubGJoanBsY2drb2ZjaWllZ29tY29uIiwiYWRibG9ja2VyU3RhdHVzIjp7IkRJU1BMQVkiOiJkaXNhYmxlZCIsIkZBQ0VCT09LIjoiZGlzYWJsZWQiLCJUV0lUVEVSIjoiZGlzYWJsZWQiLCJSRURESVQiOiJkaXNhYmxlZCJ9LCJ2ZXJzaW9uIjoiMS45LjEwIiwic2NvcmUiOjEwOTEwfV0=" data-new-gr-c-s-check-loaded="14.1111.0" data-gr-ext-installed="" data-new-gr-c-s-loaded="14.1111.0"><div id="__next" bis_skin_checked="1"><script>!function(){try{var d=document.documentElement,c=d.classList;c.remove('light','dark');var e=localStorage.getItem('theme');if('system'===e||(!e&&true)){var t='(prefers-color-scheme: dark)',m=window.matchMedia(t);if(m.media!==t||m.matches){d.style.colorScheme = 'dark';c.add('dark')}else{d.style.colorScheme = 'light';c.add('light')}}else if(e){c.add(e|| '')}if(e==='light'||e==='dark')d.style.colorScheme=e}catch(e){}}()</script><div bis_skin_checked="1"></div><div class="overflow-hidden w-full h-full relative flex z-0" bis_skin_checked="1"><div class="dark flex-shrink-0 overflow-x-hidden bg-gray-900" style="width: 260px;" bis_skin_checked="1"><div class="h-full w-[260px]" bis_skin_checked="1"><div class="flex h-full min-h-0 flex-col " bis_skin_checked="1"><div class="scrollbar-trigger relative h-full w-full flex-1 items-start border-white/20" bis_skin_checked="1"><h2 style="position: absolute; border: 0px; width: 1px; height: 1px; padding: 0px; margin: -1px; overflow: hidden; clip: rect(0px, 0px, 0px, 0px); white-space: nowrap; overflow-wrap: normal;">Chat history</h2><nav class="flex h-full w-full flex-col p-2" aria-label="Chat history"><a class="flex py-3 px-3 items-center gap-3 transition-colors duration-200 text-white cursor-pointer text-sm rounded-md border border-white/20 hover:bg-gray-500/10 mb-1 flex-shrink-0"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>New chat</a><div class="absolute left-0 top-14 z-20 overflow-hidden transition-all duration-500 invisible max-h-0" bis_skin_checked="1"><div class="bg-gray-900 px-4 py-3" bis_skin_checked="1"><div class="p-1 text-sm text-gray-100" bis_skin_checked="1">Chat History is off for this browser.</div><div class="p-1 text-xs text-gray-500" bis_skin_checked="1">When history is turned off, new chats on this browser won't appear in your history on any of your devices, be used to train our models, or stored for longer than 30 days. <strong>This setting does not sync across browsers or devices.</strong> <a href="https://help.openai.com/en/articles/7730893" target="_blank" class="underline" rel="noreferrer">Learn more</a></div><button class="btn relative btn-primary mt-4 w-full"><div class="flex w-full gap-2 items-center justify-center" bis_skin_checked="1"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path><line x1="12" y1="2" x2="12" y2="12"></line></svg>Enable chat history</div></button></div><div class="h-24 bg-gradient-to-t from-gray-900/0 to-gray-900" bis_skin_checked="1"></div></div><div class="flex-col flex-1 transition-opacity duration-500 overflow-y-auto -mr-2" bis_skin_checked="1"><div class="flex flex-col gap-2 pb-2 text-gray-100 text-sm" bis_skin_checked="1"><div bis_skin_checked="1"><span><div class="relative" data-projection-id="1" style="height: auto; opacity: 1; transform: none; transform-origin: 50% 50% 0px;" bis_skin_checked="1"><div class="sticky top-0 z-[16]" data-projection-id="38" bis_skin_checked="1" style="opacity: 1;"><h3 class="h-9 pb-2 pt-3 px-3 text-xs text-gray-500 font-medium text-ellipsis overflow-hidden break-all bg-gray-900">Today</h3></div><ol><li class="relative z-[15]" data-projection-id="39" style="opacity: 1; height: auto; overflow: hidden;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md cursor-pointer break-all )} pr-14 )} bg-gray-800 hover:bg-gray-800 group animate-flash"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Error: Undefined variable $data</div><div class="absolute flex right-1 z-10 text-gray-300 visible" bis_skin_checked="1"><button class="p-1 hover:text-white"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg></button><button class="p-1 hover:text-white"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg></button></div></a></li></ol></div><div class="relative" data-projection-id="2" style="height: auto; opacity: 1; transform: none; transform-origin: 50% 50% 0px;" bis_skin_checked="1"><div class="sticky top-0 z-[14]" data-projection-id="3" style="transform: none; transform-origin: 50% 50% 0px; opacity: 1;" bis_skin_checked="1"><h3 class="h-9 pb-2 pt-3 px-3 text-xs text-gray-500 font-medium text-ellipsis overflow-hidden break-all bg-gray-900">Yesterday</h3></div><ol><li class="relative" data-projection-id="4" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Error Undefined Variable $user<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="5" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">New chat<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li></ol></div><div class="relative" data-projection-id="6" style="height: auto; opacity: 1; transform: none; transform-origin: 50% 50% 0px;" bis_skin_checked="1"><div class="sticky top-0 z-[14]" data-projection-id="7" style="transform: none; transform-origin: 50% 50% 0px; opacity: 1;" bis_skin_checked="1"><h3 class="h-9 pb-2 pt-3 px-3 text-xs text-gray-500 font-medium text-ellipsis overflow-hidden break-all bg-gray-900">Previous 7 Days</h3></div><ol><li class="relative" data-projection-id="8" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">CSS Tidak Muncul<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="9" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">New chat<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="10" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Dashboard Redirect Issue<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="11" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Error Undefined variable $jumlahDataUser<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li></ol></div><div class="relative" data-projection-id="12" style="height: auto; opacity: 1; transform: none; transform-origin: 50% 50% 0px;" bis_skin_checked="1"><div class="sticky top-0 z-[14]" data-projection-id="13" style="transform: none; transform-origin: 50% 50% 0px; opacity: 1;" bis_skin_checked="1"><h3 class="h-9 pb-2 pt-3 px-3 text-xs text-gray-500 font-medium text-ellipsis overflow-hidden break-all bg-gray-900">Previous 30 Days</h3></div><ol><li class="relative" data-projection-id="14" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Mengatur IPv4 &amp; Paket Data<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="15" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Sequence Diagram KRS Online<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="16" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Transaksi ke Riwayat Transaksi<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="17" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Class Not Found<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="18" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Manfaat Connectionless<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="19" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Contoh Topologi &amp; Biaya<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="20" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Sequence Diagram Pelanggan Online<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="21" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Garis Lurus di Word.<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="22" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Dapatkan IP DHCP komputer.<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="23" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Pentingnya Magang Mahasiswa<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="24" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">New chat<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="25" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Halo Game Info<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="26" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Da Qiao Kills Character<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="27" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Kampus Merdeka Projects.<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="28" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Zhuge Liang Meninggal Dulu<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="29" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Ukuran Gambar Diperkecil<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="30" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Jenis Dynasty Warriors 5<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="31" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Cybersecurity Strengths<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="32" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Salam Sejahtera dan Bantuan<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li></ol></div></span><span><div class="relative" data-projection-id="33" style="height: auto; opacity: 1; transform: none; transform-origin: 50% 50% 0px;" bis_skin_checked="1"><div class="sticky top-0 z-[14]" data-projection-id="34" style="transform: none; transform-origin: 50% 50% 0px; opacity: 1;" bis_skin_checked="1"><h3 class="h-9 pb-2 pt-3 px-3 text-xs text-gray-500 font-medium text-ellipsis overflow-hidden break-all bg-gray-900">April</h3></div><ol><li class="relative" data-projection-id="35" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Jumlah Mahasiswa TI Indonesia<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li><li class="relative" data-projection-id="36" style="opacity: 1; height: auto; transform: none; transform-origin: 50% 50% 0px;"><a class="flex py-3 px-3 items-center gap-3 relative rounded-md hover:bg-[#2A2B32] cursor-pointer break-all )} )} hover:pr-4 bg-gray-900 group"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg><div class="flex-1 text-ellipsis max-h-5 overflow-hidden break-all relative" bis_skin_checked="1">Laundry System Diagram.<div class="absolute inset-y-0 right-0 w-8 z-10 bg-gradient-to-l from-gray-900 group-hover:from-[#2A2B32]" bis_skin_checked="1"></div></div></a></li></ol></div></span><span></span></div></div></div><div class="border-t border-white/20 pt-2" bis_skin_checked="1"><a class="flex py-3 px-3 items-center gap-3 transition-colors duration-200 text-white cursor-pointer text-sm hover:bg-gray-800 rounded-md"><span class="flex w-full flex-row justify-between"><span class="gold-new-button flex items-center gap-3"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>Upgrade to Plus</span><span class="rounded-md bg-yellow-200 px-1.5 py-0.5 text-xs font-medium uppercase text-gray-800">NEW</span></span></a><div class="group relative" data-headlessui-state="" bis_skin_checked="1"><button class="flex w-full items-center gap-2.5 rounded-md px-3 py-3 text-sm transition-colors duration-200 hover:bg-gray-800 group-ui-open:bg-gray-800" id="headlessui-menu-button-:r8:" type="button" aria-haspopup="true" aria-expanded="false" data-headlessui-state=""><div class="-ml-0.5 w-5 flex-shrink-0" bis_skin_checked="1"><div class="relative flex" bis_skin_checked="1"><span style="box-sizing: border-box; display: inline-block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: relative; max-width: 100%;"><span style="box-sizing: border-box; display: block; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; max-width: 100%;"><img alt="" aria-hidden="true" src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2720%27%20height=%2720%27/%3e" style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px;"></span><img alt="User" src="./Error_ Undefined variable $data_files/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c.png" decoding="async" data-nimg="intrinsic" class="rounded-sm" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=32&amp;q=75 1x, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=48&amp;q=75 2x" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"></span></div></div><div class="grow overflow-hidden text-ellipsis whitespace-nowrap text-left text-white" bis_skin_checked="1">Abdul Basith Bahi 313</div><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 flex-shrink-0 text-gray-500" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg></button></div></div></nav></div></div></div></div><div class="relative flex h-full max-w-full flex-1 overflow-hidden" bis_skin_checked="1"><div class="flex h-full max-w-full flex-1 flex-col" bis_skin_checked="1"><main class="relative h-full w-full transition-width flex flex-col overflow-hidden items-stretch flex-1"><div class="absolute z-10 hidden flex-col gap-2 md:flex right-3 top-3" bis_skin_checked="1"></div><div class="flex-1 overflow-hidden" bis_skin_checked="1"><div class="react-scroll-to-bottom--css-nhpul-79elbk h-full dark:bg-gray-800" bis_skin_checked="1"><div class="react-scroll-to-bottom--css-nhpul-1n7m0yu" bis_skin_checked="1"><div class="flex flex-col text-sm dark:bg-gray-800" bis_skin_checked="1"><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 dark:bg-gray-800" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative flex" bis_skin_checked="1"><span style="box-sizing: border-box; display: inline-block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: relative; max-width: 100%;"><span style="box-sizing: border-box; display: block; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; max-width: 100%;"><img alt="" aria-hidden="true" src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2738%27%20height=%2738%27/%3e" style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px;"></span><img alt="User" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=48&amp;q=75 1x, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=96&amp;q=75 2x" src="./Error_ Undefined variable $data_files/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c(1).png" decoding="async" data-nimg="intrinsic" class="rounded-sm" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"></span></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1">kenapa muncul error Undefined variable $data
+
+
+
+&lt;body&gt;
+  &lt;div class="container mt-5"&gt;
+
+    &lt;?php
+    $row = 'F';
+    $col = 8;
+    for ($i = 'A'; $i &lt;= $row; $i++) {
+    ?&gt;
+      &lt;div class="row gap-2 justify-content-center"&gt;
+        &lt;?php
+        for ($j = 1; $j &lt;= $col; $j++) { ?&gt;
+          &lt;p onclick="seatClicked(event)" class="col btn &lt;?= (in_array($i . $j, $data['bookedSeats']) ? 'btn-primary' : 'btn-secondary') ?&gt; &lt;?= $j % 4 == 0 ? 'me-5' : '' ?&gt;"&gt;
+            &lt;?= $i . $j ?&gt;
+          &lt;/p&gt;
+        &lt;?php
+        } ?&gt;
+      &lt;/div&gt;&lt;?php
+          } ?&gt;
+
+    &lt;button class="btn btn-primary" onclick="updateSeat()"&gt;pilih&lt;/button&gt;
+
+    &lt;div class="row mt-5"&gt;
+      &lt;h4&gt;Harga Rp.&lt;span id="harga"&gt;&lt;/span&gt;
+      &lt;/h4&gt;
+      &lt;h4&gt;Tempat Duduk &lt;p id="tempat-duduk"&gt;-&lt;/p&gt;
+      &lt;/h4&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class="col-md-12 text-end mt-5"&gt;
+      &lt;a href="&lt;?= $uriHelper-&gt;baseUrl('confirm-checkout/' . $data['transaksi']-&gt;id) ?&gt;" onclick="sendSeat()" class="btn btn-primary"&gt;Checkout&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const selectedSeat = [];
+    const bookedSeat = &lt;?= json_encode($data['bookedSeats']) ?&gt;;
+    let current_harga = 0;
+
+    const seatClicked = (e) =&gt; {
+      const el = e.target
+      const seat = el.innerHTML.trim()
+      console.log(bookedSeat)
+      if (bookedSeat.includes(seat)) {
+        console.log('telah dipesan')
+        return
+      }
+      if (selectedSeat.indexOf(seat) != -1) {
+        selectedSeat.splice(selectedSeat.indexOf(seat), 1)
+      } else {
+        selectedSeat.push(seat);
+      }
+      el.classList.toggle('btn-primary');
+      el.classList.toggle('btn-secondary');
+      console.log(selectedSeat)
+    }
+    const updateSeat = () =&gt; {
+      const harga = document.querySelector('#harga')
+      const tempat = document.querySelector('#tempat-duduk')
+
+      current_harga = '&lt;?= $data['jadwal']['harga'] ?&gt;' * selectedSeat.length
+      harga.innerHTML = current_harga
+      let elText = "";
+      selectedSeat.forEach(seat =&gt; {
+        elText += `&lt;button class='btn btn-success mx-2 mt-3'&gt;${seat}&lt;/button&gt;`
+        console.log(seat)
+      })
+      tempat.innerHTML = elText
+    }
+
+    const sendSeat = () =&gt; {
+      $.ajax({
+        url: `&lt;?= $uriHelper-&gt;baseUrl() ?&gt;checkout/jadwal/${&lt;?= $data['jadwal']["id"] ?&gt;}`,
+        method: 'POST',
+        data: {
+          selectedSeat,
+          current_harga,
+          idTransaksi: '&lt;?= $data['transaksi']-&gt;id ?&gt;'
+        }
+      })
+
+    }
+  &lt;/script&gt;
+</div></div><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button></div><div class="flex justify-between lg:block" bis_skin_checked="1"></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 bg-gray-50 dark:bg-[#444654]" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative p-1 rounded-sm h-[30px] w-[30px] text-white flex items-center justify-center" style="background-color: rgb(25, 195, 125);" bis_skin_checked="1"><svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" class="h-6 w-6" role="img"><title>ChatGPT</title><text x="-9999" y="-9999">ChatGPT</text><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path></svg></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1"><div class="markdown prose w-full break-words dark:prose-invert light" bis_skin_checked="1"><p>Error "Undefined variable $data" occurs when the variable "$data" is not defined or not accessible in the current context. In the given code snippet, the error occurs because the variable "$data" is not defined or assigned a value before being used in the PHP and JavaScript code.</p><p>To resolve this error, you need to make sure that the variable "$data" is properly defined and contains the expected data before using it in the code. Here are a few possible solutions:</p><ol><li><p>Check the code that precedes the provided snippet and ensure that the variable "$data" is assigned a value or fetched from a relevant data source.</p></li><li><p>Make sure that the necessary data is being passed to the current script or file that contains the code snippet. You may need to check the code that calls or includes this script to ensure that the data is being passed correctly.</p></li><li><p>Verify that the variable "$data" is accessible in the current scope. If it is defined in a different scope or file, you may need to use the <code>global</code> keyword or include the file that defines the variable before using it.</p></li></ol><p>Without further information about the context and how the variable "$data" is supposed to be populated, it's challenging to provide a specific solution. Please review the code and make sure that the variable "$data" is properly defined and assigned a value before using it in the code snippet.</p></div></div></div><div class="flex justify-between lg:block" bis_skin_checked="1"><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="flex ml-auto gap-2 rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></button><div class="flex gap-1" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button></div></div></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 dark:bg-gray-800" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative flex" bis_skin_checked="1"><span style="box-sizing: border-box; display: inline-block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: relative; max-width: 100%;"><span style="box-sizing: border-box; display: block; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; max-width: 100%;"><img alt="" aria-hidden="true" src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2738%27%20height=%2738%27/%3e" style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px;"></span><img alt="User" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=48&amp;q=75 1x, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=96&amp;q=75 2x" src="./Error_ Undefined variable $data_files/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c(1).png" decoding="async" data-nimg="intrinsic" class="rounded-sm" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"></span></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1">selesaikan dalam bentuk program</div></div><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button></div><div class="flex justify-between lg:block" bis_skin_checked="1"></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 bg-gray-50 dark:bg-[#444654]" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative p-1 rounded-sm h-[30px] w-[30px] text-white flex items-center justify-center" bis_skin_checked="1" style="background-color: rgb(25, 195, 125);"><svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" class="h-6 w-6" role="img"><title>ChatGPT</title><text x="-9999" y="-9999">ChatGPT</text><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path></svg></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1"><div class="markdown prose w-full break-words dark:prose-invert light" bis_skin_checked="1"><p>Untuk menyelesaikan masalah ini dalam bentuk program, Anda perlu memastikan variabel <code>$data</code> telah didefinisikan dan diisi dengan nilai yang sesuai sebelum digunakan dalam kode PHP dan JavaScript.</p><p>Berikut ini contoh program yang memperbaiki masalah tersebut dengan menginisialisasi variabel <code>$data</code>:</p><pre><div class="bg-black rounded-md mb-4" bis_skin_checked="1"><div class="flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between rounded-t-md" bis_skin_checked="1"><span>php</span><button class="flex ml-auto gap-2"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Copy code</button></div><div class="p-4 overflow-y-auto" bis_skin_checked="1"><code class="!whitespace-pre hljs language-php"><span class="hljs-meta">&lt;?php</span>
+<span class="hljs-comment">// Inisialisasi variabel $data</span>
+<span class="hljs-variable">$data</span> = [
+  <span class="hljs-string">'bookedSeats'</span> =&gt; [<span class="hljs-string">'A1'</span>, <span class="hljs-string">'B3'</span>, <span class="hljs-string">'C5'</span>], <span class="hljs-comment">// Contoh data kursi yang sudah dipesan</span>
+  <span class="hljs-string">'jadwal'</span> =&gt; [
+    <span class="hljs-string">'harga'</span> =&gt; <span class="hljs-number">10000</span>, <span class="hljs-comment">// Contoh harga per kursi</span>
+  ],
+  <span class="hljs-string">'transaksi'</span> =&gt; [
+    <span class="hljs-string">'id'</span> =&gt; <span class="hljs-string">'12345'</span>, <span class="hljs-comment">// Contoh ID transaksi</span>
+  ],
+];
+
+<span class="hljs-meta">?&gt;</span>
+
+&lt;body&gt;
+  &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>="<span class="hljs-title">container</span> <span class="hljs-title">mt</span>-5"&gt;
+    &lt;!-- <span class="hljs-title">Kode</span> <span class="hljs-title">HTML</span> <span class="hljs-title">lainnya</span> --&gt;
+
+    &lt;?<span class="hljs-title">php</span>
+    $<span class="hljs-title">row</span> = '<span class="hljs-title">F</span>';
+    $<span class="hljs-title">col</span> = 8;
+    <span class="hljs-title">for</span> ($<span class="hljs-title">i</span> = '<span class="hljs-title">A</span>'; $<span class="hljs-title">i</span> &lt;= $<span class="hljs-title">row</span>; $<span class="hljs-title">i</span>++) </span>{
+    <span class="hljs-meta">?&gt;</span>
+      &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>="<span class="hljs-title">row</span> <span class="hljs-title">gap</span>-2 <span class="hljs-title">justify</span>-<span class="hljs-title">content</span>-<span class="hljs-title">center</span>"&gt;
+        &lt;?<span class="hljs-title">php</span>
+        <span class="hljs-title">for</span> ($<span class="hljs-title">j</span> = 1; $<span class="hljs-title">j</span> &lt;= $<span class="hljs-title">col</span>; $<span class="hljs-title">j</span>++) </span>{
+          <span class="hljs-variable">$seat</span> = <span class="hljs-variable">$i</span> . <span class="hljs-variable">$j</span>;
+          <span class="hljs-meta">?&gt;</span>
+          &lt;p onclick=<span class="hljs-string">"seatClicked(event)"</span> <span class="hljs-class"><span class="hljs-keyword">class</span>="<span class="hljs-title">col</span> <span class="hljs-title">btn</span> &lt;?= (<span class="hljs-title">in_array</span>($<span class="hljs-title">seat</span>, $<span class="hljs-title">data</span>['<span class="hljs-title">bookedSeats</span>']) ? '<span class="hljs-title">btn</span>-<span class="hljs-title">primary</span>' : '<span class="hljs-title">btn</span>-<span class="hljs-title">secondary</span>') ?&gt; &lt;?= $<span class="hljs-title">j</span> % 4 == 0 ? '<span class="hljs-title">me</span>-5' : '' ?&gt;"&gt;
+            &lt;?= $<span class="hljs-title">seat</span> ?&gt;
+          &lt;/<span class="hljs-title">p</span>&gt;
+        &lt;?<span class="hljs-title">php</span>
+        }
+        ?&gt;
+      &lt;/<span class="hljs-title">div</span>&gt;
+    &lt;?<span class="hljs-title">php</span>
+    }
+    ?&gt;
+
+    &lt;!-- <span class="hljs-title">Kode</span> <span class="hljs-title">HTML</span> <span class="hljs-title">lainnya</span> --&gt;
+
+    &lt;<span class="hljs-title">script</span>&gt;
+      <span class="hljs-title">const</span> <span class="hljs-title">selectedSeat</span> = [];
+      <span class="hljs-title">const</span> <span class="hljs-title">bookedSeat</span> = &lt;?= <span class="hljs-title">json_encode</span>($<span class="hljs-title">data</span>['<span class="hljs-title">bookedSeats</span>']) ?&gt;;
+      <span class="hljs-title">let</span> <span class="hljs-title">current_harga</span> = 0;
+
+      // <span class="hljs-title">Kode</span> <span class="hljs-title">JavaScript</span> <span class="hljs-title">lainnya</span>
+    &lt;/<span class="hljs-title">script</span>&gt;
+  &lt;/<span class="hljs-title">div</span>&gt;
+
+  &lt;!-- <span class="hljs-title">Kode</span> <span class="hljs-title">JavaScript</span> <span class="hljs-title">dan</span> <span class="hljs-title">HTML</span> <span class="hljs-title">lainnya</span> --&gt;
+&lt;/<span class="hljs-title">body</span>&gt;
+</span></code></div></div></pre><p>Dalam contoh program di atas, variabel <code>$data</code> diinisialisasi dengan beberapa contoh data. Pastikan untuk mengganti data tersebut dengan nilai yang sesuai dengan kebutuhan Anda.</p><p>Dengan menggunakan inisialisasi variabel <code>$data</code> seperti contoh di atas, kesalahan "Undefined variable $data" tidak akan muncul karena variabel <code>$data</code> sudah didefinisikan dan diisi dengan nilai yang sesuai sebelum digunakan dalam kode.</p></div></div></div><div class="flex justify-between lg:block" bis_skin_checked="1"><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="flex ml-auto gap-2 rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></button><div class="flex gap-1" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button></div></div></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 dark:bg-gray-800" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative flex" bis_skin_checked="1"><span style="box-sizing: border-box; display: inline-block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: relative; max-width: 100%;"><span style="box-sizing: border-box; display: block; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; max-width: 100%;"><img alt="" aria-hidden="true" src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2738%27%20height=%2738%27/%3e" style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px;"></span><img alt="User" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=48&amp;q=75 1x, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=96&amp;q=75 2x" src="./Error_ Undefined variable $data_files/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c(1).png" decoding="async" data-nimg="intrinsic" class="rounded-sm" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"></span></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1">ubahlah dalam bentuk laravel
+
+
+
+&lt;body&gt;
+  &lt;div class="container mt-5"&gt;
+
+    &lt;?php
+    $row = 'F';
+    $col = 8;
+    for ($i = 'A'; $i &lt;= $row; $i++) {
+    ?&gt;
+      &lt;div class="row gap-2 justify-content-center"&gt;
+        &lt;?php
+        for ($j = 1; $j &lt;= $col; $j++) { ?&gt;
+          &lt;p onclick="seatClicked(event)" class="col btn &lt;?= (in_array($i . $j, $data['bookedSeats']) ? 'btn-primary' : 'btn-secondary') ?&gt; &lt;?= $j % 4 == 0 ? 'me-5' : '' ?&gt;"&gt;
+            &lt;?= $i . $j ?&gt;
+          &lt;/p&gt;
+        &lt;?php
+        } ?&gt;
+      &lt;/div&gt;&lt;?php
+          } ?&gt;
+
+    &lt;button class="btn btn-primary" onclick="updateSeat()"&gt;pilih&lt;/button&gt;
+
+    &lt;div class="row mt-5"&gt;
+      &lt;h4&gt;Harga Rp.&lt;span id="harga"&gt;&lt;/span&gt;
+      &lt;/h4&gt;
+      &lt;h4&gt;Tempat Duduk &lt;p id="tempat-duduk"&gt;-&lt;/p&gt;
+      &lt;/h4&gt;
+    &lt;/div&gt;
+
+
+    &lt;div class="col-md-12 text-end mt-5"&gt;
+      &lt;a href="&lt;?= $uriHelper-&gt;baseUrl('confirm-checkout/' . $data['transaksi']-&gt;id) ?&gt;" onclick="sendSeat()" class="btn btn-primary"&gt;Checkout&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const selectedSeat = [];
+    const bookedSeat = &lt;?= json_encode($data['bookedSeats']) ?&gt;;
+    let current_harga = 0;
+
+    const seatClicked = (e) =&gt; {
+      const el = e.target
+      const seat = el.innerHTML.trim()
+      console.log(bookedSeat)
+      if (bookedSeat.includes(seat)) {
+        console.log('telah dipesan')
+        return
+      }
+      if (selectedSeat.indexOf(seat) != -1) {
+        selectedSeat.splice(selectedSeat.indexOf(seat), 1)
+      } else {
+        selectedSeat.push(seat);
+      }
+      el.classList.toggle('btn-primary');
+      el.classList.toggle('btn-secondary');
+      console.log(selectedSeat)
+    }
+    const updateSeat = () =&gt; {
+      const harga = document.querySelector('#harga')
+      const tempat = document.querySelector('#tempat-duduk')
+
+      current_harga = '&lt;?= $data['jadwal']['harga'] ?&gt;' * selectedSeat.length
+      harga.innerHTML = current_harga
+      let elText = "";
+      selectedSeat.forEach(seat =&gt; {
+        elText += `&lt;button class='btn btn-success mx-2 mt-3'&gt;${seat}&lt;/button&gt;`
+        console.log(seat)
+      })
+      tempat.innerHTML = elText
+    }
+
+    const sendSeat = () =&gt; {
+      $.ajax({
+        url: `&lt;?= $uriHelper-&gt;baseUrl() ?&gt;checkout/jadwal/${&lt;?= $data['jadwal']["id"] ?&gt;}`,
+        method: 'POST',
+        data: {
+          selectedSeat,
+          current_harga,
+          idTransaksi: '&lt;?= $data['transaksi']-&gt;id ?&gt;'
+        }
+      })
+
+    }
+  &lt;/script&gt;
+</div></div><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button></div><div class="flex justify-between lg:block" bis_skin_checked="1"></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 bg-gray-50 dark:bg-[#444654]" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative p-1 rounded-sm h-[30px] w-[30px] text-white flex items-center justify-center" bis_skin_checked="1" style="background-color: rgb(25, 195, 125);"><svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" class="h-6 w-6" role="img"><title>ChatGPT</title><text x="-9999" y="-9999">ChatGPT</text><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path></svg></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1"><div class="markdown prose w-full break-words dark:prose-invert light" bis_skin_checked="1"><p>Dalam Laravel, kita dapat menggunakan sintaksis Blade untuk menggabungkan kode PHP dengan HTML. Berikut adalah kode yang sudah diubah menjadi format Blade di Laravel:</p><pre><div class="bg-black rounded-md mb-4" bis_skin_checked="1"><div class="flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between rounded-t-md" bis_skin_checked="1"><span>html</span><button class="flex ml-auto gap-2"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Copy code</button></div><div class="p-4 overflow-y-auto" bis_skin_checked="1"><code class="!whitespace-pre hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"container mt-5"</span>&gt;</span>
+    @php
+    $row = 'F';
+    $col = 8;
+    @endphp
+    @for ($i = 'A'; $i &lt;= $row; $i++)
+      <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row gap-2 justify-content-center"</span>&gt;</span>
+        @for ($j = 1; $j &lt;= $col; $j++)
+          @php
+          $seat = $i . $j;
+          @endphp
+          <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"seatClicked(event)"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col btn {{ in_array($seat, $data['bookedSeats']) ? 'btn-primary' : 'btn-secondary' }} {{ $j % 4 == 0 ? 'me-5' : '' }}"</span>&gt;</span>
+            {{ $seat }}
+          <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+        @endfor
+      <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+    @endfor
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-primary"</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"updateSeat()"</span>&gt;</span>pilih<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"row mt-5"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>Harga Rp.<span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"harga"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">h4</span>&gt;</span>Tempat Duduk <span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"tempat-duduk"</span>&gt;</span>-<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">h4</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+    <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"col-md-12 text-end mt-5"</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">href</span>=<span class="hljs-string">"{{ $uriHelper-&gt;baseUrl('confirm-checkout/' . $data['transaksi']-&gt;id) }}"</span> <span class="hljs-attr">onclick</span>=<span class="hljs-string">"sendSeat()"</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"btn btn-primary"</span>&gt;</span>Checkout<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="javascript">
+    <span class="hljs-keyword">const</span> selectedSeat = [];
+    <span class="hljs-keyword">const</span> bookedSeat = {!! <span class="hljs-title function_">json_encode</span>($data[<span class="hljs-string">'bookedSeats'</span>]) !!};
+    <span class="hljs-keyword">let</span> current_harga = <span class="hljs-number">0</span>;
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">seatClicked</span> = (<span class="hljs-params">e</span>) =&gt; {
+      <span class="hljs-keyword">const</span> el = e.<span class="hljs-property">target</span>;
+      <span class="hljs-keyword">const</span> seat = el.<span class="hljs-property">innerHTML</span>.<span class="hljs-title function_">trim</span>();
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(bookedSeat);
+      <span class="hljs-keyword">if</span> (bookedSeat.<span class="hljs-title function_">includes</span>(seat)) {
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">'telah dipesan'</span>);
+        <span class="hljs-keyword">return</span>;
+      }
+      <span class="hljs-keyword">if</span> (selectedSeat.<span class="hljs-title function_">indexOf</span>(seat) != -<span class="hljs-number">1</span>) {
+        selectedSeat.<span class="hljs-title function_">splice</span>(selectedSeat.<span class="hljs-title function_">indexOf</span>(seat), <span class="hljs-number">1</span>);
+      } <span class="hljs-keyword">else</span> {
+        selectedSeat.<span class="hljs-title function_">push</span>(seat);
+      }
+      el.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">'btn-primary'</span>);
+      el.<span class="hljs-property">classList</span>.<span class="hljs-title function_">toggle</span>(<span class="hljs-string">'btn-secondary'</span>);
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(selectedSeat);
+    };
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">updateSeat</span> = (<span class="hljs-params"></span>) =&gt; {
+      <span class="hljs-keyword">const</span> harga = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#harga'</span>);
+      <span class="hljs-keyword">const</span> tempat = <span class="hljs-variable language_">document</span>.<span class="hljs-title function_">querySelector</span>(<span class="hljs-string">'#tempat-duduk'</span>);
+
+      current_harga = <span class="hljs-string">'{{ $data['</span>jadwal<span class="hljs-string">']['</span>harga<span class="hljs-string">'] }}'</span> * selectedSeat.<span class="hljs-property">length</span>;
+      harga.<span class="hljs-property">innerHTML</span> = current_harga;
+      <span class="hljs-keyword">let</span> elText = <span class="hljs-string">""</span>;
+      selectedSeat.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">seat</span> =&gt;</span> {
+        elText += <span class="hljs-string">`&lt;button class='btn btn-success mx-2 mt-3'&gt;<span class="hljs-subst">${seat}</span>&lt;/button&gt;`</span>;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(seat);
+      });
+      tempat.<span class="hljs-property">innerHTML</span> = elText;
+    };
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">sendSeat</span> = (<span class="hljs-params"></span>) =&gt; {
+      $.<span class="hljs-title function_">ajax</span>({
+        <span class="hljs-attr">url</span>: <span class="hljs-string">'{{ $uriHelper-&gt;baseUrl() }}checkout/jadwal/{{ $data['</span>jadwal<span class="hljs-string">']['</span>id<span class="hljs-string">'] }}'</span>,
+        <span class="hljs-attr">method</span>: <span class="hljs-string">'POST'</span>,
+        <span class="hljs-attr">data</span>: {
+          selectedSeat,
+          current_harga,
+          <span class="hljs-attr">idTransaksi</span>: <span class="hljs-string">'{{ $data['</span>transaksi<span class="hljs-string">']-&gt;id }}'</span>
+        }
+      });
+    };
+  </span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span>
+</code></div></div></pre><p>Dalam kode di atas, Anda dapat melihat penggunaan direktif Blade seperti <code>@php</code>, <code>@endphp</code>, <code>@for</code>, dan <code>@endfor</code> untuk menggabungkan kode PHP dengan HTML. Kode PHP yang</p></div></div></div><div class="flex justify-between lg:block" bis_skin_checked="1"><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="flex ml-auto gap-2 rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></button><div class="flex gap-1" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button></div></div></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 dark:bg-gray-800" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative flex" bis_skin_checked="1"><span style="box-sizing: border-box; display: inline-block; overflow: hidden; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; position: relative; max-width: 100%;"><span style="box-sizing: border-box; display: block; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px; max-width: 100%;"><img alt="" aria-hidden="true" src="data:image/svg+xml,%3csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20version=%271.1%27%20width=%2738%27%20height=%2738%27/%3e" style="display: block; max-width: 100%; width: initial; height: initial; background: none; opacity: 1; border: 0px; margin: 0px; padding: 0px;"></span><img alt="User" srcset="/_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=48&amp;q=75 1x, /_next/image?url=https%3A%2F%2Flh3.googleusercontent.com%2Fa%2FAAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ%3Ds96-c&amp;w=96&amp;q=75 2x" src="./Error_ Undefined variable $data_files/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c(1).png" decoding="async" data-nimg="intrinsic" class="rounded-sm" style="position: absolute; inset: 0px; box-sizing: border-box; padding: 0px; border: none; margin: auto; display: block; width: 0px; height: 0px; min-width: 100%; max-width: 100%; min-height: 100%; max-height: 100%;"></span></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1">muncul error Undefined variable $data</div></div><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400 md:invisible md:group-hover:visible"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg></button></div><div class="flex justify-between lg:block" bis_skin_checked="1"></div></div></div></div><div class="group w-full text-gray-800 dark:text-gray-100 border-b border-black/10 dark:border-gray-900/50 bg-gray-50 dark:bg-[#444654]" bis_skin_checked="1"><div class="flex p-4 gap-4 text-base md:gap-6 md:max-w-2xl lg:max-w-xl xl:max-w-3xl md:py-6 lg:px-0 m-auto" bis_skin_checked="1"><div class="flex-shrink-0 flex flex-col relative items-end" bis_skin_checked="1"><div class="w-[30px]" bis_skin_checked="1"><div class="relative p-1 rounded-sm h-[30px] w-[30px] text-white flex items-center justify-center" bis_skin_checked="1" style="background-color: rgb(25, 195, 125);"><svg width="41" height="41" viewBox="0 0 41 41" fill="none" xmlns="http://www.w3.org/2000/svg" stroke-width="1.5" class="h-6 w-6" role="img"><title>ChatGPT</title><text x="-9999" y="-9999">ChatGPT</text><path d="M37.5324 16.8707C37.9808 15.5241 38.1363 14.0974 37.9886 12.6859C37.8409 11.2744 37.3934 9.91076 36.676 8.68622C35.6126 6.83404 33.9882 5.3676 32.0373 4.4985C30.0864 3.62941 27.9098 3.40259 25.8215 3.85078C24.8796 2.7893 23.7219 1.94125 22.4257 1.36341C21.1295 0.785575 19.7249 0.491269 18.3058 0.500197C16.1708 0.495044 14.0893 1.16803 12.3614 2.42214C10.6335 3.67624 9.34853 5.44666 8.6917 7.47815C7.30085 7.76286 5.98686 8.3414 4.8377 9.17505C3.68854 10.0087 2.73073 11.0782 2.02839 12.312C0.956464 14.1591 0.498905 16.2988 0.721698 18.4228C0.944492 20.5467 1.83612 22.5449 3.268 24.1293C2.81966 25.4759 2.66413 26.9026 2.81182 28.3141C2.95951 29.7256 3.40701 31.0892 4.12437 32.3138C5.18791 34.1659 6.8123 35.6322 8.76321 36.5013C10.7141 37.3704 12.8907 37.5973 14.9789 37.1492C15.9208 38.2107 17.0786 39.0587 18.3747 39.6366C19.6709 40.2144 21.0755 40.5087 22.4946 40.4998C24.6307 40.5054 26.7133 39.8321 28.4418 38.5772C30.1704 37.3223 31.4556 35.5506 32.1119 33.5179C33.5027 33.2332 34.8167 32.6547 35.9659 31.821C37.115 30.9874 38.0728 29.9178 38.7752 28.684C39.8458 26.8371 40.3023 24.6979 40.0789 22.5748C39.8556 20.4517 38.9639 18.4544 37.5324 16.8707ZM22.4978 37.8849C20.7443 37.8874 19.0459 37.2733 17.6994 36.1501C17.7601 36.117 17.8666 36.0586 17.936 36.0161L25.9004 31.4156C26.1003 31.3019 26.2663 31.137 26.3813 30.9378C26.4964 30.7386 26.5563 30.5124 26.5549 30.2825V19.0542L29.9213 20.998C29.9389 21.0068 29.9541 21.0198 29.9656 21.0359C29.977 21.052 29.9842 21.0707 29.9867 21.0902V30.3889C29.9842 32.375 29.1946 34.2791 27.7909 35.6841C26.3872 37.0892 24.4838 37.8806 22.4978 37.8849ZM6.39227 31.0064C5.51397 29.4888 5.19742 27.7107 5.49804 25.9832C5.55718 26.0187 5.66048 26.0818 5.73461 26.1244L13.699 30.7248C13.8975 30.8408 14.1233 30.902 14.3532 30.902C14.583 30.902 14.8088 30.8408 15.0073 30.7248L24.731 25.1103V28.9979C24.7321 29.0177 24.7283 29.0376 24.7199 29.0556C24.7115 29.0736 24.6988 29.0893 24.6829 29.1012L16.6317 33.7497C14.9096 34.7416 12.8643 35.0097 10.9447 34.4954C9.02506 33.9811 7.38785 32.7263 6.39227 31.0064ZM4.29707 13.6194C5.17156 12.0998 6.55279 10.9364 8.19885 10.3327C8.19885 10.4013 8.19491 10.5228 8.19491 10.6071V19.808C8.19351 20.0378 8.25334 20.2638 8.36823 20.4629C8.48312 20.6619 8.64893 20.8267 8.84863 20.9404L18.5723 26.5542L15.206 28.4979C15.1894 28.5089 15.1703 28.5155 15.1505 28.5173C15.1307 28.5191 15.1107 28.516 15.0924 28.5082L7.04046 23.8557C5.32135 22.8601 4.06716 21.2235 3.55289 19.3046C3.03862 17.3858 3.30624 15.3413 4.29707 13.6194ZM31.955 20.0556L22.2312 14.4411L25.5976 12.4981C25.6142 12.4872 25.6333 12.4805 25.6531 12.4787C25.6729 12.4769 25.6928 12.4801 25.7111 12.4879L33.7631 17.1364C34.9967 17.849 36.0017 18.8982 36.6606 20.1613C37.3194 21.4244 37.6047 22.849 37.4832 24.2684C37.3617 25.6878 36.8382 27.0432 35.9743 28.1759C35.1103 29.3086 33.9415 30.1717 32.6047 30.6641C32.6047 30.5947 32.6047 30.4733 32.6047 30.3889V21.188C32.6066 20.9586 32.5474 20.7328 32.4332 20.5338C32.319 20.3348 32.154 20.1698 31.955 20.0556ZM35.3055 15.0128C35.2464 14.9765 35.1431 14.9142 35.069 14.8717L27.1045 10.2712C26.906 10.1554 26.6803 10.0943 26.4504 10.0943C26.2206 10.0943 25.9948 10.1554 25.7963 10.2712L16.0726 15.8858V11.9982C16.0715 11.9783 16.0753 11.9585 16.0837 11.9405C16.0921 11.9225 16.1048 11.9068 16.1207 11.8949L24.1719 7.25025C25.4053 6.53903 26.8158 6.19376 28.2383 6.25482C29.6608 6.31589 31.0364 6.78077 32.2044 7.59508C33.3723 8.40939 34.2842 9.53945 34.8334 10.8531C35.3826 12.1667 35.5464 13.6095 35.3055 15.0128ZM14.2424 21.9419L10.8752 19.9981C10.8576 19.9893 10.8423 19.9763 10.8309 19.9602C10.8195 19.9441 10.8122 19.9254 10.8098 19.9058V10.6071C10.8107 9.18295 11.2173 7.78848 11.9819 6.58696C12.7466 5.38544 13.8377 4.42659 15.1275 3.82264C16.4173 3.21869 17.8524 2.99464 19.2649 3.1767C20.6775 3.35876 22.0089 3.93941 23.1034 4.85067C23.0427 4.88379 22.937 4.94215 22.8668 4.98473L14.9024 9.58517C14.7025 9.69878 14.5366 9.86356 14.4215 10.0626C14.3065 10.2616 14.2466 10.4877 14.2479 10.7175L14.2424 21.9419ZM16.071 17.9991L20.4018 15.4978L24.7325 17.9975V22.9985L20.4018 25.4983L16.071 22.9985V17.9991Z" fill="currentColor"></path></svg></div></div><div class="text-xs flex items-center justify-center gap-1 invisible absolute left-0 top-2 -ml-4 -translate-x-full group-hover:visible !invisible" bis_skin_checked="1"><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="15 18 9 12 15 6"></polyline></svg></button><span class="flex-grow flex-shrink-0">1 / 1</span><button disabled="" class="dark:text-white disabled:text-gray-300 dark:disabled:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="9 18 15 12 9 6"></polyline></svg></button></div></div><div class="relative flex w-[calc(100%-50px)] flex-col gap-1 md:gap-3 lg:w-[calc(100%-115px)]" bis_skin_checked="1"><div class="flex flex-grow flex-col gap-3" bis_skin_checked="1"><div class="min-h-[20px] flex flex-col items-start gap-4 whitespace-pre-wrap break-words" bis_skin_checked="1"><div class="markdown prose w-full break-words dark:prose-invert light" bis_skin_checked="1"><p>Untuk mengatasi error "Undefined variable $data" dalam Laravel, Anda perlu memastikan variabel <code>$data</code> telah didefinisikan dan diisi dengan nilai yang sesuai sebelum digunakan dalam template Blade.</p><p>Berikut adalah contoh penyelesaian masalah tersebut dalam format Laravel:</p><pre><div class="bg-black rounded-md mb-4" bis_skin_checked="1"><div class="flex items-center relative text-gray-200 bg-gray-800 px-4 py-2 text-xs font-sans justify-between rounded-t-md" bis_skin_checked="1"><span>php</span><button class="flex ml-auto gap-2"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>Copy code</button></div><div class="p-4 overflow-y-auto" bis_skin_checked="1"><code class="!whitespace-pre hljs language-php">&lt;body&gt;
+  &lt;div <span class="hljs-class"><span class="hljs-keyword">class</span>="<span class="hljs-title">container</span> <span class="hljs-title">mt</span>-5"&gt;
+
+    @<span class="hljs-title">php</span>
+    $<span class="hljs-title">row</span> = '<span class="hljs-title">F</span>';
+    $<span class="hljs-title">col</span> = 8;
+    @<span class="hljs-title">endphp</span>
+    @<span class="hljs-title">for</span> ($<span class="hljs-title">i</span> = '<span class="hljs-title">A</span>'; $<span class="hljs-title">i</span> &lt;= $<span class="hljs-title">row</span>; $<span class="hljs-title">i</span>++)
+      &lt;<span class="hljs-title">div</span> <span class="hljs-title">class</span>="<span class="hljs-title">row</span> <span class="hljs-title">gap</span>-2 <span class="hljs-title">justify</span>-<span class="hljs-title">content</span>-<span class="hljs-title">center</span>"&gt;
+        @<span class="hljs-title">for</span> ($<span class="hljs-title">j</span> = 1; $<span class="hljs-title">j</span> &lt;= $<span class="hljs-title">col</span>; $<span class="hljs-title">j</span>++)
+          @<span class="hljs-title">php</span>
+          $<span class="hljs-title">seat</span> = $<span class="hljs-title">i</span> . $<span class="hljs-title">j</span>;
+          @<span class="hljs-title">endphp</span>
+          &lt;<span class="hljs-title">p</span> <span class="hljs-title">onclick</span>="<span class="hljs-title">seatClicked</span>(<span class="hljs-title">event</span>)" <span class="hljs-title">class</span>="<span class="hljs-title">col</span> <span class="hljs-title">btn</span> </span>{{ (<span class="hljs-title function_ invoke__">in_array</span>(<span class="hljs-variable">$seat</span>, <span class="hljs-variable">$data</span>[<span class="hljs-string">'bookedSeats'</span>]) ? <span class="hljs-string">'btn-primary'</span> : <span class="hljs-string">'btn-secondary'</span>) }} {{ <span class="hljs-variable">$j</span> % <span class="hljs-number">4</span> == <span class="hljs-number">0</span> ? <span class="hljs-string">'me-5'</span> : <span class="hljs-string">''</span> }}<span class="hljs-string">"&gt;
+            {{ <span class="hljs-subst">$seat</span> }}
+          &lt;/p&gt;
+        @endfor
+      &lt;/div&gt;
+    @endfor
+
+    &lt;button class="</span>btn btn-primary<span class="hljs-string">" onclick="</span><span class="hljs-title function_ invoke__">updateSeat</span>()<span class="hljs-string">"&gt;pilih&lt;/button&gt;
+
+    &lt;div class="</span>row mt-<span class="hljs-number">5</span><span class="hljs-string">"&gt;
+      &lt;h4&gt;Harga Rp.&lt;span id="</span>harga<span class="hljs-string">"&gt;&lt;/span&gt;&lt;/h4&gt;
+      &lt;h4&gt;Tempat Duduk &lt;p id="</span>tempat-duduk<span class="hljs-string">"&gt;-&lt;/p&gt;&lt;/h4&gt;
+    &lt;/div&gt;
+
+    &lt;div class="</span>col-md-<span class="hljs-number">12</span> text-end mt-<span class="hljs-number">5</span><span class="hljs-string">"&gt;
+      &lt;a href="</span>{{ <span class="hljs-variable">$uriHelper</span>-&gt;<span class="hljs-title function_ invoke__">baseUrl</span>(<span class="hljs-string">'confirm-checkout/'</span> . <span class="hljs-variable">$data</span>[<span class="hljs-string">'transaksi'</span>]-&gt;id) }}<span class="hljs-string">" onclick="</span><span class="hljs-title function_ invoke__">sendSeat</span>()<span class="hljs-string">" class="</span>btn btn-primary<span class="hljs-string">"&gt;Checkout&lt;/a&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    const selectedSeat = [];
+    const bookedSeat = {!! json_encode(<span class="hljs-subst">$data</span>['bookedSeats']) !!};
+    let current_harga = 0;
+
+    const seatClicked = (e) =&gt; {
+      const el = e.target;
+      const seat = el.innerHTML.trim();
+      console.log(bookedSeat);
+      if (bookedSeat.includes(seat)) {
+        console.log('telah dipesan');
+        return;
+      }
+      if (selectedSeat.indexOf(seat) != -1) {
+        selectedSeat.splice(selectedSeat.indexOf(seat), 1);
+      } else {
+        selectedSeat.push(seat);
+      }
+      el.classList.toggle('btn-primary');
+      el.classList.toggle('btn-secondary');
+      console.log(selectedSeat);
+    };
+
+    const updateSeat = () =&gt; {
+      const harga = document.querySelector('#harga');
+      const tempat = document.querySelector('#tempat-duduk');
+
+      current_harga = '{{ <span class="hljs-subst">$data</span>['jadwal']['harga'] }}' * selectedSeat.length;
+      harga.innerHTML = current_harga;
+      let elText = "</span><span class="hljs-string">";
+      selectedSeat.forEach(seat =&gt; {
+        elText += `&lt;button class='btn btn-success mx-2 mt-3'&gt;${seat}&lt;/button&gt;`;
+        console.log(seat);
+      });
+      tempat.innerHTML = elText;
+    };
+
+    const sendSeat = () =&gt; {
+      $.ajax({
+        url: '{{ <span class="hljs-subst">$uriHelper</span>-&gt;baseUrl() }}checkout/jadwal/{{ <span class="hljs-subst">$data</span>['jadwal']['id'] }}',
+        method: 'POST',
+        data: {
+          selectedSeat,
+          current_harga,
+          idTransaksi: '{{ <span class="hljs-subst">$data</span>['transaksi']-&gt;id }}'
+        }
+      });
+    };
+  &lt;/script&gt;
+&lt;/body&gt;
+</span></code></div></div></pre><p>Pastikan bahwa variabel <code>$data</code> telah didefinisikan dan diisi dengan nilai yang</p></div></div></div><div class="flex justify-between lg:block" bis_skin_checked="1"><div class="text-gray-400 flex self-end lg:self-center justify-center mt-2 gap-2 md:gap-3 lg:gap-1 lg:absolute lg:top-0 lg:translate-x-full lg:right-0 lg:mt-0 lg:pl-2 visible" bis_skin_checked="1"><button class="flex ml-auto gap-2 rounded-md p-1 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg></button><div class="flex gap-1" bis_skin_checked="1"><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path></svg></button><button class="p-1 rounded-md hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200 disabled:dark:hover:text-gray-400"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"></path></svg></button></div></div></div></div></div></div><div class="h-32 md:h-48 flex-shrink-0" bis_skin_checked="1"></div></div><button class="cursor-pointer absolute right-6 bottom-[124px] md:bottom-[120px] z-10 rounded-full border border-gray-200 bg-gray-50 text-gray-600 dark:border-white/10 dark:bg-white/10 dark:text-gray-200"><svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 m-1" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg></button></div><button class="react-scroll-to-bottom--css-nhpul-1tj0vk3 scroll-convo" type="button"></button></div></div><div class="absolute bottom-0 left-0 w-full border-t md:border-t-0 dark:border-white/20 md:border-transparent md:dark:border-transparent md:bg-vert-light-gradient bg-white dark:bg-gray-800 md:!bg-transparent dark:md:bg-vert-dark-gradient pt-2" bis_skin_checked="1"><form class="stretch mx-2 flex flex-row gap-3 last:mb-2 md:mx-4 md:last:mb-6 lg:mx-auto lg:max-w-2xl xl:max-w-3xl"><div class="relative flex h-full flex-1 items-stretch md:flex-col" bis_skin_checked="1"><div class="" bis_skin_checked="1"><div class="h-full flex ml-1 md:w-full md:m-auto md:mb-2 gap-0 md:gap-2 justify-center" bis_skin_checked="1"><button class="btn relative btn-neutral border-0 md:border" as="button"><div class="flex w-full gap-2 items-center justify-center" bis_skin_checked="1"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 flex-shrink-0" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polyline points="1 4 1 10 7 10"></polyline><polyline points="23 20 23 14 17 14"></polyline><path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path></svg>Regenerate response</div></button><button class="btn relative btn-neutral border-0 md:border" as="button"><div class="flex w-full gap-2 items-center justify-center" bis_skin_checked="1"><svg stroke="currentColor" fill="none" stroke-width="1.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="h-3 w-3 -rotate-180" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><polygon points="11 19 2 12 11 5 11 19"></polygon><polygon points="22 19 13 12 22 5 22 19"></polygon></svg>Continue generating</div></button></div></div><div class="flex flex-col w-full py-[10px] flex-grow md:py-4 md:pl-4 relative border border-black/10 bg-white dark:border-gray-900/50 dark:text-white dark:bg-gray-700 rounded-xl shadow-xs dark:shadow-xs" bis_skin_checked="1"><textarea id="prompt-textarea" tabindex="0" data-id="request-:R1dd6:-3" rows="1" placeholder="Send a message." class="m-0 w-full resize-none border-0 bg-transparent p-0 pr-10 focus:ring-0 focus-visible:ring-0 dark:bg-transparent md:pr-12 pl-3 md:pl-0" style="max-height: 200px; height: 24px; overflow-y: hidden;"></textarea><button class="absolute p-1 rounded-md bottom-[10px] md:bottom-3 md:p-2 md:right-3 dark:hover:bg-gray-900 dark:disabled:hover:bg-transparent right-2 disabled:text-gray-400 enabled:bg-brand-purple text-white transition-colors disabled:opacity-40" style="" disabled=""><span class="" data-state="closed"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" class="h-4 w-4" stroke-width="2"><path d="M.5 1.163A1 1 0 0 1 1.97.28l12.868 6.837a1 1 0 0 1 0 1.766L1.969 15.72A1 1 0 0 1 .5 14.836V10.33a1 1 0 0 1 .816-.983L8.5 8 1.316 6.653A1 1 0 0 1 .5 5.67V1.163Z" fill="currentColor"></path></svg></span></button></div></div></form><div class="px-3 pb-3 pt-2 text-center text-xs text-gray-600 dark:text-gray-300 md:px-4 md:pb-6 md:pt-3" bis_skin_checked="1"><span>Free Research Preview. ChatGPT may produce inaccurate information about people, places, or facts. <a href="https://help.openai.com/en/articles/6825453-chatgpt-release-notes" target="_blank" rel="noreferrer" class="underline">ChatGPT May 24 Version</a></span></div></div></main></div></div></div><div class="absolute left-0 right-0 top-0 z-[2]" bis_skin_checked="1"></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"user":{"id":"user-YK1FhKMZx1WQwgNUS5rWUQR6","name":"Abdul Basith Bahi 313","email":"basithbahi@gmail.com","image":"https://lh3.googleusercontent.com/a/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c","picture":"https://lh3.googleusercontent.com/a/AAcHTte4nkzpc1WZLQFnUdtIwC6Ytth25cd6A6HhfvPWxQ=s96-c","idp":"google-oauth2","iat":1685114147,"mfa":false,"groups":[],"intercom_hash":"c64fc3f96d5add89d6b4a83d56e0e2fe74b63385cd6be748b9b5b239b08083e3"},"serviceStatus":{},"userCountry":"ID","geoOk":true,"serviceAnnouncement":{"paid":{},"public":{}},"isUserInCanPayGroup":true,"_sentryTraceData":"6573ae7436d841ad9ca5dea877aef95f-a247c2b713422b11-1","_sentryBaggage":"sentry-environment=production,sentry-release=affd05c93f76e890235ac876cfc9b95c86ef0eb2,sentry-transaction=%2F,sentry-public_key=33f79e998f93410882ecec1e57143840,sentry-trace_id=6573ae7436d841ad9ca5dea877aef95f,sentry-sample_rate=1"},"__N_SSP":true},"page":"/","query":{},"buildId":"P7slZS66cy3khXMWyp3GF","isFallback":false,"gssp":true,"scriptLoader":[]}</script><script>(function(){var js = "window['__CF$cv$params']={r:'7d0600ed9b204011',m:'bDzl3T0nQqGnfSjjyLhBkC5HX.wMF_CWQoHDSakQd3Y-1685607272-0-AaCesbnd5heDHEA4m5voxHBTscxNpHUYhq5QD8t8DQEj',u:'/cdn-cgi/challenge-platform/h/b'};_cpo=document.createElement('script');_cpo.nonce='',_cpo.src='/cdn-cgi/challenge-platform/scripts/invisible.js',document.getElementsByTagName('head')[0].appendChild(_cpo);";var _0xh = document.createElement('iframe');_0xh.height = 1;_0xh.width = 1;_0xh.style.position = 'absolute';_0xh.style.top = 0;_0xh.style.left = 0;_0xh.style.border = 'none';_0xh.style.visibility = 'hidden';document.body.appendChild(_0xh);function handler() {var _0xi = _0xh.contentDocument || _0xh.contentWindow.document;if (_0xi) {var _0xj = _0xi.createElement('script');_0xj.nonce = '';_0xj.innerHTML = js;_0xi.getElementsByTagName('head')[0].appendChild(_0xj);}}if (document.readyState !== 'loading') {handler();} else if (window.addEventListener) {document.addEventListener('DOMContentLoaded', handler);} else {var prev = document.onreadystatechange || function () {};document.onreadystatechange = function (e) {prev(e);if (document.readyState !== 'loading') {document.onreadystatechange = prev;handler();}};}})();</script><iframe height="1" width="1" style="position: absolute; top: 0px; left: 0px; border: none; visibility: hidden;" src="./Error_ Undefined variable $data_files/saved_resource.html"></iframe><next-route-announcer><p aria-live="assertive" id="__next-route-announcer__" role="alert" style="border: 0px; clip: rect(0px, 0px, 0px, 0px); height: 1px; margin: -1px; overflow: hidden; padding: 0px; position: absolute; top: 0px; width: 1px; white-space: nowrap; overflow-wrap: normal;"></p></next-route-announcer><div portal-container="" bis_skin_checked="1"><span class="pointer-events-none fixed inset-0 z-[60] mx-auto my-2 flex max-w-[560px] flex-col items-stretch justify-start md:pb-5"></span></div><iframe id="intercom-frame" style="position: absolute !important; opacity: 0 !important; width: 1px !important; height: 1px !important; top: 0 !important; left: 0 !important; border: none !important; display: block !important; z-index: -1 !important; pointer-events: none;" aria-hidden="true" tabindex="-1" title="Intercom" src="./Error_ Undefined variable $data_files/saved_resource(1).html"></iframe><div class="intercom-lightweight-app" bis_skin_checked="1"><style id="intercom-lightweight-app-style" type="text/css">
+  @keyframes intercom-lightweight-app-launcher {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes intercom-lightweight-app-gradient {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes intercom-lightweight-app-messenger {
+    
+        0% {
+          opacity: 0;
+          transform: scale(0);
+        }
+        40% {
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1);
+        }
+        
+  }
+
+  .intercom-lightweight-app {
+    position: fixed;
+    z-index: 2147483001;
+    width: 0;
+    height: 0;
+    font-family: intercom-font, "Helvetica Neue", "Apple Color Emoji", Helvetica, Arial, sans-serif;
+  }
+
+  .intercom-lightweight-app-gradient {
+    position: fixed;
+    z-index: 2147483002;
+    width: 500px;
+    height: 500px;
+    bottom: 0;
+    right: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      ellipse at bottom right,
+      rgba(29, 39, 54, 0.16) 0%,
+      rgba(29, 39, 54, 0) 72%);
+    animation: intercom-lightweight-app-gradient 200ms ease-out;
+  }
+
+  .intercom-lightweight-app-launcher {
+    position: fixed;
+    z-index: 2147483003;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: none;
+    bottom: 20px;
+    right: 20px;
+    max-width: 48px;
+    width: 48px;
+    max-height: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #202123;
+    cursor: pointer;
+    box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.06), 0 2px 32px 0 rgba(0, 0, 0, 0.16);
+    transition: transform 167ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+    box-sizing: content-box;
+  }
+
+  
+        .intercom-lightweight-app-launcher:hover {
+          transition: transform 250ms cubic-bezier(0.33, 0.00, 0.00, 1.00);
+          transform: scale(1.1)
+        }
+
+        .intercom-lightweight-app-launcher:active {
+          transform: scale(0.85);
+          transition: transform 134ms cubic-bezier(0.45, 0, 0.2, 1);
+        }
+      
+
+
+  .intercom-lightweight-app-launcher:focus {
+    outline: none;
+
+    
+  }
+
+  .intercom-lightweight-app-launcher-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 48px;
+    height: 48px;
+    transition: transform 100ms linear, opacity 80ms linear;
+  }
+
+  .intercom-lightweight-app-launcher-icon-open {
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-open svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .intercom-lightweight-app-launcher-icon-open svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve {
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve svg {
+    height: 44px;
+  }
+
+  .intercom-lightweight-app-launcher-icon-self-serve svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  .intercom-lightweight-app-launcher-custom-icon-open {
+    max-height: 24px;
+    max-width: 24px;
+
+    
+        opacity: 1;
+        transform: rotate(0deg) scale(1);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-minimize {
+    
+        opacity: 0;
+        transform: rotate(-60deg) scale(0);
+      
+  }
+
+  .intercom-lightweight-app-launcher-icon-minimize svg path {
+    fill: rgb(255, 255, 255);
+  }
+
+  .intercom-lightweight-app-messenger {
+    position: fixed;
+    z-index: 2147483003;
+    overflow: hidden;
+    background-color: white;
+    animation: intercom-lightweight-app-messenger 250ms cubic-bezier(0, 1, 1, 1);
+    transform-origin: bottom right;
+    
+        width: 400px;
+        height: calc(100% - 40px);
+        max-height: 704px;
+        min-height: 250px;
+        right: 20px;
+        bottom: 20px;
+        box-shadow: 0 5px 40px rgba(0,0,0,0.16);
+      
+
+    border-radius: 16px;
+  }
+
+  .intercom-lightweight-app-messenger-header {
+    height: 64px;
+    border-bottom: none;
+    background: #202123
+
+    
+  }
+
+  .intercom-lightweight-app-messenger-footer{
+    position:absolute;
+    bottom:0;
+    width: 100%;
+    height: 80px;
+    background: #fff;
+    font-size: 14px;
+    line-height: 21px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0px 0px 25px rgba(0, 0, 0, 0.05);
+    
+  }
+
+  @media print {
+    .intercom-lightweight-app {
+      display: none;
+    }
+  }
+</style></div></body><grammarly-desktop-integration data-grammarly-shadow-root="true"><template shadowrootmode="open"><style>
+  div.grammarly-desktop-integration {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select:none;
+    user-select:none;
+  }
+
+  div.grammarly-desktop-integration:before {
+    content: attr(data-content);
+  }
+</style><div aria-label="grammarly-integration" role="group" tabindex="-1" class="grammarly-desktop-integration" data-content="{&quot;mode&quot;:&quot;full&quot;,&quot;isActive&quot;:true,&quot;isUserDisabled&quot;:false}"></div></template></grammarly-desktop-integration></html>

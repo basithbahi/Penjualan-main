@@ -57,6 +57,13 @@
                             <input type="text" class="form-control" id="harga" name="harga"
                                 value="{{ isset($jadwal) ? $jadwal->harga : '' }}">
                         </div>
+                        <div class="form-group">
+                            <label for="waktu">Waktu Keberangkatan</label>
+                            <input name="waktu" type="text" class="form-control datetimepicker-input" id="waktu"
+                                data-toggle="datetimepicker" data-target="#waktu" placeholder="Waktu"
+                                value="{{ isset($jadwal) ? $jadwal->waktu : '' }}">
+                        </div>
+
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -66,3 +73,14 @@
         </div>
     </form>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            $('.datetimepicker-input').datetimepicker({
+                format: 'YYYY-MM-DD HH:mm:ss',
+                // Anda dapat menyesuaikan format dan opsi sesuai kebutuhan Anda
+            });
+        });
+    </script>
+@endpush

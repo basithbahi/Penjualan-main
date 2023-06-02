@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('id_kursi')->nullable();
             $table->string('nama_kursi')->nullable();
-            $table->string('kursi_gerbong')->nullable();
             $table->foreignId('id_gerbong')->references('id')->on('gerbong');
             $table->timestamps();
         });
