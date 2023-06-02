@@ -150,19 +150,24 @@
                     <body class="text-center">
                     <form action="{{ route('jadwal.searchIndex') }}" method="GET">
                             <br>
-                            <select name="pemilihan_stasiun" class="form-control">
-                                <option value="0">Pemilihan Stasiun</option>
+                            <select name="stasiun" class="form-control">
                                 <option value="1">Surabaya</option>
                                 <option value="2">Malang</option>
                             </select>
                             <br>
 
-                            <input type="date" id="inputTanggal" class="form-control" placeholder="Tanggal" required autofocus>
+                            <input type="date" id="tanggal" name="tanggal" class="form-control" placeholder="Tanggal" required
+                                autofocus>
+
+                            <br>
+
+
 
 
                             <br><br>
                             <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                                 <button type="submit" class="btn btn-primary">Pesan</button>
+                                <!-- <a href="{{ route('transaksi.searchKodeBooking') }}" class="glightbox btn-watch-video d-flex align-items-center"> -->
                                 <a href="cekKodeBooking" class="glightbox btn-watch-video d-flex align-items-center">
                                     <span>Cek Kode Booking</span></a>
                                 <a href="seat" class="glightbox btn-watch-video d-flex align-items-center">
