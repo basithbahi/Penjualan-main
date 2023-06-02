@@ -11,7 +11,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $fillable = ['invoice', 'nik', 'id_jadwal', 'id_metode_pembayaran', 'id_kursi'];
+    protected $fillable = ['invoice', 'nik', 'id_jadwal', 'id_kursi', 'id_metode_pembayaran', 'total_bayar'];
 
     public function user()
     {
@@ -21,6 +21,11 @@ class Transaksi extends Model
     public function jadwal()
     {
         return $this->belongsTo(Jadwal::class, 'id_jadwal');
+    }
+
+    public function kursi()
+    {
+        return $this->belongsTo(Kursi::class, 'id_kursi');
     }
 
     public function metode_pembayaran()
