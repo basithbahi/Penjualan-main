@@ -67,6 +67,11 @@
             <i class="fas fa-fw fa-history"></i>
             <span>Transaksi</span></a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('riwayat_transaksi') }}">
+            <i class="fas fa-fw fa-history"></i>
+            <span>Riwayat Transaksi</span></a>
+    </li>
 
 
     <!-- Divider -->

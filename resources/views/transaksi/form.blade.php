@@ -32,19 +32,6 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="id_metode_pembayaran">Metode Pembayaran</label>
-                            <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Metode Pembayaran --</option>
-                                @foreach ($metode_pembayaran as $row)
-                                    <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($row->id == $transaksi->id ? 'selected' : '') : '' }}>
-                                        {{ $row->metode_pembayaran }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="form-group">
                             <label for="id_jadwal">Jadwal Kereta</label>
                             <select name="id_jadwal" id="id_jadwal" class="custom-select">
                                 <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
@@ -69,6 +56,30 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="id_metode_pembayaran">Metode Pembayaran</label>
+                            <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Metode Pembayaran --</option>
+                                @foreach ($metode_pembayaran as $row)
+                                    @if (is_object($row))
+                                        $id = $row->id;
+                                        <option value="{{ $row->id }}"
+                                        {{ isset($transaksi) ? ($transaksi->id_metode_pembayaran == $row->id ? 'selected' : '') : '' }}>
+                                        {{ $row->metode_pembayaran }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="harga">Total Harga</label>
+                            <input type="text" class="form-control" id="harga" name="harga"
+                            value="{{ isset($transaksi) ? $transaksi->jadwal->harga : '' }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_bayar">Total Bayar</label>
+                            <input type="text" class="form-control" id="total_bayar" name="total_bayar" value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
+                        </div>
+
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
@@ -77,4 +88,23 @@
             </div>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var jadwalSelect = document.getElementById('id_jadwal');
+            var hargaInput = document.getElementById('harga');
+
+            jadwalSelect.addEventListener('change', function() {
+                var selectedOption = jadwalSelect.options[jadwalSelect.selectedIndex];
+                var harga = selectedOption.getAttribute('data-harga');
+
+                if (harga) {
+                    hargaInput.value = harga;
+                } else {
+                    hargaInput.value = '';
+                }
+            });
+        });
+
+    </script>
 @endsection

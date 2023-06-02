@@ -29,9 +29,11 @@
               <th>No</th>
               <th>Invoice</th>
               <th>User</th>
-              <th>Metode Pembayaran</th>
               <th>Jadwal Kereta Api</th>
               <th>Kursi</th>
+              <th>Metode Pembayaran</th>
+              <th>Total Harga</th>
+              <th>Total Bayar</th>
               <th>Aksi</th>
 				@endif
             </tr>
@@ -43,18 +45,20 @@
                 <th>{{ $no++ }}</th>
                 <td>{{ $row->invoice }}</td>
                 <td>{{ $row->user->nama }}</td>
-                <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
                 <td>
                   @if ($row->id_jadwal && $row->jadwal->rute->stasiun)
                     {{ $row->jadwal->rute->stasiun->nama_stasiun }} - {{ $row->jadwal->rute->stasiun_tujuan }}
                   @endif
                 </td>
                 <td>{{ $row->id_kursi }}</td>
+                <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
+                <td>{{ $row->jadwal->harga }}</td>
+                <td>{{ $row->total_bayar }}</td>
 				        @if (auth()->user()->level == 'Admin')
                     <td>
                         <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
                         <a href="{{ route('transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
-                        <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-info"><i class="fas fa-money-bill "></i></a>
+                        <!-- <a href="{{ route('riwayat_transaksi.bayar', $row->id) }}" class="btn btn-info"><i class="fas fa-money-bill "></i></a> -->
                     </td>
                 @else
                 @endif
