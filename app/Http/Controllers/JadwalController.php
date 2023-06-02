@@ -34,7 +34,8 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
 
         ];
 
@@ -61,7 +62,9 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
+
 
         ];
 
