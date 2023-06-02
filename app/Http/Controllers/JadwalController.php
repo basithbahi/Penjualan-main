@@ -80,18 +80,44 @@ class JadwalController extends Controller
         return redirect()->route('jadwal');
     }
 
+
+
     public function search(Request $request)
     {
         $query = $request->input('query');
 
         if ($query) {
-            $data = Jadwal::with('kereta')
+            $data = Jadwal::query()
                 ->where('id_jadwal', 'like', "%$query%")
+                ->orderBy('id_jadwal', 'asc')
                 ->paginate(10);
         } else {
-            $data = Jadwal::with('kereta')->get();
+            $data = Jadwal::get();
         }
 
         return view('jadwal.index', ['data' => $data, 'query' => $query]);
+    }
+
+    public function searchIndex(Request $request)
+    {
+        $query = $request->input('stasiunKeberangkatan');
+        $query2 = $request->input('tanggal');
+        $kereta = Kereta::get();
+        $rute = Rute::get();
+        $users = User::get();
+
+        if ($query) {
+            $data = Jadwal::query()
+            ->join('rute', 'jadwal.id_rute', '=', 'rute.id_rute')
+            ->join('stasiun', 'rute.id_stasiun', '=', 'stasiun.id_stasiun')
+            ->where('stasiun.nama_stasiun', 'like', "%$query%")
+            ->orWhere('jadwal.tanggal', 'like', "%$query2%")
+            ->orderBy('jadwal.id_kereta', 'asc')
+            ->paginate(10);
+        } else {
+            $data = Jadwal::get();
+        }
+
+        return view('pilihJadwal', ['data' => $data, 'query' => $query]);
     }
 }

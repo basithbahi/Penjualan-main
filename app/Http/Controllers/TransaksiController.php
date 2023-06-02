@@ -102,15 +102,29 @@ class TransaksiController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-            $data = Transaksi::with('user', 'id_jadwal', 'id_metode_pembayaran')
+            $data = Transaksi::query()
                 ->where('invoice', 'like', "%$query%")
-                ->orWhere('nama_user', 'like', "%$query%")
                 ->orderBy('invoice', 'asc')
                 ->paginate(10);
         } else {
-            $data = Transaksi::with('user', 'id_jadwal', 'id_metode_pembayaran')->get();
+            $data = Transaksi::get();
         }
 
         return view('transaksi.index', ['data' => $data, 'query' => $query]);
+    }
+
+    public function searchKodeBooking(Request $request)
+    {
+        $query = $request->input('query');
+
+        if ($query) {
+            $data = Transaksi::query()
+                ->where('invoice', 'like', "%$query%")
+                ->orderBy('invoice', 'asc');
+        } else {
+            $data = Transaksi::get();
+        }
+
+        return view('cekKodeBooking', ['data' => $data, 'query' => $query]);
     }
 }
