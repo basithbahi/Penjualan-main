@@ -23,6 +23,7 @@ class CreateJadwalTable extends Migration
             $table->unsignedBigInteger('id_rute');
             $table->foreign('id_rute')->references('id')->on('rute');
             $table->double('harga');
+            $table->dateTime('waktu');
             $table->timestamps();
         });
     }

@@ -22,7 +22,7 @@
   <body>
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <form action="{{ route('transaksi.searchKodeBooking') }}" method="GET">
+        <form action="{{ route('jadwal.searchIndex') }}" method="GET">
           <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" name="query" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">
@@ -34,38 +34,41 @@
         </form>
       </div>
 
+
     <div class="card-body">
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>No</th>
-              <th>Invoice</th>
-              <th>User</th>
-              <th>Metode Pembayaran</th>
-              <th>Jadwal Kereta Api</th>
-              <th>Kursi</th>
+              <th>ID Jadwal</th>
+              <th>Admin</th>
+              <th>Jadwal Kereta</th>
+              <th>Jadwal Rute</th>
+              <th>Harga Perjalanan</th>
+              @if (auth()->user()->level == 'Admin')
+              <th>Aksi</th>
+              @endif
             </tr>
           </thead>
           <tbody>
-          @if (!empty($data))
             @php($no = 1)
             @foreach ($data as $row)
               <tr>
                 <th>{{ $no++ }}</th>
-                <td>{{ $row->invoice }}</td>
-                <td>{{ $row->user->nama }}</td>
-                <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
+                <td>{{ $row->id_jadwal }}</td>
+                <td>{{ $row->nik }}</td>
+                <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
+                <td>{{ $row->rute->stasiun->nama_stasiun }} -{{ $row->rute->stasiun_tujuan }}</td>
+                <td>{{ $row->harga }}</td>
+                @if (auth()->user()->level == 'Admin')
                 <td>
-                  @if ($row->id_jadwal && $row->jadwal->rute->stasiun)
-                    {{ $row->jadwal->rute->stasiun->nama_stasiun }} - {{ $row->jadwal->rute->stasiun_tujuan }}
-                  @endif
+                    <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                    <a href="{{ route('jadwal.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
                 </td>
-                <td>{{ $row->id_kursi }}</td>
+                @endif
               </tr>
             @endforeach
-            @else
-          @endif
           </tbody>
         </table>
       </div>

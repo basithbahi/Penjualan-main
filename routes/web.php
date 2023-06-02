@@ -151,6 +151,7 @@ Route::middleware('auth')->group(function () {
             Route::post('edit/{id}', 'update')->name('jadwal.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('jadwal.hapus');
             Route::get('search', 'search')->name('jadwal.search');
+            Route::get('searchIndex', 'searchIndex')->name('jadwal.searchIndex');
         });
 
     Route::controller(TransaksiController::class)
@@ -165,6 +166,7 @@ Route::middleware('auth')->group(function () {
             Route::get('bayar/{id}', 'bayar')->name('transaksi.bayar');
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
+            Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
         });
 
         Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
@@ -181,8 +183,13 @@ Route::middleware('auth')->group(function () {
         Route::get('home', function () {
             return view('home');
         })->name('home');
+
         Route::get('cekKodeBooking', function () {
             return view('cekKodeBooking');
         })->name('cekKodeBooking');
+
+        Route::get('seat', function () {
+            return view('seat');
+        })->name('seat');
     });
 });
