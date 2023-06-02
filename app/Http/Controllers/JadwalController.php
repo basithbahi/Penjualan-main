@@ -34,7 +34,8 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
 
         ];
 
@@ -61,7 +62,9 @@ class JadwalController extends Controller
             'id_kereta' => $request->id_kereta,
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
-            'waktu' => $request->waktu,
+            'tanggal_keberangkatan' => $request->tanggal_keberangkatan,
+            'waktu_keberangkatan' => $request->waktu_keberangkatan,
+
 
         ];
 
@@ -97,7 +100,7 @@ class JadwalController extends Controller
 
     public function searchIndex(Request $request)
     {
-        $query = $request->input('stasiunKeberangkatan');
+        $query = $request->input('stasiun');
         $query2 = $request->input('tanggal');
         $kereta = Kereta::get();
         $rute = Rute::get();
@@ -106,9 +109,8 @@ class JadwalController extends Controller
         if ($query) {
             $data = Jadwal::query()
             ->join('rute', 'jadwal.id_rute', '=', 'rute.id_rute')
-            ->join('stasiun', 'rute.id_stasiun', '=', 'stasiun.id_stasiun')
-            ->where('stasiun.nama_stasiun', 'like', "%$query%")
-            ->orWhere('jadwal.tanggal', 'like', "%$query2%")
+            ->where('rute.id_stasiun', 'like', "%$query%")
+            ->Where('jadwal.tanggal', 'like', "%$query2%")
             ->orderBy('jadwal.id_kereta', 'asc')
             ->paginate(10);
         } else {
