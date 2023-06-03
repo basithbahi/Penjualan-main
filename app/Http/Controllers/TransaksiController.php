@@ -133,20 +133,12 @@ class TransaksiController extends Controller
         $query = $request->input('query');
 
         if ($query) {
-<<<<<<< HEAD
             $data = Transaksi::with('user', 'id_jadwal')
-=======
-            $data = Transaksi::query()
->>>>>>> 88e0ffc143fe0444e27d5d46bb98f10bed8cee1e
                 ->where('invoice', 'like', "%$query%")
                 ->orderBy('invoice', 'asc')
                 ->paginate(10);
         } else {
-<<<<<<< HEAD
             $data = Transaksi::with('user', 'id_jadwal')->get();
-=======
-            $data = Transaksi::get();
->>>>>>> 88e0ffc143fe0444e27d5d46bb98f10bed8cee1e
         }
 
         return view('transaksi.index', ['data' => $data, 'query' => $query]);

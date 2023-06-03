@@ -3,25 +3,33 @@
 <head>
   <title>Seat Selection</title>
   <style>
+    body {
+      background-image: linear-gradient(to bottom right, #f9a5ff, #a5b3ff);
+      font-family: Arial, sans-serif;
+    }
+    
     .seat-container {
       display: flex;
       flex-direction: column;
       align-items: center;
       max-width: 400px;
       margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
+    
     .seat-row {
       display: flex;
       justify-content: center;
       margin-bottom: 10px;
     }
-
+    
     .seat {
       display: inline-block;
-      width: 50px;
+      width: 80px;
       height: 50px;
-      background-color: #ccc;
       margin: 2px;
       cursor: pointer;
       transition: background-color 0.3s;
@@ -30,47 +38,66 @@
       align-items: center;
       font-weight: bold;
       font-size: 14px;
+      border-radius: 10px;
+      background-image: url('https://www.jing.fm/clipimg/detail/169-1695221_drawn-sofa-animasi-sofa-clipart.png');
+      background-size: cover;
+      color: #fff;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     }
-
+    
     .seat.selected {
-      background-color: green;
+      background-color: #00ff00;
+      color: #fff;
     }
-
+    
     .seat.disabled {
-      background-color: gray;
+      background-color: #e0e0e0;
       cursor: not-allowed;
     }
-
+    
     .path {
       display: inline-block;
       width: 100px;
       text-align: center;
       margin-bottom: 10px;
+      font-weight: bold;
     }
-
+    
     .divider {
       display: inline-block;
       width: 20px;
       height: 50px;
     }
-
+    
     .footer {
       margin-top: 20px;
       text-align: center;
     }
-
+    
     .button {
       padding: 10px 20px;
-      background-color: #007bff;
+      background-color: #ff73ff;
       color: #fff;
       border: none;
       border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-
+    
     .button:hover {
-      background-color: #0056b3;
+      background-color: #ff42ff;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #ff73ff;
+      margin-bottom: 10px;
+    }
+    
+    p {
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -128,6 +155,7 @@
       seat.addEventListener('click', () => {
         if (!seat.classList.contains('disabled')) {
           seat.classList.toggle('selected');
+          seat.style.backgroundColor = seat.classList.contains('selected') ? '#00ff00' : '';
           updateSubmitButtonStatus();
         }
       });

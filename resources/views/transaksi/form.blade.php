@@ -36,7 +36,7 @@
                             <select name="id_jadwal" id="id_jadwal" class="custom-select">
                                 <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
                                 @foreach ($jadwal as $row)
-                                    <option value="{{ $row->id }}"
+                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}"
                                         {{ isset($transaksi) ? ($row->id == $transaksi->id_jadwal ? 'selected' : '') : '' }}>
                                         {{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}
                                     </option>
@@ -82,7 +82,7 @@
 
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="btn-simpan">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -93,6 +93,8 @@
         document.addEventListener('DOMContentLoaded', function() {
             var jadwalSelect = document.getElementById('id_jadwal');
             var hargaInput = document.getElementById('harga');
+            var totalBayarInput = document.getElementById('total_bayar');
+            var btnSimpan = document.getElementById('btn-simpan');
 
             jadwalSelect.addEventListener('change', function() {
                 var selectedOption = jadwalSelect.options[jadwalSelect.selectedIndex];
@@ -104,7 +106,17 @@
                     hargaInput.value = '';
                 }
             });
-        });
 
+            totalBayarInput.addEventListener('input', function() {
+                var totalBayar = parseFloat(totalBayarInput.value);
+                var harga = parseFloat(hargaInput.value);
+
+                if (totalBayar < harga || totalBayar > harga) {
+                    btnSimpan.disabled = true;
+                } else {
+                    btnSimpan.disabled = false;
+                }
+            });
+        });
     </script>
 @endsection
