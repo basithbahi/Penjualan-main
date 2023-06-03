@@ -29,15 +29,27 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      max-width: 400px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
-
+    
     .seat-row {
       display: flex;
       justify-content: center;
       margin-bottom: 10px;
     }
-
+    
     .seat {
+      display: inline-block;
+      width: 80px;
+      height: 50px;
+      margin: 2px;
+      cursor: pointer;
+      transition: background-color 0.3s;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -47,40 +59,64 @@
       background-color: #ccc;
       font-weight: bold;
       font-size: 14px;
-      cursor: pointer;
-      transition: background-color 0.3s;
+      border-radius: 10px;
+      background-image: url('https://www.jing.fm/clipimg/detail/169-1695221_drawn-sofa-animasi-sofa-clipart.png');
+      background-size: cover;
+      color: #fff;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
     }
-
+    
     .seat.selected {
-      background-color: green;
+      background-color: #00ff00;
+      color: #fff;
     }
-
+    
     .seat.disabled {
-      background-color: gray;
+      background-color: #e0e0e0;
       cursor: not-allowed;
     }
-
+    
+    .path {
+      display: inline-block;
+      width: 100px;
+      text-align: center;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    
     .divider {
       width: 20px;
     }
-
+    
     .footer {
       margin-top: 20px;
       text-align: center;
     }
-
+    
     .button {
       padding: 10px 20px;
-      background-color: #007bff;
+      background-color: #ff73ff;
       color: #fff;
       border: none;
       border-radius: 4px;
       font-size: 16px;
       cursor: pointer;
+      transition: background-color 0.3s;
     }
-
+    
     .button:hover {
-      background-color: #0056b3;
+      background-color: #ff42ff;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #ff73ff;
+      margin-bottom: 10px;
+    }
+    
+    p {
+      text-align: center;
+      margin-bottom: 20px;
     }
   </style>
 </head>

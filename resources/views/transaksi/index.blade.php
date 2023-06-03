@@ -34,6 +34,9 @@
               <th>Metode Pembayaran</th>
               <th>Total Harga</th>
               <th>Total Bayar</th>
+              <th>Metode Pembayaran</th>
+              <th>Total Harga</th>
+              <th>Total Bayar</th>
               <th>Aksi</th>
 				@endif
             </tr>
@@ -54,10 +57,14 @@
                 <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
                 <td>{{ $row->jadwal->harga }}</td>
                 <td>{{ $row->total_bayar }}</td>
+                <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
+                <td>{{ $row->jadwal->harga }}</td>
+                <td>{{ $row->total_bayar }}</td>
 				        @if (auth()->user()->level == 'Admin')
                     <td>
                         <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
                         <a href="{{ route('transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
+                        <!-- <a href="{{ route('riwayat_transaksi.bayar', $row->id) }}" class="btn btn-info"><i class="fas fa-money-bill "></i></a> -->
                     </td>
                 @else
                 @endif

@@ -48,7 +48,7 @@
                                     <td>{{ $row->jk }}</td>
                                     <td>{{ $row->email }}</td>
                                     <td>{{ $row->password }}</td>
-                                    <td>{{ $row->foto_profil }}</td>
+                                    <td><img src="{{ asset('storage/' .$row->foto_profil) }}" alt="Foto Profil"></td>
                                     <td>
                                         <a href="{{ route('user.edit', $row->id) }}" class="btn btn-warning">Edit
                                             &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>

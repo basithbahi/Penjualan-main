@@ -11,6 +11,7 @@ use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
 use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\MetodePembayaranController;
+use App\Http\Controllers\RiwayatTransaksiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -164,9 +165,22 @@ Route::middleware('auth')->group(function () {
             Route::get('edit/{id}', 'edit')->name('transaksi.edit');
             Route::post('edit/{id}', 'update')->name('transaksi.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('transaksi.hapus');
+            Route::get('bayar/{id}', 'bayar')->name('transaksi.bayar');
+            Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
             Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
         });
+
+        Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
+            Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
+            Route::get('', 'index')->name('riwayat_transaksi.index');
+            Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
+            Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
+            Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
+            Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
+            Route::get('search', 'search')->name('riwayat_transaksi.search');
+        });
+
     Route::middleware('auth')->group(function () {
         Route::get('home', function () {
             return view('home');
@@ -191,5 +205,9 @@ Route::middleware('auth')->group(function () {
         Route::get('seat', function () {
             return view('seat');
         })->name('seat');
+
+        Route::get('profile', function () {
+            return view('profile');
+        })->name('profile');
     });
 });
