@@ -34,6 +34,9 @@
               <th>Metode Pembayaran</th>
               <th>Total Harga</th>
               <th>Total Bayar</th>
+              <th>Metode Pembayaran</th>
+              <th>Total Harga</th>
+              <th>Total Bayar</th>
               <th>Aksi</th>
 				@endif
             </tr>
@@ -51,6 +54,9 @@
                   @endif
                 </td>
                 <td>{{ $row->id_kursi }}</td>
+                <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
+                <td>{{ $row->jadwal->harga }}</td>
+                <td>{{ $row->total_bayar }}</td>
                 <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
                 <td>{{ $row->jadwal->harga }}</td>
                 <td>{{ $row->total_bayar }}</td>

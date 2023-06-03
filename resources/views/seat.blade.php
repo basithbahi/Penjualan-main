@@ -4,10 +4,27 @@
   <title>Seat Selection</title>
   <style>
     body {
-      background-image: linear-gradient(to bottom right, #f9a5ff, #a5b3ff);
       font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
     }
-    
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
     .seat-container {
       display: flex;
       flex-direction: column;
@@ -36,6 +53,10 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      width: 50px;
+      height: 50px;
+      margin: 2px;
+      background-color: #ccc;
       font-weight: bold;
       font-size: 14px;
       border-radius: 10px;
@@ -64,9 +85,7 @@
     }
     
     .divider {
-      display: inline-block;
       width: 20px;
-      height: 50px;
     }
     
     .footer {
@@ -102,62 +121,73 @@
   </style>
 </head>
 <body>
-  <h1>Seat Selection</h1>
-  <p>Select your seat:</p>
+  <div class="container">
+    <h1>Seat Selection</h1>
+    <p>Select your seat:</p>
 
-  <div class="seat-container">
-    <div class="seat-row">
-      <div class="seat">A1</div>
-      <div class="seat">B1</div>
-      <div class="divider"></div>
-      <div class="seat">C1</div>
-      <div class="seat">D1</div>
+    <div class="seat-container">
+      <div class="seat-row">
+        <div class="seat" data-seat="A1">A1</div>
+        <div class="seat" data-seat="B1">B1</div>
+        <div class="divider"></div>
+        <div class="seat" data-seat="C1">C1</div>
+        <div class="seat" data-seat="D1">D1</div>
+      </div>
+      <div class="seat-row">
+        <div class="seat" data-seat="A2">A2</div>
+        <div class="seat" data-seat="B2">B2</div>
+        <div class="divider"></div>
+        <div class="seat" data-seat="C2">C2</div>
+        <div class="seat" data-seat="D2">D2</div>
+      </div>
+      <div class="seat-row">
+        <div class="seat" data-seat="A3">A3</div>
+        <div class="seat" data-seat="B3">B3</div>
+        <div class="divider"></div>
+        <div class="seat" data-seat="C3">C3</div>
+        <div class="seat" data-seat="D3">D3</div>
+      </div>
+      <div class="seat-row">
+        <div class="seat" data-seat="A4">A4</div>
+        <div class="seat" data-seat="B4">B4</div>
+        <div class="divider"></div>
+        <div class="seat" data-seat="C4">C4</div>
+        <div class="seat" data-seat="D4">D4</div>
+      </div>
+      <div class="seat-row">
+        <div class="seat" data-seat="A5">A5</div>
+        <div class="seat" data-seat="B5">B5</div>
+        <div class="divider"></div>
+        <div class="seat" data-seat="C5">C5</div>
+        <div class="seat" data-seat="D5">D5</div>
+      </div>
     </div>
-    <div class="seat-row">
-      <div class="seat">A2</div>
-      <div class="seat">B2</div>
-      <div class="divider"></div>
-      <div class="seat">C2</div>
-      <div class="seat">D2</div>
-    </div>
-    <div class="seat-row">
-      <div class="seat">A3</div>
-      <div class="seat">B3</div>
-      <div class="divider"></div>
-      <div class="seat">C3</div>
-      <div class="seat">D3</div>
-    </div>
-    <div class="seat-row">
-      <div class="seat">A4</div>
-      <div class="seat">B4</div>
-      <div class="divider"></div>
-      <div class="seat">C4</div>
-      <div class="seat">D4</div>
-    </div>
-    <div class="seat-row">
-      <div class="seat">A5</div>
-      <div class="seat">B5</div>
-      <div class="divider"></div>
-      <div class="seat">C5</div>
-      <div class="seat">D5</div>
-    </div>
-  </div>
 
-  <div class="footer">
-    <button class="button" disabled>Submit</button>
+    <div class="footer">
+      <button class="button" disabled>Submit</button>
+    </div>
   </div>
 
   <script>
     const seats = document.querySelectorAll('.seat');
     const submitButton = document.querySelector('.button');
+    let selectedSeat = null;
 
     seats.forEach((seat) => {
       seat.addEventListener('click', () => {
-        if (!seat.classList.contains('disabled')) {
-          seat.classList.toggle('selected');
-          seat.style.backgroundColor = seat.classList.contains('selected') ? '#00ff00' : '';
-          updateSubmitButtonStatus();
+        const seatData = seat.getAttribute('data-seat');
+        if (selectedSeat === seatData) {
+          seat.classList.remove('selected');
+          selectedSeat = null;
+        } else {
+          if (selectedSeat) {
+            const currentSelectedSeat = document.querySelector(`.seat[data-seat="${selectedSeat}"]`);
+            currentSelectedSeat.classList.remove('selected');
+          }
+          seat.classList.add('selected');
+          selectedSeat = seatData;
         }
+        updateSubmitButtonStatus();
       });
     });
 

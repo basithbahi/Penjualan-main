@@ -7,11 +7,15 @@
     <form
     action="{{ $transaksi && isset($transaksi->id) ? route('transaksi.bayar.upload', $transaksi->id) : route('transaksi.bayar.upload') }}"
     method="post">
+    action="{{ $transaksi && isset($transaksi->id) ? route('transaksi.bayar.upload', $transaksi->id) : route('transaksi.bayar.upload') }}"
+    method="post">
         @csrf
         <div class="row">
             <div class="col-12">
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">
+                            {{ $transaksi && isset($transaksi->id) ? 'Form Edit Transaksi' : 'Form Tambah Transaksi' }}</h6>
                     <h6 class="m-0 font-weight-bold text-primary">
                             {{ $transaksi && isset($transaksi->id) ? 'Form Edit Transaksi' : 'Form Tambah Transaksi' }}</h6>
                     </div>
@@ -49,6 +53,7 @@
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary"
+                            onclick="">
                             onclick="">
                             Bayar
                         </button>
