@@ -159,6 +159,8 @@ Route::middleware('auth')->group(function () {
             Route::get('', 'index')->name('transaksi');
             Route::get('tambah', 'tambah')->name('transaksi.tambah');
             Route::post('tambah', 'simpan')->name('transaksi.tambah.simpan');
+            Route::get('tambahCustomer', 'tambahCustomer')->name('transaksi.tambahCustomer');
+            Route::post('tambahCustomer', 'simpanCustomer')->name('transaksi.tambahCustomer.simpanCustomer');
             Route::get('edit/{id}', 'edit')->name('transaksi.edit');
             Route::post('edit/{id}', 'update')->name('transaksi.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('transaksi.hapus');
@@ -181,6 +183,10 @@ Route::middleware('auth')->group(function () {
         Route::get('searchKodeBooking', function () {
             return view('searchKodeBooking');
         })->name('searchKodeBooking');
+
+        Route::get('transaksiCustomer', function () {
+            return view('transaksiCustomer');
+        })->name('transaksiCustomer');
 
         Route::get('seat', function () {
             return view('seat');

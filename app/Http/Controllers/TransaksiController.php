@@ -56,6 +56,40 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi');
     }
 
+    public function tambahCustomer(Request $request)
+    {
+        $id_jadwal = $request->id;
+        $harga = $request->harga;
+
+        $user = User::get();
+        $jadwal = Jadwal::find($id_jadwal);
+        $kursi = Kursi::get();
+        $metode_pembayaran = MetodePembayaran::get();
+
+        return view('transaksiCustomer', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran, 'harga' => $harga]);
+    }
+
+    public function simpanCustomer(Request $request)
+    {
+        $request->validate([
+            'nik' => 'required',
+            'total_bayar' => 'required|numeric|min:0'
+        ]);
+
+        $data = [
+            'invoice' => $request->invoice,
+            'nik' => $request->nik,
+            'id_jadwal' => $request->id_jadwal,
+            'id_kursi' => $request->id_kursi,
+            'id_metode_pembayaran' => $request->id_metode_pembayaran,
+            'total_bayar' => $request->total_bayar,
+        ];
+
+        Transaksi::create($data);
+
+        return redirect()->route('home');
+    }
+
     // public function bayar($id)
     // {
     //     $transaksi = Transaksi::find($id);

@@ -156,15 +156,11 @@
                             </select>
                             <br>
 
-                            <input type="date" id="tanggal" name="tanggal" class="form-control" placeholder="Tanggal" required
+                            <input type="date" id="tanggal" name="tanggal" class="form-control" placeholder="tanggal" required
                                 autofocus>
 
-                            <br>
+                            <br><br><br>
 
-
-
-
-                            <br><br>
                             <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                                 <button type="submit" class="btn btn-primary">Pesan</button>
                                 <!-- <a href="{{ route('transaksi.searchKodeBooking') }}" class="glightbox btn-watch-video d-flex align-items-center"> -->

@@ -21,15 +21,15 @@
   </head>
   <body>
   <div class="card shadow mb-4">
-    <div class="card-header py-3">
-        <form action="{{ route('jadwal.searchIndex') }}" method="GET">
+    {{-- <div class="card-header py-3"> --}}
+        {{-- <form action="{{ route('jadwal.searchIndex') }}" method="GET">
           <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" name="query" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">
               <button class="btn btn-primary" type="submit">
                 <i class="fas fa-search fa-sm"></i>
               </button>
-            </div>
+            </div> --}}
           </div>
         </form>
       </div>
@@ -46,9 +46,7 @@
               <th>Jadwal Kereta</th>
               <th>Jadwal Rute</th>
               <th>Harga Perjalanan</th>
-              @if (auth()->user()->level == 'Admin')
               <th>Aksi</th>
-              @endif
             </tr>
           </thead>
           <tbody>
@@ -59,14 +57,10 @@
                 <td>{{ $row->id_jadwal }}</td>
                 <td>{{ $row->nik }}</td>
                 <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
-                <td>{{ $row->rute->stasiun->nama_stasiun }} -{{ $row->rute->stasiun_tujuan }}</td>
+                <td>{{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}</td>
                 <td>{{ $row->harga }}</td>
-                @if (auth()->user()->level == 'Admin')
                 <td>
-                    <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
-                    <a href="{{ route('jadwal.hapus', $row->id) }}" class="btn btn-danger">Hapus &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
-                </td>
-                @endif
+                    <a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id_jadwal, 'harga' => $row->harga]) }}" class="btn btn-success">PILIH</a>                </td>
               </tr>
             @endforeach
           </tbody>
@@ -75,4 +69,3 @@
     </div>
   </div>
   </body>
-  
