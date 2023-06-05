@@ -117,10 +117,15 @@
               <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown">
+            <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown"></div>
                 <a class="dropdown-item text-center" href="#" style="margin-left: -20px;">
                   <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
                   <span class="text-black">Profile</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown"></div>
+                <a class="dropdown-item text-center" href="cekTiket" style="margin-left: -20px;">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Cek Tiket</span>
                 </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item text-center" href="{{ route('logout') }}" style="margin-left: -20px;">

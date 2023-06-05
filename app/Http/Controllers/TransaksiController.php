@@ -8,7 +8,6 @@ use App\Models\User;
 use App\Models\Jadwal;
 use App\Models\Kursi;
 use App\Models\MetodePembayaran;
-use App\Models\MetodePembayaran;
 
 class TransaksiController extends Controller
 {
@@ -28,16 +27,10 @@ class TransaksiController extends Controller
         $metode_pembayaran = MetodePembayaran::get();
 
         return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function simpan(Request $request)
     {
-        $request->validate([
-            'nik' => 'required',
-            'total_bayar' => 'required|numeric|min:0'
-        ]);
-
         $request->validate([
             'nik' => 'required',
             'total_bayar' => 'required|numeric|min:0'
@@ -116,7 +109,6 @@ class TransaksiController extends Controller
         $metode_pembayaran = MetodePembayaran::get();
 
         return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function update($id, Request $request)
@@ -170,12 +162,10 @@ class TransaksiController extends Controller
 
         if ($query) {
             $data = Transaksi::with('user', 'id_jadwal')
-            $data = Transaksi::with('user', 'id_jadwal')
                 ->where('invoice', 'like', "%$query%")
                 ->orderBy('invoice', 'asc')
                 ->paginate(10);
         } else {
-            $data = Transaksi::with('user', 'id_jadwal')->get();
             $data = Transaksi::with('user', 'id_jadwal')->get();
         }
 
@@ -196,4 +186,5 @@ class TransaksiController extends Controller
 
         return view('cekKodeBooking', ['data' => $data, 'query' => $query]);
     }
+    
 }

@@ -199,5 +199,9 @@ Route::middleware('auth')->group(function () {
         Route::get('seat', function () {
             return view('seat');
         })->name('seat');
+
+        Route::get('cekTiket', function () {
+            return view('cekTiket');
+        })->name('cekTiket');
     });
 });
