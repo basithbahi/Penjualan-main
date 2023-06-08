@@ -14,12 +14,6 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($id)
-    {
-        $user = User::find($id);
-
-        return view('user.show', ['user' => $user]);
-    }
 
     public function index()
     {
@@ -84,6 +78,56 @@ class UserController extends Controller
         return redirect()->route('user');
     }
 
+    public function editProfile(Request $request)
+    {
+        $user = $request->user();
+
+        return view('pilihProfile', ['user' => $user]);
+    }
+
+    public function simpanProfile(Request $request)
+    {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
+        User::create([
+            'nik' => $request->nik,
+            'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'ttl' => $request->ttl,
+            'jk' => $request->jk,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'foto_profil' => $image_name,
+            'level' => 'User'
+        ]);
+
+        return redirect()->route('profile');
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
+        $user = $request->user();
+        $user->nik = $request->input('nik');
+        $user->nama = $request->input('nama');
+        $user->alamat = $request->input('alamat');
+        $user->ttl = $request->input('ttl');
+        $user->jk = $request->input('jk');
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
+        $user->foto_profil = $image_name;
+        $user->save();
+
+        return redirect()->route('profile');
+    }
+
     public function hapus($id)
     {
         User::find($id)->delete();
@@ -108,4 +152,5 @@ class UserController extends Controller
         }
         return view('user.index', compact('user', 'query', 'jumlahDataUser'));
     }
+
 }

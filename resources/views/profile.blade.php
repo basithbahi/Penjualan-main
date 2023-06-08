@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
     <title>Profile | JESJESPOR</title>
@@ -16,9 +16,7 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,600;1,700&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&family=Raleway:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
     <!-- Vendor CSS Files -->
     <link href="{{ asset('style/assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
@@ -28,9 +26,8 @@
     <link href="{{ asset('style/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('style/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <!-- Custom fonts for this template-->
-  <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
+    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
@@ -50,7 +47,8 @@
   ======================================================== -->
     <style>
         body {
-            background-image: linear-gradient(to bottom, #2980B9, #6DD5FA);
+            background-color: #123456;
+            color: #ffffff;
         }
 
         .center-table {
@@ -65,12 +63,14 @@
             border-collapse: collapse;
             width: 100%;
             border: 2px solid #000;
+            color: #ffffff;
         }
 
         th, td {
             border: 2px solid #000;
             padding: 8px;
             text-align: left;
+            color: #ffffff; /* Tambahkan untuk mengubah warna teks */
         }
 
         th {
@@ -140,37 +140,39 @@
                 <tbody>
                     @if (Auth::check())
                         <tr>
-                            <td>NIK:</td>
-                            <td>{{ Auth::user()->nik }}</td>
+                            <td style="color: white;">NIK:</td>
+                            <td style="color: white;">{{ Auth::user()->nik }}</td>
                         </tr>
                         <tr>
-                            <td>Nama:</td>
-                            <td>{{ Auth::user()->nama }}</td>
+                            <td style="color: white;">Nama:</td>
+                            <td style="color: white;">{{ Auth::user()->nama }}</td>
                         </tr>
                         <tr>
-                            <td>Alamat:</td>
-                            <td>{{ Auth::user()->alamat }}</td>
+                            <td style="color: white;">Alamat:</td>
+                            <td style="color: white;">{{ Auth::user()->alamat }}</td>
                         </tr>
                         <tr>
-                            <td>TTL:</td>
-                            <td>{{ Auth::user()->ttl }}</td>
+                            <td style="color: white;">TTL:</td>
+                            <td style="color: white;">{{ Auth::user()->ttl }}</td>
                         </tr>
                         <tr>
-                            <td>JK:</td>
-                            <td>{{ Auth::user()->jk }}</td>
+                            <td style="color: white;">JK:</td>
+                            <td style="color: white;">{{ Auth::user()->jk }}</td>
                         </tr>
                         <tr>
-                            <td>Email:</td>
-                            <td>{{ Auth::user()->email }}</td>
+                            <td style="color: white;">Email:</td>
+                            <td style="color: white;">{{ Auth::user()->email }}</td>
                         </tr>
                     @endif
                 </tbody>
             </table>
         </div>
         <div class="edit-button">
-            <a href="{{ route('user.edit', Auth::user()->id) }}">Edit</a>
+            <a href="{{ route('user.editProfile', ['user' => Auth::user()]) }}">Edit</a>
         </div>
     </div>
+    <div id="preloader"></div>
+
     <!-- Vendor JS Files -->
     <script src="{{ asset('style/assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <script src="{{ asset('style/assets/vendor/aos/aos.js') }}"></script>
@@ -186,5 +188,14 @@
   <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
   <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
+
+    <!-- Template Main JS File -->
+    <script src="{{ asset('style/assets/js/main.js') }}"></script>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="{{ route('logout') }}">
+        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+        Logout
+    </a>
+    </div>
 </body>
 </html>

@@ -136,7 +136,9 @@ Route::middleware('auth')->group(function () {
             Route::get('tambah', 'tambah')->name('user.tambah');
             Route::post('tambah', 'simpan')->name('user.tambah.simpan');
             Route::get('edit/{id}', 'edit')->name('user.edit');
+            Route::get('editProfile', 'editProfile')->name('user.editProfile');
             Route::post('edit/{id}', 'update')->name('user.tambah.update');
+            Route::post('editProfile', 'updateProfile')->name('user.editProfile.updateProfile');
             Route::get('hapus/{id}', 'hapus')->name('user.hapus');
             Route::get('search', 'search')->name('user.search');
         });

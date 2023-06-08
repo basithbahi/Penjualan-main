@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
-@section('title', isset($user) ? 'Form Edit user' : 'Form Tambah user')
+@section('title', 'Form Edit')
 
 @section('contents')
-    <form action="{{ isset($user) ? route('user.tambah.update', $user->id) : route('user.tambah.simpan') }}"
+     <form action="{{ isset($user) ? route('user.editProfile.updateProfile', $user->id) : route('user.tambah.simpanProfile') }}"
         method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
@@ -71,7 +71,6 @@
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('profile') }}" class="btn btn-secondary">Kembali ke Profil</a>
                     </div>
                 </div>
             </div>

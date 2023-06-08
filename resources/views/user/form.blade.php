@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', isset($user) ? 'Form Edit user' : 'Form Tambah user')
+@section('title', 'Form User')
 
 @section('contents')
     <form action="{{ isset($user) ? route('user.tambah.update', $user->id) : route('user.tambah.simpan') }}"
@@ -71,7 +71,6 @@
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary">Simpan</button>
-                        <a href="{{ route('profile') }}" class="btn btn-secondary">Kembali ke Profil</a>
                     </div>
                 </div>
             </div>
