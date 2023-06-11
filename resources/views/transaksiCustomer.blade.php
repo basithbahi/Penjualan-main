@@ -15,22 +15,22 @@
                     </div>
                     <div class="card-body">
                         @php
-                        $idJadwal = $jadwal->id;
-                        $idTransaksi = 'TR' . str_pad($idJadwal, 2, '0', STR_PAD_LEFT);
-                        $nomorVirtualAccount = generateVirtualAccount();
+                            $idJadwal = $jadwal->id;
+                            $idTransaksi = 'TR' . str_pad($idJadwal, 2, '0', STR_PAD_LEFT);
+                            $nomorVirtualAccount = generateVirtualAccount();
 
-                        function generateVirtualAccount()
-                        {
-                            $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                            $length = 12;
-                            $randomString = '';
+                            function generateVirtualAccount()
+                            {
+                                $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                                $length = 12;
+                                $randomString = '';
 
-                            for ($i = 0; $i < $length; $i++) {
-                                $randomString .= $characters[rand(0, strlen($characters) - 1)];
+                                for ($i = 0; $i < $length; $i++) {
+                                    $randomString .= $characters[rand(0, strlen($characters) - 1)];
+                                }
+
+                                return $randomString;
                             }
-
-                            return $randomString;
-                        }
                         @endphp
 
                         <div class="form-group">
@@ -41,10 +41,9 @@
 
                         <div class="form-group">
                             <label for="nik">User</label>
-                            <input type="text" class="form-control" id="nik" name="nik" value="{{ auth()->user()->id }}"
-                                hidden>
-                            <input type="text" class="form-control" id="id_jadwal"
-                                value="{{ auth()->user()->nama }}"
+                            <input type="text" class="form-control" id="nik" name="nik"
+                                value="{{ auth()->user()->id }}" hidden>
+                            <input type="text" class="form-control" id="id_jadwal" value="{{ auth()->user()->nama }}"
                                 readonly>
                         </div>
 
@@ -62,7 +61,11 @@
                             <select name="id_gerbong" id="id_gerbong" class="custom-select">
                                 <option value="" selected disabled hidden>-- Pilih Gerbong --</option>
                                 @foreach ($gerbong as $row)
-                                    <option value="{{ $row->id }}">{{ $row->nama_gerbong }}</option>
+                                    @if ($row->id_kereta == $jadwal->kereta->id)
+                                        // Menambahkan kondisi untuk hanya menampilkan gerbong yang terkait dengan kereta
+                                        yang dipilih
+                                        <option value="{{ $row->id }}">{{ $row->nama_gerbong }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -72,7 +75,7 @@
                             <div id="kursi-buttons" class="btn-group"></div>
                         </div>
 
-                        <input type="hidden" name="id_kursi" id="id_kursi"> <!-- Tambahkan baris ini -->
+                        <input type="hidden" name="id_kursi" id="id_kursi">
 
                         <div class="form-group">
                             <label for="total_bayar">Total Bayar</label>
@@ -104,7 +107,7 @@
                                 <li><b>Tagihan</b> Yang Harus <b>Dibayar</b> Akan Tampil Pada Layar Konfirmasi</li>
                                 <li>Periksa Informasi Yang Tertera Dilayar. Pastikan Merchant Adalah <b>Jejespor</b>,
                                     Total Tagihan Sudah Benar Dan Username Kamu <b>
-                                    {{ auth()->user()->nama }}. </b></li>
+                                        {{ auth()->user()->nama }}. </b></li>
                                 <li>Jika Benar, Masukkan <b>Password Transaksi</b> Dan Pilih Lanjut</li>
                             </ol>
                         </div>
@@ -112,8 +115,8 @@
                         <div class="form-group">
                             <label for="bukti_pembayaran"><strong>Bukti Pembayaran</strong></label>
                             @if (isset($transaksi) && $transaksi->bukti_pembayaran)
-                                <img src="{{ asset('storage/' . $transaksi->bukti_pembayaran) }}"
-                                    alt="Bukti Pembayaran" width="20">
+                                <img src="{{ asset('storage/' . $transaksi->bukti_pembayaran) }}" alt="Bukti Pembayaran"
+                                    width="20">
                             @endif
                             <input type="file" class="form-control-file" id="bukti_pembayaran" name="bukti_pembayaran">
                         </div>
@@ -145,12 +148,15 @@
         }
     </style>
 
+
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var gerbongSelect = document.getElementById('id_gerbong');
             var kursiContainer = document.getElementById('kursi-container');
             var kursiButtons = document.getElementById('kursi-buttons');
             var kursiOptions = {!! $kursi !!};
+            var selectedKursi = null;
 
             gerbongSelect.addEventListener('change', function() {
                 var selectedGerbong = gerbongSelect.value;
@@ -162,7 +168,18 @@
                         button.setAttribute('type', 'button');
                         button.setAttribute('data-idkursi', kursi.id);
                         button.innerText = kursi.nama_kursi;
-                        button.classList.add('btn', 'btn-primary'); // Mengganti kelas 'btn-light' dengan 'btn-primary'
+                        button.classList.add('btn', 'btn-primary');
+                        button.addEventListener('click', function() {
+                            if (selectedKursi !== null) {
+                                // Remove 'active' class from the previously selected seat button
+                                selectedKursi.classList.remove('active');
+                            }
+                            // Select the clicked seat
+                            selectedKursi = button;
+                            selectedKursi.classList.add('active');
+                            var idKursiInput = document.getElementById('id_kursi');
+                            idKursiInput.value = button.getAttribute('data-idkursi');
+                        });
                         kursiButtons.appendChild(button);
                     }
                 });
