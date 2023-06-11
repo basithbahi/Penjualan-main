@@ -80,31 +80,6 @@
                             <label for="total_bayar">Total Bayar</label>
                             <input type="text" class="form-control" id="total_bayar" name="total_bayar" value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
                         </div>
-
-                        <div class="form-group">
-                            <label for="id_metode_pembayaran">Metode Pembayaran</label>
-                            <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Metode Pembayaran --</option>
-                                @foreach ($metode_pembayaran as $row)
-                                    @if (is_object($row))
-                                        $id = $row->id;
-                                        <option value="{{ $row->id }}"
-                                        {{ isset($transaksi) ? ($transaksi->id_metode_pembayaran == $row->id ? 'selected' : '') : '' }}>
-                                        {{ $row->metode_pembayaran }}</option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="harga">Total Harga</label>
-                            <input type="text" class="form-control" id="harga" name="harga"
-                            value="{{ isset($transaksi) ? $transaksi->jadwal->harga : '' }}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="total_bayar">Total Bayar</label>
-                            <input type="text" class="form-control" id="total_bayar" name="total_bayar" value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
-                        </div>
-
                     </div>
                     <div class="card-footer">
                         <button type="submit" class="btn btn-primary" id="btn-simpan" id="btn-simpan">Simpan</button>
