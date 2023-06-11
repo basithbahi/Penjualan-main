@@ -68,7 +68,7 @@
                         </div>
 
                         <div class="form-group" id="kursi-container" style="display: none;">
-                            <label for="id_kursi">Kursi</label>
+                            <label for="id_kursi"></label>
                             <div id="kursi-buttons" class="btn-group"></div>
                         </div>
 
