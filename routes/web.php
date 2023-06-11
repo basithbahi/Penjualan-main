@@ -169,17 +169,19 @@ Route::middleware('auth')->group(function () {
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
             Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
+            Route::get('seat-selection', 'showSeatSelection')->name('transaksi.seatSelection');
+            Route::post('seat-selection', 'storeSeatSelection')->name('transaksi.storeSeatSelection');
         });
 
-        Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
-            Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
-            Route::get('', 'index')->name('riwayat_transaksi.index');
-            Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
-            Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
-            Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
-            Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
-            Route::get('search', 'search')->name('riwayat_transaksi.search');
-        });
+    Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
+        Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
+        Route::get('', 'index')->name('riwayat_transaksi.index');
+        Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
+        Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
+        Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
+        Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
+        Route::get('search', 'search')->name('riwayat_transaksi.search');
+    });
 
     Route::middleware('auth')->group(function () {
         Route::get('home', function () {

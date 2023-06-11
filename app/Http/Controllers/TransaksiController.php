@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\User;
 use App\Models\Jadwal;
+use App\Models\Gerbong;
 use App\Models\Kursi;
 use App\Models\MetodePembayaran;
 
@@ -29,10 +30,11 @@ class TransaksiController extends Controller
     {
         $user = User::get();
         $jadwal = Jadwal::get();
+        $gerbong = Gerbong::get();
         $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'gerbong' => $gerbong, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function simpan(Request $request)
@@ -46,9 +48,11 @@ class TransaksiController extends Controller
             'invoice' => $request->invoice,
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
+            'id_gerbong' => $request->id_gerbong,
             'id_kursi' => $request->id_kursi,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
             'total_bayar' => $request->total_bayar,
+            'bukti_pembayaran' => $request->bukti_pembayaran,
         ];
 
         Transaksi::create($data);
@@ -63,10 +67,11 @@ class TransaksiController extends Controller
 
         $user = User::get();
         $jadwal = Jadwal::find($id_jadwal);
+        $gerbong = Gerbong::get();
         $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksiCustomer', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran, 'harga' => $harga]);
+        return view('transaksiCustomer', ['user' => $user, 'jadwal' => $jadwal, 'gerbong' => $gerbong, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran, 'harga' => $harga]);
     }
 
     public function simpanCustomer(Request $request)
@@ -81,8 +86,10 @@ class TransaksiController extends Controller
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
             'id_kursi' => $request->id_kursi,
+            'id_gerbong' => $request->id_gerbong,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
             'total_bayar' => $request->total_bayar,
+            'bukti_pembayaran' => $request->bukti_pembayaran,
         ];
 
         Transaksi::create($data);
@@ -119,10 +126,11 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::find($id);
         $user = User::get();
         $jadwal = Jadwal::get();
+        $gerbong = Gerbong::get();
         $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
+        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'gerbong' => $gerbong, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function update($id, Request $request)
@@ -131,9 +139,11 @@ class TransaksiController extends Controller
             'invoice' => $request->invoice,
             'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
+            'id_gerbong' => $request->id_gerbong,
             'id_kursi' => $request->id_kursi,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
             'total_bayar' => $request->total_bayar,
+            'bukti_pembayaran' => $request->bukti_pembayaran,
         ];
 
         Transaksi::find($id)->update($data);
