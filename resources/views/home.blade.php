@@ -178,8 +178,6 @@
                                 <!-- <a href="{{ route('transaksi.searchKodeBooking') }}" class="glightbox btn-watch-video d-flex align-items-center"> -->
                                 <a href="cekKodeBooking" class="glightbox btn-watch-video d-flex align-items-center">
                                     <span>Cek Kode Booking</span></a>
-                                <a href="seat" class="glightbox btn-watch-video d-flex align-items-center">
-                                    <span>Kursi</span></a>
                             </div>
                         </form>
                     </body>

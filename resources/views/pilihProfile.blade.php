@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
-@section('title', 'Form User')
+@section('title', 'Form Edit')
 
 @section('contents')
-    <form action="{{ isset($user) ? route('user.tambah.update', $user->id) : route('user.tambah.simpan') }}"
+     <form action="{{ isset($user) ? route('user.editProfile.updateProfile', $user->id) : route('user.tambah.simpanProfile') }}"
         method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
