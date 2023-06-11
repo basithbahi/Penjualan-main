@@ -104,42 +104,37 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="home" class="active">Home</a></li>
-          <li><a href="#tentang">Tentang Kami</a></li>
-          <li><a href="#footer">Hubungi Kami</a></li>
-          <div class="topbar-divider d-none d-sm-block"></div>
-          <li class="nav-item dropdown no-arrow">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                Akun
-                <br>
-              </span>
-            </a>
-           <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item text-center" href="profile" style="margin-left: -20px;">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray"></i>
-                  <span class="text-black">Profile</span>
-                </a>
-           </div>
-           </li>
-           <br>
-          <li class="nav-item dropdown no-arrow">
+            <li><a href="home" class="active">Home</a></li>
+            <li><a href="#tentang">Tentang Kami</a></li>
+            <li><a href="#footer">Hubungi Kami</a></li>
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                 {{ auth()->user()->nama }}
                 <br>
-              </span>
-              <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
+                </span>
             </a>
             <!-- Dropdown - User Information -->
-            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-center" href="{{ route('logout') }}">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
-                  <span class="text-black">Logout</span>
-                </a>
-              </div>
-              </li>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" style="margin-left: -20px;" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="profile">
+                <div class="d-flex align-items-center">
+                <i class="fas fa-user fa-sm fa-fw mr-3 text-black"></i>
+                &nbsp &nbsp &nbsp &nbsp
+                <span class="text-black">Profile</span>
+                </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ route('logout') }}">
+                <div class="d-flex align-items-center">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-4 text-black"></i>
+                &nbsp &nbsp &nbsp &nbsp
+                <span class="text-black">Logout</span>
+                </div>
+            </a>
+            </div>
+
+            </li>
         </ul>
       </nav><!-- .navbar -->
     </div>
@@ -171,8 +166,6 @@
                                 <!-- <a href="{{ route('transaksi.searchKodeBooking') }}" class="glightbox btn-watch-video d-flex align-items-center"> -->
                                 <a href="cekKodeBooking" class="glightbox btn-watch-video d-flex align-items-center">
                                     <span>Cek Kode Booking</span></a>
-                                <a href="seat" class="glightbox btn-watch-video d-flex align-items-center">
-                                    <span>Kursi</span></a>
                             </div>
 
 

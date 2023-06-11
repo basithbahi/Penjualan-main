@@ -115,19 +115,22 @@
           <li><a href="home" class="active">Home</a></li>
           <div class="topbar-divider d-none d-sm-block"></div>
           <li class="nav-item dropdown no-arrow">
-          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                Akun
+                {{ auth()->user()->nama }}
                 <br>
               </span>
+              <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
             </a>
-           <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown">
-                <a class="dropdown-item text-center" href="profile" style="margin-left: -20px;">
-                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray"></i>
-                  <span class="text-black">Profile</span>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-center" href="{{ route('logout') }}">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Logout</span>
                 </a>
-           </div>
-           </li>
+              </div>
+              </li>
            <br>
         </ul>
       </nav><!-- .navbar -->
@@ -191,11 +194,5 @@
 
     <!-- Template Main JS File -->
     <script src="{{ asset('style/assets/js/main.js') }}"></script>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="{{ route('logout') }}">
-        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-        Logout
-    </a>
-    </div>
 </body>
 </html>
