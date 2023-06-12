@@ -172,6 +172,9 @@ Route::middleware('auth')->group(function () {
             Route::get('search', 'search')->name('transaksi.search');
             Route::post('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
             Route::get('lunas/{id}', 'lunas')->name('transaksi.lunas');
+            Route::get('searchIndex', 'searchIndex')->name('transaksi.searchIndex');
+
+
         });
 
         Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
@@ -204,7 +207,10 @@ Route::middleware('auth')->group(function () {
         Route::get('searchKodeBooking', function () {
             return view('searchKodeBooking');
         })->name('searchKodeBooking');
-
+        // Route::get('searchIndex', function () {
+        //     return view('searchIndex');
+        // })->name('searchIndex'); 
+        
         Route::get('transaksiCustomer', function () {
             return view('transaksiCustomer');
         })->name('transaksiCustomer');

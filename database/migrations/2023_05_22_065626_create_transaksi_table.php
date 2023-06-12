@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('invoice')->nullable();
             $table->foreignId('nik')->references('id')->on('users');
             $table->foreignId('id_jadwal')->references('id')->on('jadwal');
+            $table->foreignId('id_gerbong')->references('id')->on('gerbong');
             $table->foreignId('id_kursi')->references('id')->on('kursi');
             $table->foreignId('id_metode_pembayaran')->references('id')->on('metode_pembayaran');
             $table->double('total_bayar');
