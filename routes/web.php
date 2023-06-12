@@ -160,6 +160,8 @@ Route::middleware('auth')->group(function () {
             Route::get('', 'index')->name('transaksi');
             Route::get('tambah', 'tambah')->name('transaksi.tambah');
             Route::post('tambah', 'simpan')->name('transaksi.tambah.simpan');
+            Route::get('tambahCustomer', 'tambahCustomer')->name('transaksi.tambahCustomer');
+            Route::post('tambahCustomer', 'simpanCustomer')->name('transaksi.tambahCustomer.simpanCustomer');
             Route::get('edit/{id}', 'edit')->name('transaksi.edit');
             Route::post('edit/{id}', 'update')->name('transaksi.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('transaksi.hapus');
@@ -167,6 +169,9 @@ Route::middleware('auth')->group(function () {
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
             Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
+            Route::get('searchIndex', 'searchIndex')->name('transaksi.searchIndex');
+
+
         });
 
         Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
@@ -196,12 +201,22 @@ Route::middleware('auth')->group(function () {
             return view('searchKodeBooking');
         })->name('searchKodeBooking');
 
+        // Route::get('searchIndex', function () {
+        //     return view('searchIndex');
+        // })->name('searchIndex'); 
+        
+        Route::get('transaksiCustomer', function () {
+            return view('transaksiCustomer');
+        })->name('transaksiCustomer');
+
         Route::get('seat', function () {
             return view('seat');
         })->name('seat');
 
-        Route::get('cekTiket', function () {
-            return view('cekTiket');
-        })->name('cekTiket');
+        Route::get('profile', function () {
+            return view('profile');
+        })->name('profile');
+
+
     });
 });
