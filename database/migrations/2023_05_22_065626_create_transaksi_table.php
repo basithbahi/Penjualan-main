@@ -22,6 +22,8 @@ return new class extends Migration
             $table->foreignId('id_kursi')->references('id')->on('kursi');
             $table->foreignId('id_metode_pembayaran')->references('id')->on('metode_pembayaran');
             $table->double('total_bayar');
+            $table->string('bukti_pembayaran');
+            $table->string('status_bayar');
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ class Transaksi extends Model
 
     protected $table = 'transaksi';
 
-    protected $fillable = ['invoice', 'nik', 'id_jadwal', 'id_kursi', 'id_metode_pembayaran', 'total_bayar'];
+    protected $fillable = ['invoice', 'nik', 'id_jadwal', 'id_kursi', 'id_metode_pembayaran', 'bukti_pembayaran', 'status_bayar'];
 
     public function user()
     {

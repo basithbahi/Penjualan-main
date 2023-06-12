@@ -1,10 +1,12 @@
-@extends('layouts.customer')
+@extends('layouts.app')
 
 @section('title', 'Form Transaksi')
 
 @section('contents')
 
-    <form action="{{ route('transaksi.tambahCustomer.simpanCustomer') }}" method="post" enctype="multipart/form-data>
+    <form
+        action="{{ isset($transaksi) ? route('transaksi.tambah.update', $transaksi->id) : route('transaksi.tambah.simpan') }}"
+        method="post">
         @csrf
         <div class="row">
             <div class="col-12">
@@ -14,15 +16,10 @@
                             {{ isset($transaksi) ? 'Form Edit Transaksi' : 'Form Tambah Transaksi' }}</h6>
                     </div>
                     <div class="card-body">
-                        @php
-                            $idJadwal = $jadwal->id;
-                            $idTransaksi = 'TR' . str_pad($idJadwal, 2, '0', STR_PAD_LEFT);
-                        @endphp
-
                         <div class="form-group">
                             <label for="invoice">ID Transaksi</label>
                             <input type="text" class="form-control" id="invoice" name="invoice"
-                                value="{{ isset($transaksi) ? $transaksi->invoice : $idTransaksi }}" readonly>
+                                value="{{ isset($transaksi) ? $transaksi->invoice : '' }}">
                         </div>
 
                         <div class="form-group">
@@ -36,22 +33,30 @@
 
                         <div class="form-group">
                             <label for="id_jadwal">Jadwal Kereta</label>
-                            <input type="hidden" name="id_jadwal" value="{{ $jadwal->id }}">
-                            <input type="text" class="form-control" id="id_jadwal" value="{{ $jadwal->kereta->nama_kereta }} - {{ $jadwal->kereta->jenis_kereta }} | {{ $jadwal->rute->stasiun->nama_stasiun }} - {{ $jadwal->rute->stasiun_tujuan }}" readonly>
-                            <small class="text-success">Berhasil Dipesan!</small>
+                            <select name="id_jadwal" id="id_jadwal" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
+                                @foreach ($jadwal as $row)
+                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}"
+                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}"
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_jadwal ? 'selected' : '') : '' }}>
+                                        {{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="id_kursi">Kursi</label>
-                            <div>
+                            <select name="id_kursi" id="id_kursi" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Kursi --</option>
                                 @foreach ($kursi as $row)
-                                    <button type="button" class="btn btn-outline-primary kursi"
-                                        data-id-kursi="{{ $row->id }}">{{ $row->nama_kursi }}</button>
+                                    <option value="{{ $row->id }}"
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_kursi ? 'selected' : '') : '' }}>
+                                        {{ $row->nama_kursi }}
+                                    </option>
                                 @endforeach
-                            </div>
+                            </select>
                         </div>
-                        <input type="hidden" id="id_kursi" name="id_kursi">
-
                         <div class="form-group">
                             <label for="id_metode_pembayaran">Metode Pembayaran</label>
                             <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
@@ -60,30 +65,24 @@
                                     @if (is_object($row))
                                         $id = $row->id;
                                         <option value="{{ $row->id }}"
-                                            {{ isset($transaksi) ? ($transaksi->id_metode_pembayaran == $row->id ? 'selected' : '') : '' }}>
-                                            {{ $row->metode_pembayaran }}</option>
+                                        {{ isset($transaksi) ? ($transaksi->id_metode_pembayaran == $row->id ? 'selected' : '') : '' }}>
+                                        {{ $row->metode_pembayaran }}</option>
                                     @endif
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="harga">Harga</label>
+                            <label for="harga">Total Harga</label>
                             <input type="text" class="form-control" id="harga" name="harga"
-                                value="{{ $harga }}" readonly>
+                            value="{{ isset($transaksi) ? $transaksi->jadwal->harga : '' }}" readonly>
                         </div>
                         <div class="form-group">
                             <label for="total_bayar">Total Bayar</label>
-                            <input type="text" class="form-control" id="total_bayar" name="total_bayar"
-                                value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
+                            <input type="text" class="form-control" id="total_bayar" name="total_bayar" value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
                         </div>
-                        <div class="form-group">
-                            <label for="image">Bukti Pembayaran</label>
-                            <input type="file" class="form-control" name="image">
-                        </div>
-
                     </div>
                     <div class="card-footer">
-                        <button type="submit" class="btn btn-primary" id="btn-simpan">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="btn-simpan" id="btn-simpan">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -92,18 +91,31 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var kursiButtons = document.querySelectorAll('.kursi');
-            var idKursiInput = document.getElementById('id_kursi');
+            var jadwalSelect = document.getElementById('id_jadwal');
+            var hargaInput = document.getElementById('harga');
+            var totalBayarInput = document.getElementById('total_bayar');
+            var btnSimpan = document.getElementById('btn-simpan');
 
-            kursiButtons.forEach(function(button) {
-                button.addEventListener('click', function() {
-                    var idKursi = this.getAttribute('data-id-kursi');
-                    idKursiInput.value = idKursi;
-                    kursiButtons.forEach(function(btn) {
-                        btn.classList.remove('btn-primary');
-                    });
-                    this.classList.add('btn-primary');
-                });
+            jadwalSelect.addEventListener('change', function() {
+                var selectedOption = jadwalSelect.options[jadwalSelect.selectedIndex];
+                var harga = selectedOption.getAttribute('data-harga');
+
+                if (harga) {
+                    hargaInput.value = harga;
+                } else {
+                    hargaInput.value = '';
+                }
+            });
+
+            totalBayarInput.addEventListener('input', function() {
+                var totalBayar = parseFloat(totalBayarInput.value);
+                var harga = parseFloat(hargaInput.value);
+
+                if (totalBayar < harga || totalBayar > harga) {
+                    btnSimpan.disabled = true;
+                } else {
+                    btnSimpan.disabled = false;
+                }
             });
         });
     </script>

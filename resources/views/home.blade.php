@@ -156,8 +156,16 @@
                     <form action="{{ route('jadwal.searchIndex') }}" method="GET">
                             <br>
                             <select name="stasiun" class="form-control">
-                                <option value="1">Surabaya</option>
-                                <option value="2">Malang</option>
+                                <?php
+                                use App\Models\Stasiun;
+                                $stasiun = Stasiun::get();
+                                ?>
+                                @foreach ($stasiun as $row)
+                                    <option value="{{ $row->id }}"
+                                        {{ isset($rute) ? ($rute->id_stasiun == $row->id ? 'selected' : '') : '' }}>
+                                        {{ $row->nama_stasiun }}</option>
+                                @endforeach
+                                
                             </select>
                             <br>
 

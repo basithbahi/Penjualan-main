@@ -170,16 +170,21 @@ Route::middleware('auth')->group(function () {
             Route::get('bayar/{id}', 'bayar')->name('transaksi.bayar');
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
-            Route::get('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
+            Route::post('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
+            Route::get('lunas/{id}', 'lunas')->name('transaksi.lunas');
         });
 
         Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
-            Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
-            Route::get('', 'index')->name('riwayat_transaksi.index');
-            Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
-            Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
-            Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
+            Route::get('', 'index')->name('riwayat_transaksi');
+            Route::get('tambah', 'tambah')->name('riwayat_transaksi.tambah');
+            Route::post('tambah', 'simpan')->name('riwayat_transaksi.tambah.simpan');
+            Route::get('tambahCustomer', 'tambahCustomer')->name('riwayat_transaksi.tambahCustomer');
+            Route::post('tambahCustomer', 'simpanCustomer')->name('riwayat_transaksi.tambahCustomer.simpanCustomer');
+            Route::get('edit/{id}', 'edit')->name('riwayat_transaksi.edit');
+            Route::post('edit/{id}', 'update')->name('riwayat_transaksi.tambah.update');
             Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
+            Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
+            Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
             Route::get('search', 'search')->name('riwayat_transaksi.search');
         });
 

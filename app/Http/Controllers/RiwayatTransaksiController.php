@@ -9,13 +9,13 @@ use App\Models\Jadwal;
 use App\Models\Kursi;
 use App\Models\MetodePembayaran;
 
-class TransaksiController extends Controller
+class RiwayatTransaksiController extends Controller
 {
     public function index()
     {
         $transaksi = Transaksi::get();
 
-        return view('transaksi.index', ['data' => $transaksi]);
+        return view('riwayat_transaksi.index', ['data' => $transaksi]);
     }
 
     public function cekKodeBooking()
@@ -32,7 +32,7 @@ class TransaksiController extends Controller
         $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
+        return view('riwayat_transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function simpan(Request $request)
@@ -132,7 +132,7 @@ class TransaksiController extends Controller
         $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
+        return view('riwayat_transaksi.form', ['transaksi' => $transaksi, 'user' => $user, 'jadwal' => $jadwal, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
     }
 
     public function update($id, Request $request)
@@ -192,33 +192,6 @@ class TransaksiController extends Controller
             $data = Transaksi::with('user', 'id_jadwal')->get();
         }
 
-        return view('transaksi.index', ['data' => $data, 'query' => $query]);
-    }
-
-    public function searchKodeBooking()
-    {
-        $query = request()->input('query');
-
-        if ($query) {
-            $data = Transaksi::query()
-                ->where('invoice', 'like', "%$query%")
-                ->orderBy('invoice', 'asc')
-                ->get();
-        } else {
-            $data = null;
-        }
-
-        return view('cekKodeBooking', ['data' => $data, 'query' => $query]);
-    }
-
-    public function lunas($id)
-    {
-        $data = [
-            'status_bayar' => 'LUNAS',
-        ];
-
-        Transaksi::find($id)->update($data);
-
-        return redirect()->route('transaksi');
+        return view('riwayat_transaksi.index', ['data' => $data, 'query' => $query]);
     }
 }
