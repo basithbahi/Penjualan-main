@@ -44,7 +44,7 @@
               <th>ID Jadwal</th>
               <th>Admin</th>
               <th>Jadwal Kereta</th>
-              <th>Jadwal Rute</th>
+              <th>Jadwal Rute (Stasiun)</th>
               <th>Harga Perjalanan</th>
               <th>Aksi</th>
             </tr>

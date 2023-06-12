@@ -16,9 +16,9 @@ class KeretaSeeder extends Seeder
     public function run()
     {
         DB::table('kereta')->insert([
-        ['id_kereta' => 'MS02', 'nama_kereta' => 'Jayabaya', 'jenis_kereta' => 'Ekonomi'],
-        ['id_kereta' => 'MS03', 'nama_kereta' => 'Probowangi', 'jenis_kereta' => 'Eksekutif'],
-        ['id_kereta' => 'MS04', 'nama_kereta' => 'Argo Lawu', 'jenis_kereta' => 'Bisnis'],
+            ['id_kereta' => 'KRT01', 'nama_kereta' => 'Jayabaya', 'jenis_kereta' => 'Ekonomi'],
+            ['id_kereta' => 'KRT02', 'nama_kereta' => 'Probowangi', 'jenis_kereta' => 'Eksekutif'],
+            ['id_kereta' => 'KRT03', 'nama_kereta' => 'Argo Lawu', 'jenis_kereta' => 'Bisnis'],
         ]);
     }
 }

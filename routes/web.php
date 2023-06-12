@@ -136,7 +136,9 @@ Route::middleware('auth')->group(function () {
             Route::get('tambah', 'tambah')->name('user.tambah');
             Route::post('tambah', 'simpan')->name('user.tambah.simpan');
             Route::get('edit/{id}', 'edit')->name('user.edit');
+            Route::get('editProfile', 'editProfile')->name('user.editProfile');
             Route::post('edit/{id}', 'update')->name('user.tambah.update');
+            Route::post('editProfile', 'updateProfile')->name('user.editProfile.updateProfile');
             Route::get('hapus/{id}', 'hapus')->name('user.hapus');
             Route::get('search', 'search')->name('user.search');
         });
@@ -174,15 +176,15 @@ Route::middleware('auth')->group(function () {
 
         });
 
-        Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
-            Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
-            Route::get('', 'index')->name('riwayat_transaksi.index');
-            Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
-            Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
-            Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
-            Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
-            Route::get('search', 'search')->name('riwayat_transaksi.search');
-        });
+    Route::controller(RiwayatTransaksiController::class)->prefix('riwayat_transaksi')->group(function () {
+        Route::get('/riwayat_transaksi', [RiwayatTransaksiController::class, 'index'])->name('riwayat_transaksi');
+        Route::get('', 'index')->name('riwayat_transaksi.index');
+        Route::get('bayar/{id}', 'bayar')->name('riwayat_transaksi.bayar');
+        Route::post('bayar/{id}', 'simpan')->name('riwayat_transaksi.bayar.simpan');
+        Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
+        Route::get('hapus/{id}', 'hapus')->name('riwayat_transaksi.hapus');
+        Route::get('search', 'search')->name('riwayat_transaksi.search');
+    });
 
     Route::middleware('auth')->group(function () {
         Route::get('home', function () {
@@ -216,7 +218,6 @@ Route::middleware('auth')->group(function () {
         Route::get('profile', function () {
             return view('profile');
         })->name('profile');
-
 
     });
 });
