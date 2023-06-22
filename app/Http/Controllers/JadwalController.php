@@ -108,7 +108,7 @@ class JadwalController extends Controller
 
         if ($query) {
             $data = Jadwal::query()
-                ->join('rute', 'jadwal.id_rute', '=', 'rute.id_rute')
+                ->join('rute', 'jadwal.id_rute', '=', 'rute.id')
                 ->where('rute.id_stasiun', 'like', "%$query%")
                 ->Where('jadwal.tanggal', 'like', "%$query2%")
                 ->orderBy('jadwal.id_kereta', 'asc')

@@ -104,53 +104,57 @@
             <i class="mobile-nav-toggle mobile-nav-show bi bi-list"></i>
             <i class="mobile-nav-toggle mobile-nav-hide d-none bi bi-x"></i>
 
-            <nav id="navbar" class="navbar">
-                <ul>
-                    <li><a href="home" class="active">Home</a></li>
-                    <li><a href="#tentang">Tentang Kami</a></li>
-                    <li><a href="#footer">Hubungi Kami</a></li>
-                    <div class="topbar-divider d-none d-sm-block"></div>
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                Akun
-                                <br>
-                            </span>
-                        </a>
-                        <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <a class="dropdown-item text-center" href="profile" style="margin-left: -20px;">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray"></i>
-                                <span class="text-black">Profile</span>
-                            </a>
-                        </div>
-                    </li>
-                    <br>
-                    <li class="nav-item dropdown no-arrow">
-                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                                {{ auth()->user()->nama }}
-                                <br>
-                            </span>
-                            <img class="rounded-circle" src="{{ asset('storage/' . auth()->user()->foto_profil) }}"
-                                alt="Foto Profil" width="50" height="50">
-                        </a>
-                        <!-- Dropdown - User Information -->
-                        <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                            aria-labelledby="userDropdown">
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center" href="{{ route('logout') }}">
-                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
-                                <span class="text-black">Logout</span>
-                            </a>
-                        </div>
-                    </li>
-                </ul>
-            </nav><!-- .navbar -->
-        </div>
-    </header><!-- End Header -->
+      <nav id="navbar" class="navbar">
+        <ul>
+          <li><a href="home" class="active">Home</a></li>
+          <li><a href="#tentang">Tentang Kami</a></li>
+          <li><a href="#footer">Hubungi Kami</a></li>
+          <div class="topbar-divider d-none d-sm-block"></div>
+          <li class="nav-item dropdown no-arrow">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                Akun
+                <br>
+              </span>
+            </a>
+           <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown">
+                <a class="dropdown-item text-center" href="profile" style="margin-left: -20px;">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-gray"></i>
+                  <span class="text-black">Profile</span>
+                </a>
+           </div>
+           </li>
+           <br>
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                {{ auth()->user()->nama }}
+                <br>
+              </span>
+              <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown"></div>
+                <a class="dropdown-item text-center" href="#" style="margin-left: -20px;">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Profile</span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-center shadow animated--grow-in" aria-labelledby="userDropdown"></div>
+                <a class="dropdown-item text-center" href="cekTiket" style="margin-left: -20px;">
+                  <i class="fas fa-user fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Cek Tiket</span>
+                </a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item text-center" href="{{ route('logout') }}">
+                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
+                  <span class="text-black">Logout</span>
+                </a>
+              </div>
+              </li>
+        </ul>
+      </nav><!-- .navbar -->
+    </div>
+  </header><!-- End Header -->
 
     <!-- ======= Hero Section ======= -->
     <section id="hero" class="hero d-flex align-items-center">
@@ -163,8 +167,16 @@
                         <form action="{{ route('jadwal.searchIndex') }}" method="GET">
                             <br>
                             <select name="stasiun" class="form-control">
-                                <option value="1">Surabaya</option>
-                                <option value="2">Malang</option>
+                                <?php
+                                use App\Models\Stasiun;
+                                $stasiun = Stasiun::get();
+                                ?>
+                                @foreach ($stasiun as $row)
+                                    <option value="{{ $row->id }}"
+                                        {{ isset($rute) ? ($rute->id_stasiun == $row->id ? 'selected' : '') : '' }}>
+                                        {{ $row->nama_stasiun }}</option>
+                                @endforeach
+                                
                             </select>
                             <br>
 
