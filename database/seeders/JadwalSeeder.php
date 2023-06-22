@@ -16,9 +16,8 @@ class JadwalSeeder extends Seeder
     public function run()
     {
         DB::table('jadwal')->insert([
-            ['id_jadwal' => 'SM02', 'nik' => '1', 'id_kereta' => '1', 'id_rute' => '2', 'harga' => 200000, 'tanggal' => '2023-06-02', 'waktu' => '14:00:00'],
-            ['id_jadwal' => 'SM03', 'nik' => '2', 'id_kereta' => '3', 'id_rute' => '1', 'harga' => 300000, 'tanggal' => '2023-06-01', 'waktu' => '15:10:00'],
-            ['id_jadwal' => 'SM04', 'nik' => '3', 'id_kereta' => '2', 'id_rute' => '3', 'harga' => 150000, 'tanggal' => '2023-06-02', 'waktu' => '16:00:00'],
+            ['id_jadwal' => '1', 'nik' => '1', 'id_kereta' => '1', 'id_rute' => '1', 'harga' => 10000, 'tanggal' => '2023-06-03', 'waktu' => '14:00:00', 'waktu_tiba' => '16:00:00'],
+            ['id_jadwal' => '2', 'nik' => '1', 'id_kereta' => '1', 'id_rute' => '2', 'harga' => 10000, 'tanggal' => '2023-06-03', 'waktu' => '15:10:00', 'waktu_tiba' => '17:00:00'],
         ]);
     }
 }

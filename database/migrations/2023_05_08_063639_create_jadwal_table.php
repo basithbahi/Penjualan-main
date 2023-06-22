@@ -25,6 +25,7 @@ class CreateJadwalTable extends Migration
             $table->double('harga');
             $table->date('tanggal');
             $table->time('waktu');
+            $table->time('waktu_tiba');
             $table->timestamps();
         });
     }
