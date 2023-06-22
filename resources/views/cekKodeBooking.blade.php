@@ -22,7 +22,8 @@
   <body>
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-        <form action="{{ route('transaksi.searchKodeBooking') }}" method="GET">
+        <form action="{{ route('transaksi.searchKodeBooking') }}" method="POST">
+          @csrf
           <div class="input-group">
             <input type="text" class="form-control bg-light border-0 small" name="query" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
             <div class="input-group-append">

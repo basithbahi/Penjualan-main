@@ -82,6 +82,7 @@
       <div class="card-header text-center">
         <h5 class="card-title" style="margin-bottom: 0; color: #fff;">Kereta</h5>
       </div>
+<<<<<<< HEAD
       <div class="list-group-item">
         <div class="row">
           <div class="col-2"><strong>No</strong></div>
@@ -90,6 +91,41 @@
           <div class="col-2"><strong>Stasiun Tiba</strong></div>
           <div class="col-2"><strong>Harga</strong></div>
         </div>
+=======
+
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>ID Jadwal</th>
+              <th>Admin</th>
+              <th>Jadwal Kereta</th>
+              <th>Jadwal Rute (Stasiun)</th>
+              <th>Harga Perjalanan</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            @php($no = 1)
+            @foreach ($data as $row)
+              <tr>
+                <th>{{ $no++ }}</th>
+                <td>{{ $row->id_jadwal }}</td>
+                <td>{{ $row->nik }}</td>
+                <td>{{ $row->kereta->nama_kereta }} - {{ $row->kereta->jenis_kereta }}</td>
+                <td>{{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}</td>
+                <td>{{ $row->harga }}</td>
+                <td>
+                    <a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id_jadwal, 'harga' => $row->harga]) }}" class="btn btn-success">PILIH</a>                
+                  </td>
+              </tr>
+            @endforeach
+          </tbody>
+        </table>
+>>>>>>> dcfa887adda333245d1327e96ae3f6e9af71608b
       </div>
       <div class="gap-row"></div> <!-- Add the gap row -->
       @php($no = 1)

@@ -22,8 +22,9 @@ return new class extends Migration
             $table->foreignId('id_gerbong')->references('id')->on('gerbong');
             $table->foreignId('id_kursi')->references('id')->on('kursi');
             $table->foreignId('id_metode_pembayaran')->references('id')->on('metode_pembayaran');
-            $table->double('total_bayar')->nullable();
-            $table->string('bukti_pembayaran')->nullable(); // Tambahkan nullable() di sini
+            $table->double('total_bayar');
+            $table->string('bukti_pembayaran');
+            $table->string('status_bayar');
             $table->timestamps();
         });
     }
