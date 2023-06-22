@@ -242,9 +242,6 @@ class TransaksiController extends Controller
         $query = $request->input('stasiun');
         $query2 = $request->input('tanggal');
         $query3 = $request->input('nik');
-        $kereta = Kereta::get();
-        $rute = Rute::get();
-        $users = User::get();
 
         if ($query) {
             $data = Transaksi::query()
