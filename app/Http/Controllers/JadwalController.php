@@ -35,8 +35,8 @@ class JadwalController extends Controller
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
             'tanggal' => $request->tanggal,
-            'waktu' => $request->waktu,
-
+            'waktu_berangkat' => $request->waktu_berangkat,
+            'waktu_tiba' => $request->waktu_tiba,
         ];
 
         Jadwal::create($data);
@@ -63,7 +63,8 @@ class JadwalController extends Controller
             'id_rute' => $request->id_rute,
             'harga' => $request->harga,
             'tanggal' => $request->tanggal,
-            'waktu' => $request->waktu,
+            'waktu_berangkat' => $request->waktu_berangkat,
+            'waktu_tiba' => $request->waktu_tiba,
 
 
         ];
@@ -102,9 +103,6 @@ class JadwalController extends Controller
     {
         $query = $request->input('stasiun');
         $query2 = $request->input('tanggal');
-        $kereta = Kereta::get();
-        $rute = Rute::get();
-        $users = User::get();
 
         if ($query) {
             $data = Jadwal::query()

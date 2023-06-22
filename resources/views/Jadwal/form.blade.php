@@ -68,10 +68,16 @@
                             @enderror
                         </div>
                         <div class="form-group">
-                            <label for="waktu">Waktu Keberangkatan</label>
-                            <input name="waktu" type="time" class="form-control datetimepicker-input" id="waktu"
-                                data-toggle="datetimepicker" data-target="#waktu" placeholder="Waktu"
-                                value="{{ isset($jadwal) ? $jadwal->waktu : '' }}">
+                            <label for="waktu_berangkat">Waktu Keberangkatan</label>
+                            <input name="waktu_berangkat" type="time" class="form-control datetimepicker-input" id="waktu_berangkat"
+                                data-toggle="datetimepicker" data-target="#waktu_berangkat" placeholder="waktu_berangkat"
+                                value="{{ isset($jadwal) ? $jadwal->waktu_berangkat : '' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="waktu_tiba">Waktu Tiba</label>
+                            <input name="waktu_tiba" type="time" class="form-control datetimepicker-input" id="waktu_tiba"
+                                data-toggle="datetimepicker" data-target="#waktu_tiba" placeholder="waktu_tiba"
+                                value="{{ isset($jadwal) ? $jadwal->waktu_tiba : '' }}">
                         </div>
 
                     </div>

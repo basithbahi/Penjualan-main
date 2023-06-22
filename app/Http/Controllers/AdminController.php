@@ -18,7 +18,7 @@ class AdminController extends Controller
         $admin = Admin::get();
         $jumlahDataAdmin = Admin::where('level', 'Admin')->count();
 
-        return view ('admin.index', compact('admin', 'jumlahDataAdmin'));
+        return view('admin.index', compact('admin', 'jumlahDataAdmin'));
     }
 
     public function tambah()
@@ -33,13 +33,14 @@ class AdminController extends Controller
             $image_name = $request->file('image')->store('images', 'public');
         }
 
-        
+
         Admin::create([
             'nik' => $request->nik,
             'nama' => $request->nama,
             'alamat' => $request->alamat,
             'ttl' => $request->ttl,
             'jk' => $request->jk,
+            'nomor_telepon' => $request->nomor_telepon,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'foto_profil' => $image_name,
@@ -70,6 +71,7 @@ class AdminController extends Controller
             'alamat' => $request->alamat,
             'ttl' => $request->ttl,
             'jk' => $request->jk,
+            'nomor_telepon' => $request->nomor_telepon,
             'email' => $request->email,
             'password' => ($request->password),
             'foto_profil' => $image_name,
@@ -94,7 +96,7 @@ class AdminController extends Controller
                 ->where('nik', 'like', "%$query%")
                 ->orWhere('nama', 'like', "%$query%")
                 ->orWhere('alamat', 'like', "%$query%")
-                ->orderBy('jk', 'asc')
+                ->orderBy('id', 'asc')
                 ->paginate(10);
         } else {
             $admin = Admin::get();

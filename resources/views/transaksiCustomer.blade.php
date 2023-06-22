@@ -4,7 +4,7 @@
 
 @section('contents')
 
-    <form action="{{ route('transaksi.tambahCustomer.simpanCustomer') }}" method="post" enctype="multipart/form-data>
+    <form action="{{ route('transaksi.tambahCustomer.simpanCustomer') }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
             <div class="col-12">
@@ -119,10 +119,6 @@
                                     width="20">
                             @endif
                             <input type="file" class="form-control-file" id="bukti_pembayaran" name="bukti_pembayaran">
-                        </div>
-                        <div class="form-group">
-                            <label for="image">Bukti Pembayaran</label>
-                            <input type="file" class="form-control" name="image">
                         </div>
 
                     </div>

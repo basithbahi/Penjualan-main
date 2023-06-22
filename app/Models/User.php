@@ -23,6 +23,7 @@ class User extends Authenticatable
         'alamat',
         'ttl',
         'jk',
+        'nomor_telepon',
         'email',
         'password',
         'foto_profil',

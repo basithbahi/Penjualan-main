@@ -24,7 +24,8 @@ class CreateJadwalTable extends Migration
             $table->foreign('id_rute')->references('id')->on('rute');
             $table->double('harga');
             $table->date('tanggal');
-            $table->time('waktu');
+            $table->time('waktu_berangkat');
+            $table->time('waktu_tiba');
             $table->timestamps();
         });
     }

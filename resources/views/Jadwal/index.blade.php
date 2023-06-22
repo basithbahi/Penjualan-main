@@ -35,6 +35,7 @@
               <th>Harga Perjalanan</th>
               <th>Tanggal Keberangkatan</th>
               <th>Waktu Keberangkatan</th>
+              <th>Waktu Tiba</th>
 
               @if (auth()->user()->level == 'Admin')
               <th>Aksi</th>
@@ -52,7 +53,8 @@
                 <td>{{ $row->rute->stasiun->nama_stasiun }} -{{ $row->rute->stasiun_tujuan }}</td>
                 <td>{{ $row->harga }}</td>
                 <td>{{ $row->tanggal }}</td>
-                <td>{{ $row->waktu }}</td>
+                <td>{{ $row->waktu_berangkat }}</td>
+                <td>{{ $row->waktu_tiba }}</td>
                 @if (auth()->user()->level == 'Admin')
                 <td>
                     <a href="{{ route('jadwal.edit', $row->id) }}" class="btn btn-warning">Edit &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>

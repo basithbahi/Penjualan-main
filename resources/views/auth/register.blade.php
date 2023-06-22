@@ -81,7 +81,14 @@
                                         <span class="invalid-feedback">{{ $message }}</span>
                                     @enderror
                                 </div>
-
+                                <div class="form-group">
+                                    <input name="nomor_telepon" type="text"
+                                        class="form-control form-control-user @error('nomor_telepon')is-invalid @enderror"
+                                        id="exampleInputnomor_telepon" placeholder="Nomor Telepon">
+                                    @error('nomor_telepon')
+                                        <span class="invalid-feedback">{{ $message }}</span>
+                                    @enderror
+                                </div>
                                 <div class="form-group">
                                     <input name="email" type="email"
                                         class="form-control form-control-user @error('email')is-invalid @enderror"

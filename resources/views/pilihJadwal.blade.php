@@ -60,7 +60,7 @@
                 <td>{{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}</td>
                 <td>{{ $row->harga }}</td>
                 <td>
-                    <a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id_jadwal, 'harga' => $row->harga]) }}" class="btn btn-success">PILIH</a>                
+                    <a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id, 'harga' => $row->harga]) }}" class="btn btn-success">PILIH</a>
                   </td>
               </tr>
             @endforeach

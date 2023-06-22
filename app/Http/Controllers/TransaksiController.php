@@ -8,8 +8,6 @@ use App\Models\User;
 use App\Models\Jadwal;
 use App\Models\Gerbong;
 use App\Models\Kursi;
-use App\Models\Kereta;
-use App\Models\Rute;
 use App\Models\MetodePembayaran;
 
 class TransaksiController extends Controller
@@ -20,7 +18,6 @@ class TransaksiController extends Controller
 
         return view('transaksi.index', ['data' => $transaksi]);
     }
-
 
     public function cekKodeBooking()
     {
@@ -33,34 +30,19 @@ class TransaksiController extends Controller
     {
         $user = User::get();
         $jadwal = Jadwal::get();
-        $gerbong = Gerbong::get();
-        $kursi = Kursi::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'gerbong' => $gerbong, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran,]);
     }
 
     public function simpan(Request $request)
     {
-        $request->validate([
-            'nik' => 'required',
-            'total_bayar' => 'required|numeric|min:0'
-        ]);
-
-        $image_name = '';
-        if ($request->file('image')) {
-            $image_name = $request->file('image')->store('images', 'public');
-        }
-
         $data = [
             'invoice' => $request->invoice,
-            'nik' => $request->nik,
+            'id_user' => $request->id_user,
             'id_jadwal' => $request->id_jadwal,
-            'id_gerbong' => $request->id_gerbong,
-            'id_kursi' => $request->id_kursi,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'total_bayar' => $request->total_bayar,
-            'bukti_pembayaran' => $image_name,
+            'waktu' => $request->waktu,
         ];
 
         Transaksi::create($data);
@@ -256,5 +238,12 @@ class TransaksiController extends Controller
         }
 
         return view('cekTiket', ['data' => $data, 'query' => $query]);
+    }
+
+    public function cekTransaksi()
+    {
+        $transaksi = Transaksi::orderBy('status_pencucian')->get();
+
+        return view('cekTransaksi', ['data' => $transaksi]);
     }
 }
