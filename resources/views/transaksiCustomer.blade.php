@@ -1,4 +1,5 @@
-@extends('layouts.customer')
+@extends('layouts.cekTransaksi')
+
 
 @section('title', 'Form Transaksi')
 
@@ -21,17 +22,17 @@
                                 $invoice = 'TR' . mt_rand(1000, 9999);
                             }
                             $nomorVirtualAccount = generateVirtualAccount();
-                            
+
                             function generateVirtualAccount()
                             {
                                 $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                                 $length = 12;
                                 $randomString = '';
-                            
+
                                 for ($i = 0; $i < $length; $i++) {
                                     $randomString .= $characters[rand(0, strlen($characters) - 1)];
                                 }
-                            
+
                                 return $randomString;
                             }
                         @endphp
