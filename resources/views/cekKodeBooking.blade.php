@@ -40,8 +40,7 @@
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
-              <th>No</th>
-              <th>Invoice</th>
+              <th>Kode Booking</th>
               <th>User</th>
               <th>Metode Pembayaran</th>
               <th>Jadwal Kereta Api</th>
@@ -53,7 +52,6 @@
             @php($no = 1)
             @foreach ($data as $row)
               <tr>
-                <th>{{ $no++ }}</th>
                 <td>{{ $row->invoice }}</td>
                 <td>{{ $row->user->nama }}</td>
                 <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
@@ -62,7 +60,7 @@
                     {{ $row->jadwal->rute->stasiun->nama_stasiun }} - {{ $row->jadwal->rute->stasiun_tujuan }}
                   @endif
                 </td>
-                <td>{{ $row->id_kursi }}</td>
+                <td>{{ $row->kursi->nama_kursi }}</td>
               </tr>
             @endforeach
             @else

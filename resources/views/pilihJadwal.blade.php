@@ -85,7 +85,7 @@
       <div class="gap-row"></div> <!-- Add the gap row -->
       @php($no = 1)
       @foreach ($data as $row)
-      <div class="list-group-item">
+      <div class="list-group-item" style="font-family:Verdana, Geneva, Tahoma, sans-serif">
         <div class="row">
           <div class="col-2">{{ $no++ }}</div>
           <div class="col-2"><b>{{ $row->kereta->nama_kereta }}</b></div>
