@@ -29,6 +29,7 @@
               <th>Metode Pembayaran</th>
               <th>Total Bayar</th>
               <th>Status Bayar</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>

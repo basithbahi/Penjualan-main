@@ -77,7 +77,7 @@
 					<!-- Menu desktop -->
                     <div class="menu-desktop ml-auto">
                         <ul class="main-menu">
-                        <li><a href="{{ route('home') }}" class="active">Home</a></li>
+                        <li><a href="{{ route('home') }}" class="text-primary">Home</a></li>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-black-600 medium">

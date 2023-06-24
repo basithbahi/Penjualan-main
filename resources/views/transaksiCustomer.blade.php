@@ -1,4 +1,4 @@
-@extends('layouts.customer')
+@extends('layouts.cekTransaksi')
 
 @section('title', 'Form Transaksi')
 
