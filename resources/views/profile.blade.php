@@ -120,16 +120,18 @@
                 {{ auth()->user()->nama }}
                 <br>
               </span>
-              <img class="rounded-circle" src="{{ asset('storage/' .auth()->user()->foto_profil) }}" alt="Foto Profil" width="50" height="50">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-center" href="{{ route('logout') }}">
-                  <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-black"></i>
-                  <span class="text-black">Logout</span>
-                </a>
-              </div>
+               <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ route('logout') }}">
+                <div class="d-flex align-items-center">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-4 text-black"></i>
+                &nbsp &nbsp &nbsp &nbsp
+                <span class="text-black">Logout</span>
+                </div>
+            </a>
+            </div>
               </li>
            <br>
         </ul>

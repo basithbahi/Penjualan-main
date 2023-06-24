@@ -29,10 +29,8 @@
     <link href="{{ asset('style/assets/vendor/swiper/swiper-bundle.min.css') }}" rel="stylesheet">
     <link href="{{ asset('style/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
     <!-- Custom fonts for this template-->
-    <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+  <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
@@ -106,17 +104,37 @@
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="home" class="active">Home</a></li>
-          <li><a href="#tentang">Tentang Kami</a></li>
-          <li><a href="#footer">Hubungi Kami</a></li>
-          <div class="topbar-divider d-none d-sm-block"></div>
-
-           <br>
-          <li class="nav-item dropdown no-arrow">
+            <li><a href="home" class="active">Home</a></li>
+            <li><a href="#tentang">Tentang Kami</a></li>
+            <li><a href="#footer">Hubungi Kami</a></li>
+            <div class="topbar-divider d-none d-sm-block"></div>
+            <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">
                 {{ auth()->user()->nama }}
                 <br>
+                </span>
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" style="margin-left: -20px;" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="profile">
+                <div class="d-flex align-items-center">
+                <i class="fas fa-user fa-sm fa-fw mr-3 text-black"></i>
+                &nbsp &nbsp &nbsp &nbsp
+                <span class="text-black">Profile</span>
+                </div>
+            </a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ route('logout') }}">
+                <div class="d-flex align-items-center">
+                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-4 text-black"></i>
+                &nbsp &nbsp &nbsp &nbsp
+                <span class="text-black">Logout</span>
+                </div>
+            </a>
+            </div>
+            </li>
+=======
               </span>
             </a>
             <!-- Dropdown - User Information -->
@@ -148,6 +166,9 @@
                 </li>
             </ul>
           </nav><!-- .navbar -->
+        </ul>
+      </nav><!-- .navbar -->
+>>>>>>> f509faa663ef6cdabbda93a0facc80096814b63f
     </div>
   </header><!-- End Header -->
 
@@ -159,7 +180,7 @@
                     <h2 data-aos="fade-up">Pemesanan Tiket</h2>
 
                     <body class="text-center">
-                        <form action="{{ route('jadwal.searchIndex') }}" method="GET">
+                    <form action="{{ route('jadwal.searchIndex') }}" method="GET">
                             <br>
                             <select name="stasiun" class="form-control">
                                 <?php
@@ -175,8 +196,8 @@
                             </select>
                             <br>
 
-                            <input type="date" id="tanggal" name="tanggal" class="form-control"
-                                placeholder="tanggal" required autofocus>
+                            <input type="date" id="tanggal" name="tanggal" class="form-control" placeholder="tanggal" required
+                                autofocus>
 
                             <br><br><br>
 
@@ -186,8 +207,11 @@
                                 <a href="cekKodeBooking" class="glightbox btn-watch-video d-flex align-items-center">
                                     <span>Cek Kode Booking</span></a>
                             </div>
+
+
                         </form>
-                    </body>
+
+
                 </div>
             </div>
         </div>
@@ -305,13 +329,13 @@
     <script src="{{ asset('style/assets/vendor/swiper/swiper-bundle.min.js') }}"></script>
     <script src="{{ asset('style/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('style/assets/vendor/php-email-form/validate.js') }}"></script>
-    <!-- Bootstrap core JavaScript-->
-    <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+      <!-- Bootstrap core JavaScript-->
+  <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
+  <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-    <!-- Core plugin JavaScript-->
-    <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-    <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
+  <!-- Core plugin JavaScript-->
+  <script src="{{ asset('vendor/jquery-easing/jquery.easing.min.js') }}"></script>
+  <script src="{{ asset('vendor/chart.js/Chart.min.js') }}"></script>
 
 
     <!-- Template Main JS File -->
