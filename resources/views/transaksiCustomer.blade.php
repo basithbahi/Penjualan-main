@@ -15,20 +15,23 @@
                     </div>
                     <div class="card-body">
                         @php
-                            $idJadwal = $jadwal->id;
-                            $idTransaksi = 'TR' . str_pad($idJadwal, 2, '0', STR_PAD_LEFT);
+                            $invoice = 'TR' . mt_rand(1000, 9999);
+                            $existing_ids = \App\Models\Transaksi::pluck('invoice')->toArray();
+                            while (in_array($invoice, $existing_ids)) {
+                                $invoice = 'TR' . mt_rand(1000, 9999);
+                            }
                             $nomorVirtualAccount = generateVirtualAccount();
-
+                            
                             function generateVirtualAccount()
                             {
                                 $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
                                 $length = 12;
                                 $randomString = '';
-
+                            
                                 for ($i = 0; $i < $length; $i++) {
                                     $randomString .= $characters[rand(0, strlen($characters) - 1)];
                                 }
-
+                            
                                 return $randomString;
                             }
                         @endphp
@@ -36,7 +39,7 @@
                         <div class="form-group">
                             <label for="invoice">ID Transaksi</label>
                             <input type="text" class="form-control" id="invoice" name="invoice"
-                                value="{{ isset($transaksi) ? $transaksi->invoice : $idTransaksi }}" readonly>
+                                value="{{ isset($transaksi) ? $transaksi->invoice : $invoice }}" readonly>
                         </div>
 
                         <div class="form-group">
@@ -121,11 +124,15 @@
                             <input type="file" class="form-control-file" id="bukti_pembayaran" name="bukti_pembayaran">
                         </div>
 
+                        <input type="text" class="form-control" id="status_bayar" name="status_bayar" value="Belum Lunas"
+                            hidden>
+
+
                     </div>
                     <td>
-                    <div class="card-footer">
-                        <button href="{{ route('transaksi.searchIndex') }}" type="submit" class="btn btn-primary" id="btn-simpan">Simpan</button>
-                    </div>
+                        <div class="card-footer">
+                            <button type="submit" class='btn btn-primary'>Simpan</button>
+                        </div>
                     </td>
                 </div>
             </div>

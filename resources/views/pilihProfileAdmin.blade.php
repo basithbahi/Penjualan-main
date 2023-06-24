@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.user')
 
-@section('title', 'Form User')
+@section('title', 'Form Edit')
 
 @section('contents')
-    <form action="{{ isset($user) ? route('user.tambah.update', $user->id) : route('user.tambah.simpan') }}"
+     <form action="{{ isset($user) ? route('user.editProfile.updateProfile', $user->id) : route('user.tambah.simpanProfile') }}"
         method="post" enctype="multipart/form-data">
         @csrf
         <div class="row">
@@ -32,11 +32,11 @@
                         <div class="form-group">
                             <label for="ttl">Tanggal Lahir</label>
                             <input name="ttl" type="date"
-                            class="form-control form-control-user @error('ttl')is-invalid @enderror"
-                            id="exampleInputTtl" placeholder="Tanggal Lahir"
-                            value="{{ isset($user) ? $user->ttl : '' }}">
+                                class="form-control form-control-user @error('ttl')is-invalid @enderror"
+                                id="exampleInputTtl" placeholder="Tanggal Lahir"
+                                value="{{ isset($user) ? $user->ttl : '' }}">
                             @error('ttl')
-                            <span class="invalid-feedback">{{ $message }}</span>
+                                <span class="invalid-feedback">{{ $message }}</span>
                             @enderror
                         </div>
                         <div class="form-group">
@@ -44,22 +44,22 @@
                             <div class="form-control form-control-user" style="font-size: 14px;">
                                 <input class="form-control-input" type="radio" name="jk" id="inlineRadio1"
                                     value="Pria" {{ isset($user) && $user->jk === 'Pria' ? 'checked' : '' }}>
-                                    <label class="form-control-label" for="inlineRadio1">Pria</label>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;
-                                    <input class="form-control-input" type="radio" name="jk" id="inlineRadio2"
+                                <label class="form-control-label" for="inlineRadio1">Pria</label>
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                <input class="form-control-input" type="radio" name="jk" id="inlineRadio2"
                                     value="Wanita" {{ isset($user) && $user->jk === 'Wanita' ? 'checked' : '' }}>
-                                    <label class="form-control-label" for="inlineRadio2">Wanita</label>
-                                </div>
+                                <label class="form-control-label" for="inlineRadio2">Wanita</label>
                             </div>
-                            <div class="form-group">
-                                <label for="nomor_telepon">Nomor Telepon</label>
-                                <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon"
-                                    value="{{ isset($user) ? $user->nomor_telepon : '' }}">
-                            </div>
-                            <div class="form-group">
-                                <label for="username">Email</label>
-                                <input type="text" class="form-control" id="email" name="email"
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Email</label>
+                            <input type="text" class="form-control" id="email" name="email"
                                 value="{{ isset($user) ? $user->email : '' }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" name="password"
+                                value="{{ isset($user) ? $user->password : '' }}">
                         </div>
                         <div class="form-group">
                             <label for="image">Foto Profil</label>

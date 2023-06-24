@@ -1,11 +1,13 @@
-@extends('layouts.customer')
+@extends('layouts.app')
 
 @section('title', 'Form Transaksi')
 
 @section('contents')
 
-<form action="{{ isset($transaksi) ? route('transaksi.tambah.update', $transaksi->id) : route('transaksi.tambah.simpan') }}" method="post">
-    @csrf
+    <form
+        action="{{ isset($transaksi) ? route('transaksi.tambah.update', $transaksi->id) : route('transaksi.tambah.simpan') }}"
+        method="post">
+        @csrf
         <div class="row">
             <div class="col-12">
                 <div class="card shadow mb-4">
@@ -14,58 +16,31 @@
                             {{ isset($transaksi) ? 'Form Edit Transaksi' : 'Form Tambah Transaksi' }}</h6>
                     </div>
                     <div class="card-body">
-                        @php
-                            $idJadwal = $jadwal->id;
-                            $idTransaksi = 'TR' . str_pad($idJadwal, 2, '0', STR_PAD_LEFT);
-                            $nomorVirtualAccount = generateVirtualAccount();
-
-                            function generateVirtualAccount()
-                            {
-                                $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                                $length = 12;
-                                $randomString = '';
-
-                                for ($i = 0; $i < $length; $i++) {
-                                    $randomString .= $characters[rand(0, strlen($characters) - 1)];
-                                }
-
-                                return $randomString;
-                            }
-                        @endphp
-
                         <div class="form-group">
                             <label for="invoice">ID Transaksi</label>
                             <input type="text" class="form-control" id="invoice" name="invoice"
-                                value="{{ isset($transaksi) ? $transaksi->invoice : $idTransaksi }}" readonly>
+                                value="{{ isset($transaksi) ? $transaksi->invoice : '' }}">
                         </div>
 
                         <div class="form-group">
                             <label for="nik">User</label>
-                            <input type="text" class="form-control" id="nik" name="nik"
-                                value="{{ auth()->user()->id }}" hidden>
-                            <input type="text" class="form-control" id="id_jadwal" value="{{ auth()->user()->nama }}"
-                                readonly>
+                            <select name="nik" id="nik" class="custom-select">
+                                <option value="{{ auth()->user()->id }}">
+                                    {{ auth()->user()->nama }}
+                                </option>
+                            </select>
                         </div>
 
                         <div class="form-group">
                             <label for="id_jadwal">Jadwal Kereta</label>
-                            <input type="hidden" name="id_jadwal" value="{{ $jadwal->id }}">
-                            <input type="text" class="form-control" id="id_jadwal"
-                                value="{{ $jadwal->kereta->nama_kereta }} - {{ $jadwal->kereta->jenis_kereta }} | {{ $jadwal->rute->stasiun->nama_stasiun }} - {{ $jadwal->rute->stasiun_tujuan }}"
-                                readonly>
-                            <small class="text-success">Berhasil Dipesan!</small>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="id_gerbong">Gerbong</label>
-                            <select name="id_gerbong" id="id_gerbong" class="custom-select">
-                                <option value="" selected disabled hidden>-- Pilih Gerbong --</option>
-                                @foreach ($gerbong as $row)
-                                    @if ($row->id_kereta == $jadwal->kereta->id)
-                                        // Menambahkan kondisi untuk hanya menampilkan gerbong yang terkait dengan kereta
-                                        yang dipilih
-                                        <option value="{{ $row->id }}">{{ $row->nama_gerbong }}</option>
-                                    @endif
+                            <select name="id_jadwal" id="id_jadwal" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
+                                @foreach ($jadwal as $row)
+                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}" <option
+                                        value="{{ $row->id }}" data-harga="{{ $row->harga }}"
+                                        {{ isset($transaksi) ? ($row->id == $transaksi->id_jadwal ? 'selected' : '') : '' }}>
+                                        {{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -76,6 +51,31 @@
                         </div>
 
                         <input type="hidden" name="id_kursi" id="id_kursi">
+
+                        <div class="form-group">
+                            <label for="id_metode_pembayaran">Metode Pembayaran</label>
+                            <select name="id_metode_pembayaran" id="id_metode_pembayaran" class="custom-select">
+                                <option value="" selected disabled hidden>-- Pilih Metode Pembayaran --</option>
+                                @foreach ($metode_pembayaran as $row)
+                                    @if (is_object($row))
+                                        $id = $row->id;
+                                        <option value="{{ $row->id }}"
+                                            {{ isset($transaksi) ? ($transaksi->id_metode_pembayaran == $row->id ? 'selected' : '') : '' }}>
+                                            {{ $row->metode_pembayaran }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="harga">Total Harga</label>
+                            <input type="text" class="form-control" id="harga" name="harga"
+                                value="{{ isset($transaksi) ? $transaksi->jadwal->harga : '' }}" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label for="total_bayar">Total Bayar</label>
+                            <input type="text" class="form-control" id="total_bayar" name="total_bayar"
+                                value="{{ isset($transaksi) ? $transaksi->total_bayar : '' }}">
+                        </div>
 
                         <div class="form-group">
                             <label for="total_bayar">Total Bayar</label>
@@ -123,86 +123,71 @@
 
                     </div>
                     <td>
-                    <div class="card-footer">
-                        <button href="{{ route('transaksi.searchIndex') }}" type="submit" class="btn btn-primary" id="btn-simpan">Simpan</button>
-                    </div>
-                    </td>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-primary" id="btn-simpan" id="btn-simpan">Simpan</button>
+                        </div>
                 </div>
             </div>
         </div>
     </form>
 
-
-    <style>
-        .btn-group button {
-            margin-right: 5px;
-            margin-bottom: 5px;
-            border-radius: 5px;
-            padding: 5px 10px;
-            font-size: 14px;
-            background-color: #f8f9fa;
-            color: #333;
-            border: 1px solid #ccc;
-        }
-
-        .btn-group button:hover {
-            background-color: #e9ecef;
-        }
-    </style>
-
-
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var gerbongSelect = document.getElementById('id_gerbong');
-            var kursiContainer = document.getElementById('kursi-container');
-            var kursiButtons = document.getElementById('kursi-buttons');
-            var kursiOptions = {!! $kursi !!};
-            var selectedKursi = null;
+            var jadwalSelect = document.getElementById('id_jadwal');
+            var hargaInput = document.getElementById('harga');
+            var totalBayarInput = document.getElementById('total_bayar');
+            var btnSimpan = document.getElementById('btn-simpan');
 
-            gerbongSelect.addEventListener('change', function() {
-                var selectedGerbong = gerbongSelect.value;
-                kursiButtons.innerHTML = '';
+            jadwalSelect.addEventListener('change', function() {
+                var selectedOption = jadwalSelect.options[jadwalSelect.selectedIndex];
+                var harga = selectedOption.getAttribute('data-harga');
 
-                kursiOptions.forEach(function(kursi) {
-                    if (kursi.id_gerbong == selectedGerbong) {
-                        var button = document.createElement('button');
-                        button.setAttribute('type', 'button');
-                        button.setAttribute('data-idkursi', kursi.id);
-                        button.innerText = kursi.nama_kursi;
-                        button.classList.add('btn', 'btn-primary');
-                        button.addEventListener('click', function() {
-                            if (selectedKursi !== null) {
-                                // Remove 'active' class from the previously selected seat button
-                                selectedKursi.classList.remove('active');
-                            }
-                            // Select the clicked seat
-                            selectedKursi = button;
-                            selectedKursi.classList.add('active');
-                            var idKursiInput = document.getElementById('id_kursi');
-                            idKursiInput.value = button.getAttribute('data-idkursi');
-                        });
-                        kursiButtons.appendChild(button);
-                    }
-                });
-
-                if (kursiButtons.children.length > 0) {
-                    kursiContainer.style.display = 'block';
+                if (harga) {
+                    hargaInput.value = harga;
                 } else {
-                    kursiContainer.style.display = 'none';
+                    hargaInput.value = '';
                 }
             });
 
-            var metodePembayaranSelect = document.getElementById('id_metode_pembayaran');
-            var petunjukPembayaran = document.getElementById('petunjuk-pembayaran');
+            totalBayarInput.addEventListener('input', function() {
+                var totalBayar = parseFloat(totalBayarInput.value);
+                var harga = parseFloat(hargaInput.value);
 
-            metodePembayaranSelect.addEventListener('change', function() {
-                var selectedMetodePembayaran = metodePembayaranSelect.value;
-
-                if (selectedMetodePembayaran !== "") {
-                    petunjukPembayaran.style.display = 'block';
+                if (totalBayar < harga || totalBayar > harga) {
+                    btnSimpan.disabled = true;
                 } else {
-                    petunjukPembayaran.style.display = 'none';
+                    btnSimpan.disabled = false;
+                }
+            });
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var jadwalSelect = document.getElementById('id_jadwal');
+            var hargaInput = document.getElementById('harga');
+            var totalBayarInput = document.getElementById('total_bayar');
+            var btnSimpan = document.getElementById('btn-simpan');
+
+            jadwalSelect.addEventListener('change', function() {
+                var selectedOption = jadwalSelect.options[jadwalSelect.selectedIndex];
+                var harga = selectedOption.getAttribute('data-harga');
+
+                if (harga) {
+                    hargaInput.value = harga;
+                } else {
+                    hargaInput.value = '';
+                }
+            });
+
+            totalBayarInput.addEventListener('input', function() {
+                var totalBayar = parseFloat(totalBayarInput.value);
+                var harga = parseFloat(hargaInput.value);
+
+                if (totalBayar < harga || totalBayar > harga) {
+                    btnSimpan.disabled = true;
+                } else {
+                    btnSimpan.disabled = false;
                 }
             });
         });

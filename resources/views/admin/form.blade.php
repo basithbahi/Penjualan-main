@@ -25,21 +25,25 @@
               <input type="text" class="form-control" id="alamat" name="alamat" value="{{ isset($admin) ? $admin->alamat : '' }}">
             </div>
             <div class="form-group">
-              <label for="ttl">Tanggal Lahir</label>
-              <input name="ttl" type="date" class="form-control form-control-user @error('ttl')is-invalid @enderror" id="exampleInputTtl" placeholder="Tanggal Lahir" value="{{ isset($admin) ? $admin->ttl : '' }}">
-              @error('ttl')
+                <label for="ttl">Tanggal Lahir</label>
+                <input name="ttl" type="date" class="form-control form-control-user @error('ttl')is-invalid @enderror" id="exampleInputTtl" placeholder="Tanggal Lahir" value="{{ isset($admin) ? $admin->ttl : '' }}">
+                @error('ttl')
                 <span class="invalid-feedback">{{ $message }}</span>
-              @enderror
+                @enderror
             </div>
             <div class="form-group">
-              <label for="jk">Jenis Kelamin</label>
-              <div class="form-control form-control-user" style="font-size: 14px;">
+                <label for="jk">Jenis Kelamin</label>
+                <div class="form-control form-control-user" style="font-size: 14px;">
                 <input class="form-control-input" type="radio" name="jk" id="inlineRadio1" value="Pria" {{ isset($admin) && $admin->jk === 'Pria' ? 'checked' : '' }}>
                 <label class="form-control-label" for="inlineRadio1">Pria</label> &nbsp;&nbsp;&nbsp;&nbsp;
                 <input class="form-control-input" type="radio" name="jk" id="inlineRadio2" value="Wanita" {{ isset($admin) && $admin->jk === 'Wanita' ? 'checked' : '' }}>
                 <label class="form-control-label" for="inlineRadio2">Wanita</label>
-              </div>
             </div>
+        </div>
+        <div class="form-group">
+          <label for="nomor_telepon">Nomor Telepon</label>
+          <input type="text" class="form-control" id="nomor_telepon" name="nomor_telepon" value="{{ isset($admin) ? $admin->nomor_telepon : '' }}">
+        </div>
             <div class="form-group">
               <label for="email">Email</label>
               <input type="text" class="form-control" id="email" name="email" value="{{ isset($admin) ? $admin->email : '' }}">

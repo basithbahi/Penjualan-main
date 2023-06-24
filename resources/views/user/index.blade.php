@@ -30,8 +30,8 @@
                                 <th>Alamat</th>
                                 <th>ttl</th>
                                 <th>JK</th>
+                                <th>Nomor Telepon</th>
                                 <th>email</th>
-                                <th>password</th>
                                 <th>Foto Profil</th>
                                 <th>Aksi</th>
                             </tr>
@@ -46,16 +46,14 @@
                                     <td>{{ $row->alamat }}</td>
                                     <td>{{ $row->ttl }}</td>
                                     <td>{{ $row->jk }}</td>
+                                    <td>{{ $row->nomor_telepon }}</td>
                                     <td>{{ $row->email }}</td>
-                                    <td>{{ $row->password }}</td>
-                                    <td><img src="{{ asset('storage/' .$row->foto_profil) }}" alt="Foto Profil"></td>
+                                    <td><img src="{{ asset('storage/' .$row->foto_profil) }}" alt="Foto Profil" height="20%" width="20%""></td>
                                     <td>
-                                        <a href="{{ route('user.edit', $row->id) }}" class="btn btn-warning">Edit
-                                            &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
-                                            @if ($jumlahDataUser > 1)
-                                                <a href="{{ route('user.hapus', $row->id) }}" class="btn btn-danger">Hapus
-                                                    &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt"></i></a>
-                                            @endif
+                                        <a href="{{ route('user.edit', $row->id) }}" class="btn btn-warning">
+                                            <i class="fas fa-pen"></i></a>
+                                                <a href="{{ route('user.hapus', $row->id) }}" class="btn btn-danger">
+                                                    <i class="fas fa-trash-alt"></i></a>
                                     </td>
                                 </tr>
                             @endforeach

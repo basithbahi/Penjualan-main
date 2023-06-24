@@ -30,8 +30,8 @@
                             <th>Alamat</th>
                             <th>Tanggal Lahir</th>
                             <th>Jenis Kelamin</th>
+                            <th>Nomor Telepon</th>
                             <th>Email</th>
-                            <th>Password</th>
                             <th>foto profil</th>
                             <th>Aksi</th>
                         </tr>
@@ -46,15 +46,15 @@
                                 <td>{{ $row->alamat }}</td>
                                 <td>{{ $row->ttl }}</td>
                                 <td>{{ $row->jk }}</td>
+                                <td>{{ $row->nomor_telepon }}</td>
                                 <td>{{ $row->email }}</td>
-                                <td>{{ $row->password }}</td>
-                                <td><img src="{{ asset('storage/' .$row->foto_profil) }}" alt="Foto Profil"></td>
+                                <td><img src="{{ asset('storage/' .$row->foto_profil) }}" alt="Foto Profil" height="20%" width="20%"></td>
                                 <td>
-                                    <a href="{{ route('admin.edit', $row->id) }}" class="btn btn-warning">Edit
-                                        &nbsp;&nbsp;&nbsp;<i class="fas fa-pen"></i></a>
+                                    <a href="{{ route('admin.edit', $row->id) }}" class="btn btn-warning">
+                                        <i class="fas fa-pen"></i></a>
                                     @if ($jumlahDataAdmin > 1)
-                                        <a href="{{ route('admin.hapus', $row->id) }}" class="btn btn-danger">Hapus
-                                            &nbsp;&nbsp;&nbsp;<i class="fas fa-trash-alt "></i></a>
+                                        <a href="{{ route('admin.hapus', $row->id) }}" class="btn btn-danger">
+                                            <i class="fas fa-trash-alt "></i></a>
                                     @endif
                                 </td>
                             </tr>

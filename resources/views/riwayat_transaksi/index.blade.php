@@ -34,7 +34,6 @@
               <th>Total Harga</th>
               <th>Bukti Pembayaran</th>
               <th>Status pembayaran</th>
-              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -56,13 +55,12 @@
                 <td><img src="{{ asset('storage/' .$row->bukti_pembayaran) }}" alt="Bukti Pembayaran"></td>
                 <td>{{ $row->status_bayar }}</td>
 
-                    <td>
-                        <a href="{{ route('riwayat_transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                        <a href="{{ route('riwayat_transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
-                    </td>
+
               </tr>
               @endif
             @endforeach
+            <a href="{{ route('transaksi.cetak') }}" class="btn btn-primary"
+            target="_blank"><i class="fas fa-print "></i>&nbsp;&nbsp;&nbsp;&nbsp;Cetak</a>
           </tbody>
         </table>
       </div>

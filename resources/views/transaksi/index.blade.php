@@ -17,43 +17,52 @@
         </form>
       </div>
 
-
     <div class="card-body">
-			@if (auth()->user()->level == 'Admin')
-      <a href="{{ route('transaksi.tambah') }}" class="btn btn-success mb-3"><i class="fas fa-plus"></i>&nbsp;&nbsp;&nbsp;Tambah Transaksi</a>
-			@endif
-
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
-            @if (auth()->user()->level == 'Admin')
             <tr>
               <th>No</th>
               <th>Invoice</th>
-              <th>ID User</th>
-              <th>ID Jadwal</th>
-              <th>ID Metode Pembayaran</th>
+              <th>User</th>
+              <th>Jadwal Kereta Api</th>
+              <th>Kursi</th>
+              <th>Metode Pembayaran</th>
+              <th>Total Harga</th>
+              <th>Bukti Pembayaran</th>
+              <th>Status pembayaran</th>
               <th>Aksi</th>
-				@endif
+              <th>Konfimasi</th>
             </tr>
           </thead>
           <tbody>
             @php($no = 1)
             @foreach ($data as $row)
-              <tr>
-                <th>{{ $no++ }}</th>
-                <td>{{ $row->invoice }}</td>
-                <td>{{ $row->user->nama }}</td>
-                <td>{{ $row->id_jadwal->id_jadwal }}</td>
-                <td>{{ $row->id_metode_pembayaran->id_metode_pembayaran }}</td>
-				@if (auth()->user()->level == 'Admin')
+              @if ($row->status_bayar === 'BELUM LUNAS')
+                <tr>
+                    <th>{{ $no++ }}</th>
+                    <td>{{ $row->invoice }}</td>
+                    <td>{{ $row->user->nama }}</td>
                     <td>
-                        <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
-                        <a href="{{ route('transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
-                        <a href="{{ route('transaksi.bayar', $row->id) }}" class="btn btn-info"><i class="fas fa-money-bill "></i></a>
+                    @if ($row->id_jadwal && $row->jadwal->rute->stasiun)
+                        {{ $row->jadwal->rute->stasiun->nama_stasiun }} - {{ $row->jadwal->rute->stasiun_tujuan }}
+                    @endif
                     </td>
-				@endif
-              </tr>
+                    <td>{{ $row->kursi->nama_kursi }}</td>
+                    <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
+                    <td>{{ $row->jadwal->harga }}</td>
+                    <td><img src="{{ asset('storage/' .$row->bukti_pembayaran) }}" alt="Bukti Pembayaran"></td>
+                    <td>{{ $row->status_bayar }}</td>
+
+                        <td>
+                            <a href="{{ route('transaksi.edit', $row->id) }}" class="btn btn-warning"><i class="fas fa-pen"></i></a>
+                            <a href="{{ route('transaksi.hapus', $row->id) }}" class="btn btn-danger"><i class="fas fa-trash-alt "></i></a>
+                        </td>
+                        <td>
+                            <a href="{{ route('transaksi.lunas', $row->id) }}" class="btn btn-success">Konfirmasi Pembayaran</i></a>
+                        </td>
+                </tr>
+              @endif
             @endforeach
           </tbody>
         </table>

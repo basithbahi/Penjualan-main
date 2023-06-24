@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\User;
 use App\Models\Jadwal;
 use App\Models\Gerbong;
 use App\Models\Kursi;
+use App\Models\Kereta;
 use App\Models\MetodePembayaran;
 
 class TransaksiController extends Controller
@@ -17,6 +19,13 @@ class TransaksiController extends Controller
         $transaksi = Transaksi::get();
 
         return view('transaksi.index', ['data' => $transaksi]);
+    }
+
+    public function cekTransaksi()
+    {
+        $transaksi = Transaksi::orderBy('status_bayar')->get();
+
+        return view('cekTransaksi', ['data' => $transaksi]);
     }
 
     public function cekKodeBooking()
@@ -30,19 +39,30 @@ class TransaksiController extends Controller
     {
         $user = User::get();
         $jadwal = Jadwal::get();
+        $gerbong = Gerbong::get();
+        $kursi = Kursi::get();
+        $kereta = Kereta::get();
         $metode_pembayaran = MetodePembayaran::get();
 
-        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'metode_pembayaran' => $metode_pembayaran,]);
+        return view('transaksi.form', ['user' => $user, 'jadwal' => $jadwal, 'gerbong' => $gerbong, 'kursi' => $kursi, 'metode_pembayaran' => $metode_pembayaran, 'kereta' => $kereta]);
     }
 
     public function simpan(Request $request)
     {
+        $image_name = '';
+        if ($request->file('image')) {
+            $image_name = $request->file('image')->store('images', 'public');
+        }
+
         $data = [
             'invoice' => $request->invoice,
-            'id_user' => $request->id_user,
+            'nik' => $request->nik,
             'id_jadwal' => $request->id_jadwal,
+            'id_gerbong' => $request->id_gerbong,
+            'id_kursi' => $request->id_kursi,
             'id_metode_pembayaran' => $request->id_metode_pembayaran,
-            'waktu' => $request->waktu,
+            'total_bayar' => $request->total_bayar,
+            'bukti_pembayaran' => $image_name,
         ];
 
         Transaksi::create($data);
@@ -89,34 +109,10 @@ class TransaksiController extends Controller
 
         Transaksi::create($data);
         $user = User::find($request->nik);
-        return redirect()->route('transaksi.searchIndex')->with('user', $user);
+        return redirect()->route('home');
 
         // return redirect()->route('home');
     }
-
-    // public function bayar($id)
-    // {
-    //     $transaksi = Transaksi::find($id);
-
-    //     return view('transaksi.bayar', ['transaksi' => $transaksi,]);
-    // }
-
-    // public function upload(Request $request)
-    // {
-    //     $request->validate([
-    //         'nik' => 'required'
-    //     ]);
-
-    //     $data = [
-    //         'id_riwayat_transaksi' => $request->id_riwayat_transaksi,
-    //         'invoice' => $request->invoice,
-    //         'total_harga' => $request->total_harga,
-    //     ];
-
-    //     Transaksi::create($data);
-
-    //     return redirect()->route('riwayat_transaksi');
-    // }
 
     public function edit($id)
     {
@@ -155,26 +151,6 @@ class TransaksiController extends Controller
         return redirect()->route('transaksi');
     }
 
-    // public function bayar($id)
-    // {
-    //     $transaksi = Transaksi::find($id);
-    //     $metode_pembayaran = MetodePembayaran::find($id);
-
-    //     return view('transaksi.bayar', ['transaksi' => $transaksi, 'metode_pembayaran' => $metode_pembayaran]);
-    // }
-
-    // public function upload(Request $request)
-    // {
-    //     $data = [
-    //         'invoice' => $request->invoice,
-    //         'metode_pembayaran' => $request->metode_pembayaran,
-    //         'total_bayar' => $request->total_bayar,
-    //     ];
-
-    //     // RiwayatTransaksi::create($data);
-
-    //     return redirect()->route('riwayat_transaksi');
-    // }
 
     public function search(Request $request)
     {
@@ -240,10 +216,17 @@ class TransaksiController extends Controller
         return view('cekTiket', ['data' => $data, 'query' => $query]);
     }
 
-    public function cekTransaksi()
+    public function cetak()
     {
-        $transaksi = Transaksi::orderBy('status_pencucian')->get();
+        $transaksi = Transaksi::where('status_bayar', 'LUNAS')->get();
+        $pdf = PDF::loadView('transaksi.cetak', ['data' => $transaksi]);
+        return $pdf->stream();
+    }
 
-        return view('cekTransaksi', ['data' => $transaksi]);
+    public function cetakNota($id_transaksi)
+    {
+        $transaksi = Transaksi::where('id_transaksi', $id_transaksi)->get();
+        $pdf = PDF::loadview('transaksi.cetakNota', compact('transaksi'));
+        return $pdf->stream();
     }
 }

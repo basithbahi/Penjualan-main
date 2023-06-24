@@ -62,7 +62,7 @@
                         <label class="custom-control-label" for="customCheck">Ingat Saya</label>
                       </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
+                    <button type="submit" class="btn btn-primary btn-block btn-user">Masuk</button>
                   </form>
                   <hr>
                   <div class="text-center">

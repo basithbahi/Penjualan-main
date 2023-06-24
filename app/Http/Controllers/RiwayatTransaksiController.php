@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\User;
@@ -24,6 +25,21 @@ class RiwayatTransaksiController extends Controller
 
         return view('cekKodeBooking', ['data' => $transaksi]);
     }
+
+    public function cekTransaksi()
+    {
+        $transaksi = Transaksi::get();
+
+        return view('cekTransaksi', ['data' => $transaksi]);
+    }
+
+    public function cetak()
+    {
+        $transaksi = Transaksi::where('status_bayar', 'Lunas')->findOrFail($$id_transaksi);
+        $pdf = PDF::loadView('transaksi.cetak', ['transaksi' => $transaksi]);
+        return $pdf->stream();
+    }
+
 
     public function tambah()
     {
