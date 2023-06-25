@@ -23,9 +23,16 @@ class TransaksiController extends Controller
 
     public function cekTransaksi()
     {
-        $transaksi = Transaksi::orderBy('status_bayar')->get();
+        $transaksi = Transaksi::get();
 
         return view('cekTransaksi', ['data' => $transaksi]);
+    }
+
+    public function cetakTiket($invoice)
+    {
+        $transaksi = Transaksi::where('invoice', $invoice)->get();
+        $pdf = PDF::loadview('transaksi.cetakTiket', compact('transaksi'));
+        return $pdf->stream();
     }
 
     public function cekKodeBooking()

@@ -29,6 +29,7 @@
               <th>Metode Pembayaran</th>
               <th>Total Bayar</th>
               <th>Status Bayar</th>
+              <th>Aksi</th>
             </tr>
           </thead>
           <tbody>
@@ -45,7 +46,12 @@
                     <td>{{ $row->metode_pembayaran->metode_pembayaran }}</td>
                     <td>{{ $row->total_bayar }}</td>
                   @if ($row->status_bayar === 'LUNAS')
-                  <td><button class="disabled-button" disabled>{{ $row->status_bayar }}</button></td>
+                  <td>
+                    <button class="disabled-button" disabled>{{ $row->status_bayar }}</button>
+                  </td>
+                  <td>
+                    <a href="{{ route('transaksi.cetakTiket', ['invoice' => $row->invoice]) }}" class="btn btn-primary" target="_blank"><i class="fas fa-print"></i></a>
+                  </td>
                   @else
                   <td><button class="button" disabled>{{ $row->status_bayar }}</button></td>
                 </tr>

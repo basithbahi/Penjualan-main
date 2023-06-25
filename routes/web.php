@@ -171,7 +171,7 @@ Route::middleware('auth')->group(function () {
             Route::get('bayar/{id}', 'bayar')->name('transaksi.bayar');
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
-            Route::get('cetakNota/{invoice}', 'cetakNota')->name('transaksi.cetakNota');
+            Route::get('cetakTiket/{invoice}', 'cetakTiket')->name('transaksi.cetakTiket');
             Route::get('cetak', 'cetak')->name('transaksi.cetak');
             Route::post('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
             Route::get('lunas/{id}', 'lunas')->name('transaksi.lunas');
