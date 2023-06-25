@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use PDF;
-use Picqer\Barcode\BarcodeGeneratorPNG;
 use Illuminate\Http\Request;
 use App\Models\Transaksi;
 use App\Models\User;
@@ -231,12 +230,10 @@ class TransaksiController extends Controller
         return $pdf->stream();
     }
 
-    public function cetakTiket($invoice)
+    public function cetakNota($id_transaksi)
     {
-        $transaksi = Transaksi::where('invoice', $invoice)->get();
-        $pdf = PDF::loadview('transaksi.cetakTiket', compact('transaksi'));
+        $transaksi = Transaksi::where('id_transaksi', $id_transaksi)->get();
+        $pdf = PDF::loadview('transaksi.cetakNota', compact('transaksi'));
         return $pdf->stream();
     }
-    
-
 }
