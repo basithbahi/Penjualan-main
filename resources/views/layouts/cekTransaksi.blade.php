@@ -84,7 +84,6 @@
                     <!-- Menu desktop -->
                     <div class="menu-desktop ml-auto">
                         <ul class="main-menu">
-<<<<<<< HEAD
                         <li><a href="{{ route('home') }}" class="text-primary">Home</a></li>
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -93,20 +92,6 @@
                                 </span>
                             </a>
                             <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="{{ route('profile') }}">
-                                <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                Profile
-=======
-                            <li><a href="{{ route('home') }}" class="active"><b class="text-primary">Home</b></a></li>
-                            <li class="nav-item dropdown no-arrow">
-                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <span class="mr-2 d-none d-lg-inline text-black-600 medium">
-                                    <b class="text-primary">{{ auth()->user()->nama }}</b>
-                                    </span>
->>>>>>> 65b3985a59a1e7c7413ddd1e34779b59ef63796a
-                                </a>
                                 <!-- Dropdown - User Information -->
                                 <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                     aria-labelledby="userDropdown">
