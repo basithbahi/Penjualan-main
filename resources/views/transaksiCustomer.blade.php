@@ -1,8 +1,4 @@
 @extends('layouts.cekTransaksi')
-<<<<<<< HEAD
-=======
-
->>>>>>> 65b3985a59a1e7c7413ddd1e34779b59ef63796a
 
 @section('title', 'Form Transaksi')
 
