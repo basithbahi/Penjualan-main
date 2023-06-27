@@ -10,6 +10,7 @@ use App\Models\Jadwal;
 use App\Models\Gerbong;
 use App\Models\Kursi;
 use App\Models\Kereta;
+use App\Models\Penumpang;
 use App\Models\MetodePembayaran;
 
 class TransaksiController extends Controller
@@ -115,12 +116,16 @@ class TransaksiController extends Controller
         ];
 
         Transaksi::create($data);
-        $user = User::find($request->nik);
-        return redirect()->route('home');
+
+        if ($request->has('pesan_lagi') && $request->pesan_lagi === 'true') {
+            return redirect()
+                ->route('transaksi.tambahCustomer')
+                ->with('invoice', $request->invoice)
+                ->with('nik', $request->nik);
+        }
 
         // return redirect()->route('home');
     }
-
     public function edit($id)
     {
         $transaksi = Transaksi::find($id);
@@ -157,7 +162,6 @@ class TransaksiController extends Controller
 
         return redirect()->route('transaksi');
     }
-
 
     public function search(Request $request)
     {

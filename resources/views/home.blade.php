@@ -137,6 +137,14 @@
                                 </div>
                             </a>
                             <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="{{ route('penumpang') }}">
+                                <div class="d-flex align-items-center">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-4 text-black"></i>
+                                    &nbsp &nbsp &nbsp &nbsp
+                                    <span class="text-black">Daftar Penumpang</span>
+                                </div>
+                            </a>
+                            <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}">
                                 <div class="d-flex align-items-center">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-4 text-black"></i>
@@ -178,7 +186,7 @@
                             <input type="date" id="tanggal" name="tanggal" class="form-control"
                                 placeholder="tanggal" required autofocus>
 
-                            <br><br><br>
+                            <br><br>
 
                             <div class="d-flex" data-aos="fade-up" data-aos-delay="200">
                                 <button type="submit" class="btn btn-primary">Pesan</button>

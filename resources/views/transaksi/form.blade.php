@@ -36,7 +36,7 @@
                             <select name="id_jadwal" id="id_jadwal" class="custom-select">
                                 <option value="" selected disabled hidden>-- Pilih Jadwal Kereta --</option>
                                 @foreach ($jadwal as $row)
-                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}" <option
+                                    <option value="{{ $row->id }}" data-harga="{{ $row->harga }}" <option>
                                         value="{{ $row->id }}" data-harga="{{ $row->harga }}"
                                         {{ isset($transaksi) ? ($row->id == $transaksi->id_jadwal ? 'selected' : '') : '' }}>
                                         {{ $row->rute->stasiun->nama_stasiun }} - {{ $row->rute->stasiun_tujuan }}
@@ -113,12 +113,13 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="bukti_pembayaran"><strong>Bukti Pembayaran</strong></label>
+                            <label for="image"><strong>Bukti Pembayaran</strong></label>
+                            <input type="file" class="form-control" id="bukti_pembayaran" name="image">
                             @if (isset($transaksi) && $transaksi->bukti_pembayaran)
                                 <img src="{{ asset('storage/' . $transaksi->bukti_pembayaran) }}" alt="Bukti Pembayaran"
                                     width="20">
                             @endif
-                            <input type="file" class="form-control-file" id="bukti_pembayaran" name="bukti_pembayaran">
+
                         </div>
 
                     </div>

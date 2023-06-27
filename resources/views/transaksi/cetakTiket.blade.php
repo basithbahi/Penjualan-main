@@ -70,13 +70,13 @@
 <body>
     <div class="boarding-pass">
         <div class="logo">
-            <img src="{{ public_path('img/jesjespor logo biru.png') }}" alt="Logo" >
+        <img src="{{ asset('img/jesjespor logo biru.png') }}" alt="Logo">
         </div>
 
         <div class="pass-info">
             @foreach($transaksi as $row)
             <div class="pass-info-row">
-               <h3><div class="pass-info-value">{{ $row->jadwal->kereta->nama_kereta }}({{ $row->jadwal->kereta->jenis_kereta }})</div></h3>
+                <h3><div class="pass-info-value">{{ $row->jadwal->kereta->nama_kereta }}({{ $row->jadwal->kereta->jenis_kereta }})</div></h3>
             </div>
 <br>
             <div class="pass-info-row">
@@ -104,21 +104,23 @@
             <div class="pass-info-row">
 
             </div>
-            @endforeach
-        </div>
 
-        <br>
+            <br>
         <div class="pass-footer">
         <p>Pindai Barcode Ini Di Gerbang</p>
         </div>
 <br>
         <center>
-            <img src="{{ public_path('img/barcode.jpeg') }}" alt="Logo" height="40%" width="35%">
+        <img src="{{ asset('img/barcode.jpeg') }}" alt="Logo" height="40%" width="35%">
         <div class="pass-footer">
             <br><br>
             <p>Terima kasih atas kunjungan Anda</p>
         </div>
     </center>
     </div>
+            @endforeach
+        </div>
+
+
 </body>
 </html>

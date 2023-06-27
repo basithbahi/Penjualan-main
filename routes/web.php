@@ -10,6 +10,7 @@ use App\Http\Controllers\KursiController;
 use App\Http\Controllers\StasiunController;
 use App\Http\Controllers\RuteController;
 use App\Http\Controllers\TransaksiController;
+use App\Http\Controllers\PenumpangController;
 use App\Http\Controllers\MetodePembayaranController;
 use App\Http\Controllers\RiwayatTransaksiController;
 use Illuminate\Support\Facades\Route;
@@ -171,9 +172,8 @@ Route::middleware('auth')->group(function () {
             Route::get('bayar/{id}', 'bayar')->name('transaksi.bayar');
             Route::post('bayar/{id}', 'upload')->name('transaksi.bayar.upload');
             Route::get('search', 'search')->name('transaksi.search');
-            Route::get('cetakTiket/{invoice}', 'cetakTiket')->name('transaksi.cetakTiket');
+            Route::get('/transaksi/cetakTiket/{invoice}', 'cetakTiket')->name('transaksi.cetakTiket');
             Route::get('cetak', 'cetak')->name('transaksi.cetak');
-            Route::get('cetakTiket', 'cetakTiket')->name('transaksi.cetakTiket');
             Route::post('searchKodeBooking', 'searchKodeBooking')->name('transaksi.searchKodeBooking');
             Route::get('lunas/{id}', 'lunas')->name('transaksi.lunas');
             Route::get('searchIndex', 'searchIndex')->name('transaksi.searchIndex');
@@ -192,6 +192,16 @@ Route::middleware('auth')->group(function () {
         Route::post('bayar/{id}', 'upload')->name('riwayat_transaksi.bayar.upload');
         Route::get('search', 'search')->name('riwayat_transaksi.search');
         Route::get('cetak', 'cetak')->name('riwayat_transaksi.cetak');
+    });
+
+    Route::controller(PenumpangController::class)->prefix('penumpang')->group(function () {
+        Route::get('', 'index')->name('penumpang');
+        Route::get('tambah', 'tambah')->name('penumpang.tambah');
+        Route::post('tambah', 'simpan')->name('penumpang.tambah.simpan');
+        Route::get('edit/{id}', 'edit')->name('penumpang.edit');
+        Route::post('edit/{id}', 'update')->name('penumpang.tambah.update');
+        Route::get('hapus/{id}', 'hapus')->name('penumpang.hapus');
+        Route::get('search', 'search')->name('penumpang.search');
     });
 
     Route::middleware('auth')->group(function () {

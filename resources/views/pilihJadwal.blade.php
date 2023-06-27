@@ -98,19 +98,17 @@
           <div class="col-2">{{ $row->kereta->jenis_kereta }}</div>
           <div class="col-3">{{ $row->waktu_berangkat }}</div>
           <div class="col-2">{{ $row->waktu_tiba }}</div>
-          <div class="col-1"><a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id, 'harga' => $row->harga]) }}" class="btn btn-primary btn-block">Pilih</a></div>
+          <div class="col-1"><a href="{{ route('transaksi.tambahCustomer', ['id' => $row->id_jadwal, 'harga' => $row->harga]) }}" class="btn btn-primary btn-block">Pilih</a></div>
         </div>
         <div class="row">
           <div class="col-2"></div>
           <div class="col-2"></div>
           <div class="col-3">{{ $row->tanggal }}</div>
           <div class="col-2">{{ $row->tanggal }}</div>
-          <div class="col-2"></div>
         </div>
       </div>
       @endforeach
     </div>
   </div>
 </body>
-
 </html>
